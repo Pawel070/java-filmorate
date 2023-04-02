@@ -1,0 +1,10 @@
+ru\yandex\practicum\filmorate\model\User.class
+org\example\Main.class
+ru\yandex\practicum\filmorate\controller\UserController.class
+ru\yandex\practicum\filmorate\controller\FilmController.class
+ru\yandex\practicum\filmorate\ErrorsIO\ValidationException.class
+ru\yandex\practicum\filmorate\FilmorateApplication.class
+ru\yandex\practicum\filmorate\model\Film$FilmBuilder.class
+ru\yandex\practicum\filmorate\model\Film.class
+ru\yandex\practicum\filmorate\model\User$UserBuilder.class
+ru\yandex\practicum\filmorate\controller\DataCheck.class
