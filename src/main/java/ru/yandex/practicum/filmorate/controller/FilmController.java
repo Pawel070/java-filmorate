@@ -17,58 +17,45 @@ import static ru.yandex.practicum.filmorate.Servis.ServisDate.localDateTimeMinFi
 @RequestMapping("/films")
 public class FilmController {
 
-    protected Map<Integer, Film> filmMap = new HashMap<>();
-    private final List<Film> films = new ArrayList<>();
-    public static int numberId = 0;
+    protected Map<Integer, Film> films = new HashMap<>();
+    private static int numberId = 0;
 
-    public int servisId() {
+    private int servisId() {
         numberId++;
         return numberId;
     }
 
     @GetMapping
-    public Collection<Film> findAll() {
-        return returnAllFilms();
+    public Collection<Film> returnAllFilms() {
+        return films.values();
     }
 
     @PostMapping
-    public Film createFilm(@Valid @RequestBody Film film) throws ValidationException {
-        return newFilm(film);
-    }
-
-    @PutMapping
-    public Film updateFilm(@Valid @RequestBody Film film) throws ValidationException {
-        return changeFilm(film);
-    }
-
-    public Collection<Film> returnAllFilms() {
-        return filmMap.values();
-    }
-
-    public Film newFilm(Film film) throws ValidationException {
+    public Film newFilm(@Valid @RequestBody Film film) throws ValidationException {
         Film retFilm;
         film.setId(servisId());
-        if (filmMap.containsKey(film.getId())) {
+        if (films.containsKey(film.getId())) {
             throw new ValidationException("E02 Фильм с таким ID уже внесён. Смените ID.");
         }
         if (film.getReleaseDate().compareTo(localDateTimeMinFilm) <= 0) {
             throw new ValidationException("E04 Дата релиза должна быть не ранее " +
                     localDateTimeMinFilm.format(DateTimeFormatter.ofPattern("dd.MM.yyyy.")));
         }
-        filmMap.put(film.getId(), film);
+        films.put(film.getId(), film);
         retFilm = film;
         return retFilm;
     }
 
-    public Film changeFilm(Film film) throws ValidationException {
+    @PutMapping
+    public Film changeFilm(@Valid @RequestBody Film film) throws ValidationException {
         Film retFilm;
-        if ((filmMap.containsKey(film.getId()))) {
+        if ((films.containsKey(film.getId()))) {
             throw new ValidationException("E05 Фильм с таким ID не существует. Смените ID..");
         }
-        Film filmBufer = filmMap.get(film.getId());
-        filmMap.remove(film.getId());
+        Film filmBufer = films.get(film.getId());
+        films.remove(film.getId());
         if (newFilm(film) == null) {
-            filmMap.put(filmBufer.getId(), filmBufer);
+            films.put(filmBufer.getId(), filmBufer);
             throw new ValidationException("E06 Изменения не внесены.");
         }
         retFilm = film;

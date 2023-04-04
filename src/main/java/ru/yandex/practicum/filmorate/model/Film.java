@@ -5,15 +5,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDateTime;
 
-@Slf4j
 @Data
 @Builder
-@Validated
 public class Film {
     private int id;
     @NotBlank(message = "E01 Название фильма не может быть пустым.")

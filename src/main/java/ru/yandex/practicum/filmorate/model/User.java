@@ -3,15 +3,11 @@ package ru.yandex.practicum.filmorate.model;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDateTime;
 
-@Slf4j
 @Data
 @Builder
-@Validated
 public class User {
     @NotBlank(message = "E12 Имя не должно быть пустым. Используйте Логин.")
     private String name;
