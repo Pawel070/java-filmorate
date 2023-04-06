@@ -12,7 +12,6 @@ import java.util.*;
 
 import static ru.yandex.practicum.filmorate.Servis.ServisDate.localDateTimeMinFilm;
 
-@Data
 @RestController
 @RequestMapping("/films")
 public class FilmController {
@@ -31,7 +30,7 @@ public class FilmController {
     }
 
     @PostMapping
-    public Film newFilm(@Valid @RequestBody Film film) throws ValidationException {
+    public Film newFilm(@Valid @RequestBody Film film)  {
         Film retFilm;
         film.setId(servisId());
         if (films.containsKey(film.getId())) {
@@ -47,7 +46,7 @@ public class FilmController {
     }
 
     @PutMapping
-    public Film changeFilm(@Valid @RequestBody Film film) throws ValidationException {
+    public Film changeFilm(@Valid @RequestBody Film film)  {
         Film retFilm;
         if ((films.containsKey(film.getId()))) {
             throw new ValidationException("E05 Фильм с таким ID не существует. Смените ID..");

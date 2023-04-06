@@ -9,7 +9,6 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.*;
 
-@Data
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -28,7 +27,7 @@ public class UserController {
     }
 
     @PostMapping
-    public User newUser(@Valid @RequestBody User user) throws ValidationException {
+    public User newUser(@Valid @RequestBody User user)  {
         User retUser;
         user.setId(servisId());
         if (users.containsKey(user.getId())) {
@@ -39,7 +38,7 @@ public class UserController {
         return retUser;
     }
     @PutMapping
-    public User changeUser(@Valid @RequestBody User user) throws ValidationException {
+    public User changeUser(@Valid @RequestBody User user)  {
         User retUser;
         if ((users.containsKey(user.getId()))) {
             throw new ValidationException("E05 Пользователь с таким ID не существует. Смените ID.");
