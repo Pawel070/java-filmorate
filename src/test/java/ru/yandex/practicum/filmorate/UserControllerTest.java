@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.ErrorsIO.ValidationException;
 import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.model.User;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashMap;
@@ -30,7 +31,7 @@ class UserControllerTest {
                 .id(1)
                 .login("u1")
                 .email("u1@test.ru")
-                .birthday(LocalDateTime.of(1970, 1, 1, 0, 0))
+                .birthday(LocalDate.from(LocalDateTime.of(1970, 1, 1, 0, 0)))
                 .name("user1")
                 .build();
 
@@ -38,7 +39,7 @@ class UserControllerTest {
                 .id(2)
                 .login("u2")
                 .email("u2@test.ru")
-                .birthday(LocalDateTime.of(1980, 1, 1, 0, 0))
+                .birthday(LocalDate.from(LocalDateTime.of(1980, 1, 1, 0, 0)))
                 .name("user2")
                 .build();
     }
