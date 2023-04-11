@@ -5,14 +5,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
 import java.util.Set;
 
 @Data
+@Validated
 @Builder
-@Component
 public class Film {
 
     private int id;

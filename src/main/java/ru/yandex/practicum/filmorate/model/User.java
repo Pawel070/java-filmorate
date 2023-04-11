@@ -3,16 +3,17 @@ package ru.yandex.practicum.filmorate.model;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Set;
 
 @Data
+@Validated
 @Builder
-@Component
 public class User {
+
     private int id;
 
     @NotBlank(message = "E07 Логин не может быть пустым или содержать пробелы.")

@@ -6,11 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Data
 public class ValidationException extends RuntimeException {
-    private String s;
+    private String parameter;
 
-    public ValidationException(String s) {
-         log.info("ValidationException > {}", s);
-        this.s = s;
+    public ValidationException(String parameter) {
+        log.info("Ошибка валидации > {}", parameter);
+        this.parameter = parameter;
     }
 
 }

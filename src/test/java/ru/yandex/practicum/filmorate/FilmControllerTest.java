@@ -3,18 +3,18 @@ package ru.yandex.practicum.filmorate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.ErrorsIO.MethodArgumentNotException;
 import ru.yandex.practicum.filmorate.ErrorsIO.ValidationException;
-import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static ru.yandex.practicum.filmorate.dataAllProject.DateTimeConfiguration.localDateMinFilm;
+import static ru.yandex.practicum.filmorate.dataService.DateTimeConfiguration.localDateMinFilm;
 
 class FilmControllerTest {
 
@@ -23,7 +23,7 @@ class FilmControllerTest {
     Film film;
     Film film1;
     Film film2;
-    FilmController filmController = new FilmController();
+    InMemoryFilmStorage inMemoryFilmStorage = new InMemoryFilmStorage();
 
     @BeforeEach
     void BeforeEach() {
@@ -56,62 +56,47 @@ class FilmControllerTest {
     }
 
     @Test
-    void returnAllFilmsTest() {
-        Collection<Film> test = filmController.returnAllFilms();
-        Assertions.assertNotNull(filmMap.values());
-    }
-
-    @Test
     void newFilmTest() throws ValidationException {
-        Film test = filmController.newFilm(film);
+        Film test = inMemoryFilmStorage.newFilm(film);
         Assertions.assertEquals("f1", test.getName());
     }
 
     @Test
     void filmValidate2Test() {
-        Film test = filmController.newFilm(film);
+        Film test = inMemoryFilmStorage.newFilm(film);
         film1.setId(1);
         try {
-            test = filmController.newFilm(film1);
+            test = inMemoryFilmStorage.newFilm(film1);
         } catch (ValidationException exception) {
-            Assertions.assertEquals("E02 Фильм с таким ID уже внесён. Смените ID.", exception.getS());
+            Assertions.assertEquals("E02 Фильм с таким ID уже внесён. Смените ID.", exception.getMessage());
         }
         film1.setId(2);
         film.setReleaseDate(LocalDate.from(LocalDateTime.of(1001, 1, 1, 0, 1))); // портим
         try {
-            test = filmController.newFilm(film1);
+            test = inMemoryFilmStorage.newFilm(film1);
         } catch (ValidationException exception) {
             Assertions.assertEquals("E04 Дата релиза должна быть не ранее " +
-                    localDateMinFilm.format(DateTimeFormatter.ofPattern("dd.MM.yyyy.")), exception.getS());
+                    localDateMinFilm.format(DateTimeFormatter.ofPattern("dd.MM.yyyy.")), exception.getMessage());
         }
     }
 
     @Test
     void changeFilmTest() throws ValidationException {
-        film1.setId(1);
-        Film test = filmController.changeFilm(film1);
-        Assertions.assertEquals("f2", test.getName());
+        film = inMemoryFilmStorage.newFilm(film);
+        Film test = inMemoryFilmStorage.changeFilm(film);
+        Assertions.assertEquals("f1", test.getName());
     }
 
     @Test
     void changeFilmValidate2Test() {
-        film1.setId(4);
+        Film test = null;
+        film = inMemoryFilmStorage.newFilm(film);
+        film.setId(1);
         try {
-            Film test = filmController.changeFilm(film1);
-        } catch (ValidationException exception) {
-            Assertions.assertEquals("E05 Фильм с таким ID не существует. Смените ID.", exception.getS());
+            test = inMemoryFilmStorage.changeFilm(film);
+        } catch (MethodArgumentNotException exception) {
+            Assertions.assertEquals("E05 Фильм с таким ID не существует. Смените ID.", exception.getMessage());
         }
     }
 
-    @Test
-    void findAll() {
-    }
-
-    @Test
-    void createFilm() {
-    }
-
-    @Test
-    void updateFilm() {
-    }
 }

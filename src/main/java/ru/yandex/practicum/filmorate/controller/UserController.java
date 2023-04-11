@@ -4,88 +4,87 @@ import jakarta.validation.Valid;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.ErrorsIO.ValidationException;
+import ru.yandex.practicum.filmorate.Service.FilmService;
+import ru.yandex.practicum.filmorate.Service.UserService;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import java.util.*;
 
 @Slf4j
+@Validated
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
-    private Map<Integer, User> users = new HashMap<>();
-    private static int numberId = 0;
+    private InMemoryUserStorage inMemoryUserStorage;
+    private UserService userService;
+    private FilmService filmService;
 
-    private int servisId() {
-        numberId++;
-        log.info("set ServisId: {}", numberId);
-        return numberId;
+    @Autowired
+    public void UserController(UserService userService) { this.userService = userService; }
+
+    @Autowired
+    public void UserController(FilmService filmService) { this.filmService = filmService; }
+
+    @Autowired
+    public void UserController(InMemoryUserStorage inMemoryUserStorage) {
+        this.inMemoryUserStorage = inMemoryUserStorage;
     }
 
     @GetMapping
     public Collection<User> returnAllUsers() {
-        log.info("returnAllFilms Ok. {}", users.values());
-        return users.values();
+        log.info("Контроллер GET все Users> {}", userService.returnAllUsers());
+        return userService.returnAllUsers();
     }
 
     @PostMapping
     public User newUser(@Valid @RequestBody User user) {
-        User userRet;
-         int buferId = user.getId();
-        if (user.getName() == null) {
-            log.info("ERR06  было >{}", user);
-            user.setName(user.getLogin());
-            log.info("ERR06 стало >{}", user);
-            // throw new ValidationException("E12 Имя не должно быть пустым. Использован логин.");
-        }
-        log.info("newUser: {}", user);
-        userRet = user;
-        for (Integer integer : users.keySet()) {
-            log.info("newUser проверяем ...: {}", users.get(integer));
-            if (users.get(integer).getEmail().equals(user.getEmail())) {
-                log.info("Email уже существует: {}", users.get(integer));
-                userRet = null;
-            }
-        }
-        if (userRet == null) {
-            throw new ValidationException("E09 Пользователь с таким Email уже внесён.");
-        } else {
-            user.setId(servisId());
-            users.put(user.getId(), user);
-            log.info("newUser post Ok. {}", user);
-            userRet = user;
-        }
-        return user;
+        log.info("Контроллер POST новый User> {}", user);
+        return inMemoryUserStorage.newUser(user);
     }
 
     @PutMapping
     public User changeUser(@Valid @RequestBody User user) {
-        Boolean validIO = true;
-        log.info("changeUser: {}", user);
-        int buferId = user.getId();
-        log.info("buferId: {}", buferId);
-        log.info("users.containsKey(buferId): {}", users.containsKey(buferId));
-        if (users.containsKey(buferId) != true && validIO == true) {
-            log.error("ERR05 - {}", users.containsKey(buferId));
-            validIO = false;
-            throw new ValidationException("E05 Пользователь с таким ID не существует. Смените ID.");
-        }
-        log.info("далее.... ");
-        if (validIO == true) {
-            log.info("user удаляем ... {}", users.get(buferId));
-            users.remove(buferId);
-            log.info("user новый заносим ... {}", user);
-            users.put(user.getId(), user);
-            log.info("changeUser put Ok. {}", user);
-            return user;
-        } else {
-            log.error("changeFilm not put`s {}", users.get(buferId));
-            return null;
-        }
+        log.info("Контроллер PUT изменение User> {}", user);
+        return inMemoryUserStorage.changeUser(user);
+    }
+
+    @GetMapping("/user/{userMail}")
+    public User getUserMail(@PathVariable("userMail") String userMail) {
+        log.info("Контроллер GET User по Email> {}", userMail);
+        return userService.findUserByEmail(userMail);
+    }
+
+    @GetMapping("/{id}")
+    public User findUserById(@PathVariable String id) {
+        log.info("Контроллер GET User по Id> {}", id);
+        return userService.findUserById(id);
+    }
+
+    @GetMapping("/{id}/friends")
+    public Collection<User> findFriendsById(@PathVariable String id) {
+        log.info("Контроллер GET User friends> {}", id);
+        return userService.findFriendsById(id);
+    }
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public Collection<User> findFriends2UserById(@PathVariable String id, @PathVariable String otherId) {
+        log.info("Контроллер GET User friends to User> {} , {}", id, otherId);
+        return userService.findFriends2UserById(id, otherId);
+    }
+
+    @PutMapping("/{id}/friends/{friendId}")
+    public User addFriendsUserById(@PathVariable String id, @PathVariable String friendId) {
+        log.info("Контроллер PUT User add friends> {} , {}", id, friendId);
+        return userService.addFriendsUserById(id, friendId);
+    }
+
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public User deleteFriendsUserById(@PathVariable String id, @PathVariable String friendId) {
+        log.info("Контроллер DELETE User delete friends> {} , {}", id, friendId);
+        return userService.deleteFriendsUserById(id, friendId);
     }
 
 }

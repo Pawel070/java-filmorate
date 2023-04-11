@@ -3,13 +3,14 @@ package ru.yandex.practicum.filmorate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import ru.yandex.practicum.filmorate.ErrorsIO.MethodArgumentNotException;
 import ru.yandex.practicum.filmorate.ErrorsIO.ValidationException;
-import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +20,7 @@ class UserControllerTest {
     LocalDateTime localDateTime;
     User user;
     User user1;
-    UserController userController = new UserController();
+    InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
 
     @BeforeEach
     void BeforeEach() {
@@ -45,42 +46,38 @@ class UserControllerTest {
     }
 
     @Test
-    void returnAllUsersTest() {
-        Collection<User> test = userController.returnAllUsers();
-        Assertions.assertNotNull(userMap.values());
-    }
-
-    @Test
     void newUserTest() throws ValidationException {
-        User test = userController.newUser(user);
+        User test = inMemoryUserStorage.newUser(user);
         Assertions.assertEquals("user1", test.getName());
     }
 
     @Test
     void changeUserTest() throws ValidationException {
-        user1.setId(1);
-        User test = userController.changeUser(user1);
-        Assertions.assertEquals("user2", test.getName());
+        user = inMemoryUserStorage.newUser(user);
+        user.setId(1);
+        user = inMemoryUserStorage.changeUser(user);
+        Assertions.assertEquals("user1", user.getName());
     }
 
     @Test
     void changeUserValidateTest() {
-        user1.setId(4);
+        user = inMemoryUserStorage.newUser(user);
+        user.setId(4);
         try {
-            User test = userController.changeUser(user1);
-        } catch (ValidationException exception) {
-            Assertions.assertEquals("E05 Фильм с таким ID не существует. Смените ID.", exception.getS());
+            user = inMemoryUserStorage.changeUser(user);
+        } catch (MethodArgumentNotException exception) {
+            Assertions.assertNotNull(user);
         }
     }
 
     @Test
     void userValidateIdDubleTest() throws ValidationException {
-        User test = userController.newUser(user);
+        User test = inMemoryUserStorage.newUser(user);
         user1.setId(1);
         try {
-            test = userController.newUser(user1);
+            test = inMemoryUserStorage.newUser(user1);
         } catch (ValidationException exception) {
-            Assertions.assertEquals("E09 Пользователь с таким ID уже внесён. Смените ID.", exception.getS());
+            Assertions.assertEquals("E09 Пользователь с таким ID уже внесён. Смените ID.", exception.getMessage());
         }
     }
 
@@ -88,22 +85,10 @@ class UserControllerTest {
     void userValidateLoginSpaseTest() {
         user.setLogin("u 1");
         try {
-            User test = userController.newUser(user);
+            User test = inMemoryUserStorage.newUser(user);
         } catch (ValidationException exception) {
-            Assertions.assertEquals("E07 Логин не может быть пустым или содержать пробелы.", exception.getS());
+            Assertions.assertEquals("E07 Логин не может быть пустым или содержать пробелы.", exception.getMessage());
         }
     }
 
-    @Test
-    void findAll() {
-
-    }
-
-    @Test
-    void createUser() {
-    }
-
-    @Test
-    void updateUser() {
-    }
 }

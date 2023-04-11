@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.dataAllProject;
+package ru.yandex.practicum.filmorate.dataService;
 
 // https://www.springcloud.io/post/2022-09/springboot-date-format/#gsc.tab=0
 
@@ -21,7 +21,6 @@ public class DateTimeConfiguration {
     public static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     public static ChronoLocalDate localDateMinFilm = LocalDate.of(1895, 12, 28);
 
-
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
         return builder -> {
@@ -40,33 +39,3 @@ public class DateTimeConfiguration {
         };
     }
 }
-
-
-/**
-package ru.yandex.practicum.filmorate.Servis;
-
-import com.google.gson.TypeAdapter;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-public class LocalDateFormated extends TypeAdapter<LocalDateTime> {
-    protected static final DateTimeFormatter formatterOfWriter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    protected static final DateTimeFormatter formatterOfReader = formatterOfWriter;
-
-    @Override
-    public void write(JsonWriter jsonWriter, LocalDateTime localDateTime) throws IOException {
-        if (localDateTime == null) return;
-        jsonWriter.value(localDateTime.format(formatterOfWriter));
-    }
-
-    @Override
-    public LocalDateTime read(JsonReader jsonReader) throws IOException {
-        return LocalDateTime.parse(jsonReader.nextString(), formatterOfReader);
-    }
-
-}
-*/
