@@ -37,10 +37,10 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) // 500
+    @ResponseStatus(HttpStatus.BAD_REQUEST) // 400
     public ErrorResponse handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
-        log.info("Искомый объект не найден. Возврат код 500 {}", e.getMessage());
-        return new ErrorResponse("http:500 Искомый объект не найден при первичной проверке.", e.getMessage());
+        log.info("Искомый объект не найден. Возврат код 400 {}", e.getMessage());
+        return new ErrorResponse("http:400 Искомый объект не найден при первичной проверке.", e.getMessage());
     }
 
     @ExceptionHandler

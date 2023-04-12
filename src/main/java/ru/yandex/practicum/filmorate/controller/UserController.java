@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.Service.FilmService;
 import ru.yandex.practicum.filmorate.Service.UserService;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.*;
 
@@ -19,20 +19,12 @@ import java.util.*;
 @RequestMapping("/users")
 public class UserController {
 
-    private InMemoryUserStorage inMemoryUserStorage;
+    private UserStorage inMemoryUserStorage;
     private UserService userService;
     private FilmService filmService;
 
     @Autowired
     public void UserController(UserService userService) { this.userService = userService; }
-
-    @Autowired
-    public void UserController(FilmService filmService) { this.filmService = filmService; }
-
-    @Autowired
-    public void UserController(InMemoryUserStorage inMemoryUserStorage) {
-        this.inMemoryUserStorage = inMemoryUserStorage;
-    }
 
     @GetMapping
     public Collection<User> returnAllUsers() {

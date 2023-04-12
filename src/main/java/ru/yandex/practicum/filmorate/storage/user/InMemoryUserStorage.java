@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.ErrorsIO.MethodArgumentNotException;
@@ -17,7 +18,7 @@ import java.util.Map;
 @Data
 @Slf4j
 @Validated
-@RestController
+@Repository
 @Component
 public class InMemoryUserStorage implements UserStorage {
 
@@ -76,11 +77,8 @@ public class InMemoryUserStorage implements UserStorage {
             validIO = false;
             throw new MethodArgumentNotException("E05 Пользователь с таким ID не существует. Смените ID.");
         }
-        log.info("далее.... ");
         if (validIO == true) {
-            log.info("user удаляем ... {}", users.get(buferId));
             users.remove(buferId);
-            log.info("user новый заносим ... {}", user);
             users.put(user.getId(), user);
             log.info("changeUser put Ok. {}", user);
             return user;

@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.ErrorsIO.MethodArgumentNotException;
@@ -19,7 +20,7 @@ import static ru.yandex.practicum.filmorate.dataService.DateTimeConfiguration.lo
 @Data
 @Slf4j
 @Validated
-@RestController
+@Repository
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
 
@@ -73,12 +74,9 @@ public class InMemoryFilmStorage implements FilmStorage {
             validIO = false;
             throw new MethodArgumentNotException("E05 Фильм с таким ID не существует. Смените ID.");
         }
-        log.info("далее.... ");
         if (validIO == true) {
-            log.info("film удаляем ... {}", films.get(buferId));
             films.remove(buferId);
-            log.info("film новый заносим ... {}", film);
-            films.put(buferId, film);
+             films.put(buferId, film);
             log.info("changeFilm put Ok. {}", film);
             return film;
         } else {
