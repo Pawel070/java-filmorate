@@ -1,64 +1,78 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import jakarta.validation.Valid;
-import lombok.Data;
-
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.ErrorsIO.ValidationException;
+import org.springframework.web.server.ResponseStatusException;
+import ru.yandex.practicum.filmorate.Service.FilmService;
+import ru.yandex.practicum.filmorate.Service.UserService;
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.time.format.DateTimeFormatter;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
+
 import java.util.*;
 
-import static ru.yandex.practicum.filmorate.Servis.ServisDate.localDateTimeMinFilm;
-
+@Slf4j
 @RestController
+@Validated
 @RequestMapping("/films")
 public class FilmController {
 
-    protected Map<Integer, Film> films = new HashMap<>();
-    private static int numberId = 0;
+    private FilmStorage inMemoryFilmStorage;
+    private UserService userService;
+    private FilmService filmService;
 
-    private int servisId() {
-        numberId++;
-        return numberId;
+    @Autowired
+    public void FilmController(FilmService filmService) {
+        this.filmService = filmService;
+    }
+
+    @GetMapping("/help")
+    public Map<String, Integer> feed() {
+        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Метод /feed ещё не реализован.");
+    }
+
+    @GetMapping("/{id}")
+    public Film findFilmById(@PathVariable String id) {
+        log.info("Контроллер GET фильм по Id> {}", id);
+        return filmService.findFilmById(id);
     }
 
     @GetMapping
     public Collection<Film> returnAllFilms() {
-        return films.values();
-    }
-
-    @PostMapping
-    public Film newFilm(@Valid @RequestBody Film film)  {
-        Film retFilm;
-        film.setId(servisId());
-        if (films.containsKey(film.getId())) {
-            throw new ValidationException("E02 Фильм с таким ID уже внесён. Смените ID.");
-        }
-        if (film.getReleaseDate().compareTo(localDateTimeMinFilm) <= 0) {
-            throw new ValidationException("E04 Дата релиза должна быть не ранее " +
-                    localDateTimeMinFilm.format(DateTimeFormatter.ofPattern("dd.MM.yyyy.")));
-        }
-        films.put(film.getId(), film);
-        retFilm = film;
-        return retFilm;
+        return filmService.returnAllFilms();
     }
 
     @PutMapping
-    public Film changeFilm(@Valid @RequestBody Film film)  {
-        Film retFilm;
-        if ((films.containsKey(film.getId()))) {
-            throw new ValidationException("E05 Фильм с таким ID не существует. Смените ID..");
-        }
-        Film filmBufer = films.get(film.getId());
-        films.remove(film.getId());
-        if (newFilm(film) == null) {
-            films.put(filmBufer.getId(), filmBufer);
-            throw new ValidationException("E06 Изменения не внесены.");
-        }
-        retFilm = film;
-        return retFilm;
+    public Film update(@RequestBody Film film) {
+        return inMemoryFilmStorage.changeFilm(film);
+    }
+
+    @PostMapping
+    public Film create(@RequestBody Film film) {
+        return inMemoryFilmStorage.newFilm(film);
+    }
+
+    @PutMapping("/{id}/like/{userId}")
+    public Film addLikeUserById(@PathVariable String id, @PathVariable String userId) {
+        log.info("Контроллер PUT лайк фильму ставит> {} - {}", id, userId);
+        return filmService.addLikeUserById(id, userId);
+    }
+
+    @DeleteMapping("/{id}/like/{userId}")
+    public Film deleteLikeUserById(@PathVariable String id, @PathVariable String userId) {
+        log.info("Контроллер DELETE лайк фильму удаляет> {} , {}", id, userId);
+        return filmService.deleteLikeUserById(id, userId);
+    }
+
+    @GetMapping("/popular?count={count}")
+    public Collection<Film> maxLikeFilm(@PathVariable Optional<String> count ) {
+        String countStr = count.orElse("10");
+        log.info("Контроллер GET  список из первых  по количеству лайков> {}", countStr);
+        return filmService.maxLikeFilm(countStr);
     }
 
 }

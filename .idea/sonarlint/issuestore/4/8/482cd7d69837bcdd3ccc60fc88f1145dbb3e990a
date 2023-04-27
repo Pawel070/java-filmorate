@@ -1,0 +1,12 @@
+
+z
+java:S1104"]Make dateTimeFormatter a static final constant or non-public and provide accessors if needed.(§¨»Õ8ÉöÙöö0
+~
+java:S1104"\Make localDateMinFilm a static final constant or non-public and provide accessors if needed.(âãÕˆúÿÿÿÿ8ÉöÙöö0
+T
+java:S1444"7Make this "public static dateTimeFormatter" field final(§¨»Õ8ÊöÙöö0
+X
+java:S1444"6Make this "public static localDateMinFilm" field final(âãÕˆúÿÿÿÿ8ÊöÙöö0
+v	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(³ø•Á8ÍöÙöö0
+g
+java:S1117"ERename "dateTimeFormatter" which hides the field declared at line 21.(–Í×Ùÿÿÿÿÿ8–÷Ùöö0
