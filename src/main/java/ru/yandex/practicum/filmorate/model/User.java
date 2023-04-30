@@ -28,7 +28,7 @@ public class User {
 
     private String name;
 
-    private Set<Long> friends; //  id друзей
+    private Set<Long> friends; //  друзья
 
     @Override
     public boolean equals(Object o) {

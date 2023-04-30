@@ -6,8 +6,11 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.validation.annotation.Validated;
+import ru.yandex.practicum.filmorate.dataService.GenreDate;
+import ru.yandex.practicum.filmorate.dataService.RateData;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Set;
 
 @Data
@@ -29,6 +32,10 @@ public class Film {
     private long duration;
 
     private Set<Long> likes; //  id лайкающего
+
+    private ArrayList<GenreDate> genre; //  vмассив жанров
+
+    private RateData rateFilm;  // рейтинг
 
 }
 

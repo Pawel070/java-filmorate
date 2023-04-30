@@ -7,14 +7,8 @@ s
 Csrc/test/java/ru/yandex/practicum/filmorate/FilmControllerTest.java,1\4\143a1f1efddf8a3777c1787a79cc54ea37cf7542
 Ñ
 Tsrc/main/java/ru/yandex/practicum/filmorate/ErrorsIO/MethodArgumentNotException.java,8\6\865dac6ed3cdbf8c5fda77310ecb658876bdff81
-z
-Jsrc/main/java/ru/yandex/practicum/filmorate/dataService/ConstantsSort.java,a\9\a94b3543d1f50ce5103cfbe4aa5a3addf674a5dd
 Ö
 Usrc/main/java/ru/yandex/practicum/filmorate/ErrorsIO/IncorrectParameterException.java,f\e\fee8653f460c64fb8d0c622d99c27b3af13326db
-u
-Esrc/main/java/ru/yandex/practicum/filmorate/FilmorateApplication.java,4\7\47bce922f4c4649cbfbb4a9e3e08ba326c480a30
-Ç
-Rsrc/main/java/ru/yandex/practicum/filmorate/dataService/DateTimeConfiguration.java,4\8\482cd7d69837bcdd3ccc60fc88f1145dbb3e990a
 â
 Ysrc/main/java/ru/yandex/practicum/filmorate/ErrorsIO/MethodArgumentNotValidException.java,a\7\a79639e0f221fe310cc05a1740a17046a5036065
 Å
@@ -40,7 +34,5 @@ Jsrc/main/java/ru/yandex/practicum/filmorate/controller/UserController.java,6\e
 Msrc/main/java/ru/yandex/practicum/filmorate/ErrorsIO/ValidationException.java,6\e\6ec5547e5cb11a03a472a2b257bb3e4d7188f694
 t
 Dsrc/main/java/ru/yandex/practicum/filmorate/model/ErrorResponse.java,f\d\fd99c2d57b42a18571912cc9fa708348b0c5d844
-k
-;src/main/java/ru/yandex/practicum/filmorate/model/Film.java,e\1\e148409a6f6356d8545f985c6fc728990c2e97b1
-k
-;src/main/java/ru/yandex/practicum/filmorate/model/User.java,a\6\a67a0ad7b203b3dde185a44550c24555f5335d9f
+7
+pom.xml,4\4\442292b8a7efeabbe4cc176709b833b1792140ec
