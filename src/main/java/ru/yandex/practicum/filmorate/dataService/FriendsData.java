@@ -5,7 +5,7 @@ public enum FriendsData {
     NO_FRIEND("НЕДРУГ"),
     FRIEND_REQUEST("ЗАПРОС ДРУЗЕЙ");
 
-    private String title;
+    private final String title;
 
     FriendsData(String title) {
         this.title = title;
@@ -15,5 +15,6 @@ public enum FriendsData {
     public String toString() {
         return title;
     }
+
 }
 

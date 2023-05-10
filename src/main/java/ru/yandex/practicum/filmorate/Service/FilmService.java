@@ -1,94 +1,82 @@
 package ru.yandex.practicum.filmorate.Service;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import ru.yandex.practicum.filmorate.ErrorsIO.IncorrectParameterException;
 import ru.yandex.practicum.filmorate.ErrorsIO.MethodArgumentNotException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.film.GenreStorage;
+import ru.yandex.practicum.filmorate.storage.film.RateStorage;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-import static ru.yandex.practicum.filmorate.dataService.ConstantsSort.DESCENDING_ORDER;
-
+@Data
 @Slf4j
 @Service
 public class FilmService {
 
     @Autowired
-    private InMemoryFilmStorage inMemoryFilmStorage;
+    private FilmStorage filmStorage;
 
     @Autowired
-    private FilmService(InMemoryFilmStorage inMemoryFilmStorage) {
-        this.inMemoryFilmStorage = inMemoryFilmStorage;
+    private GenreStorage genreStorage;
+
+    @Autowired
+    private RateStorage rateStorage;
+
+    @Autowired
+    private FilmService(FilmStorage filmStorage) {
+        this.filmStorage = filmStorage;
     }
 
     public Collection<Film> returnAllFilms() {
-        log.info("returnAllFilms Ok. {}", inMemoryFilmStorage.getFilms().values());
-        return inMemoryFilmStorage.getFilms().values();
+        log.info("returnAllFilms Ok.");
+        return filmStorage.getCollectionFilm();
     }
 
-    public Film findFilmById(String filmId) {
+    public Film findFilmById(int filmId) {
         Film filmReturn;
-        if (filmId == null) {
+        if (filmId < 1) {
             log.info("Запрос пользователя фильм по Id - неправильный формат Id: {}", filmId);
-            filmReturn = null;
             throw new IncorrectParameterException("Запрос пользователя фильм по Id - неправильный формат Id.");
-        } else {
-            int id = Integer.parseInt(filmId);
-            if (id <= 0) {
-                log.info("Запрос пользователя фильм по Id - отрицательное или 0 значение Id: {}", filmId);
-                filmReturn = null;
-                throw new IncorrectParameterException("Запрос пользователя фильм по Id - неправильный формат Id.");
-            } else {
-                filmReturn = inMemoryFilmStorage.getFilms().get(id);
-                if (filmReturn == null) {
-                    log.info("Запрос пользователя фильм по Id - фильма нет. {}", filmId);
-                    throw new MethodArgumentNotException("Запрос пользователя фильм по Id с таким Id нет.");
-                }
-            }
         }
-        log.info("Запрос пользователя по Id Ok. {}", filmReturn);
+        filmReturn = filmStorage.getByIdFilm(filmId);
+        if (filmReturn == null) {
+            log.info("Запрос пользователя фильм по Id - фильма нет. {}", filmId);
+            throw new MethodArgumentNotException("Запрос пользователя фильм по Id с таким Id нет.");
+        }
+        log.info("Запрос пользователя по Id Ok.");
         return filmReturn;
     }
 
-    public Film addLikeUserById(String userId, String like) {
-        Film filmReturn1 = findFilmById(userId);
-        Set<Long> likes = filmReturn1.getLikes();
-        if (filmReturn1 == null) {
-            log.info("Запрос добавления лайка по Id фильма невыполним. {}", filmReturn1);
+    private void addLikeUserById(int userId, int filmId) {
+        Film filmReturn = filmStorage.getByIdFilm(filmId);
+        if (filmReturn == null) {
+            log.info("Запрос добавления лайка по Id фильма невыполним. {}", filmReturn);
             throw new MethodArgumentNotException("Запрос добавления лайка по Id фильма невыполним - фильма с таким Id нет.");
-        } else {
-            likes.add(Long.parseLong(like));
-            filmReturn1.setLikes(likes);
-            inMemoryFilmStorage.changeFilm(filmReturn1);
-            log.info("Запрос добавления лайка по Id фильма Ok. {} < {}", filmReturn1);
         }
-        return filmReturn1;
+        filmStorage.addLike(filmId, userId);
+        log.info("Запрос добавления лайка по Id фильма Ok.");
     }
 
-    public Film deleteLikeUserById(String userId, String like) {
-        Film filmReturn1 = findFilmById(userId);
-        Set<Long> likes = filmReturn1.getLikes();
-        if (filmReturn1 == null) {
-            log.info("Запрос удаления лайка по Id фильма невыполним. {}", filmReturn1);
-            throw new MethodArgumentNotException("Запрос удаления лайка по Id фильма невыполним - фильма с таким Id нет.");
-        } else {
-            likes.remove(Long.parseLong(like));
-            filmReturn1.setLikes(likes);
-            inMemoryFilmStorage.changeFilm(filmReturn1);
-            log.info("Запрос удаления лайка по Id фильма Ok. {} ", filmReturn1);
+    private void deleteLikeUserById(int userId, int filmId) {
+        Film filmReturn = filmStorage.getByIdFilm(filmId);
+        if (filmReturn == null) {
+            log.info("Запрос добавления лайка по Id фильма невыполним. {}", filmReturn);
+            throw new MethodArgumentNotException("Запрос добавления лайка по Id фильма невыполним - фильма с таким Id нет.");
         }
-        return filmReturn1;
+        filmStorage.deleteLike(filmId, userId);
+        log.info("Удаление лайка по Id фильма Ok.");
     }
 
-    public Collection<Film> maxLikeFilm(String like) {
+    public Collection<Film> maxLikeFilm(int like) {
         log.info("Запрос самых лайковых фильмов в количестве {} шт. Ok.", like);
-        Collection<Film> sortMaxLike = inMemoryFilmStorage.getFilms().values().stream()
-                .filter(film -> film.getLikes().contains(Long.parseLong(like))).collect(Collectors.toList());
-        return sortMaxLike;
+        return filmStorage.getMaxPopular(like);
     }
 
 }

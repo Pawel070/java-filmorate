@@ -10,8 +10,8 @@ public class IncorrectParameterException extends RuntimeException {
     private final String parameter;
 
     public IncorrectParameterException(String parameter) {
-            log.info("Ошибка с полем \"%s\".", parameter);
-            this.parameter = parameter;
+        log.info("Ошибка с полем \"%s\".", parameter);
+        this.parameter = parameter;
     }
 
 }

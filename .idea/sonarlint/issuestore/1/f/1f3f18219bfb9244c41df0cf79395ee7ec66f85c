@@ -1,14 +1,5 @@
 
-{	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(Î’ÈÙþÿÿÿÿ8³–Ï‡÷0
-U
-java:S2589x"8Remove this expression which always evaluates to "false"(êÿÒÿ8Ã–Ï‡÷0
-U
-java:S2589d"8Remove this expression which always evaluates to "false"(êÿÒÿ8Ã–Ï‡÷0
-[
-java:S1854'">Remove this useless assignment to local variable "userReturn".(ì¹ç»8Ç–Ï‡÷0
-[
-java:S1854-">Remove this useless assignment to local variable "userReturn".(ì¹ç»8Ç–Ï‡÷0
-[
-java:S1155D">Use isEmpty() to check whether the collection is empty or not.(ö¹Û 8Ê–Ï‡÷0
-b
-java:S1854V"@Remove this useless assignment to local variable "friendsUser1".(•Ìê¹øÿÿÿÿ8Ë–Ï‡÷0
+{	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(Î’ÈÙþÿÿÿÿ8¨×ð³€1
+r	java:S116"VRename this field "FilmStorage" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(äðá‚8°×ð³€1
+`
+java:S1155=">Use isEmpty() to check whether the collection is empty or not.(¤°™†üÿÿÿÿ8µ×ð³€1

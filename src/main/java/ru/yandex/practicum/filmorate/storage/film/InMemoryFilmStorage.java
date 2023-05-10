@@ -12,8 +12,7 @@ import ru.yandex.practicum.filmorate.ErrorsIO.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static ru.yandex.practicum.filmorate.dataService.DateTimeConfiguration.localDateMinFilm;
 
@@ -26,7 +25,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     private Map<Integer, Film> films = new HashMap<>();
 
-    private static int numberId = 0;
+    private int numberId;
 
     private int servisId() {
         numberId++;
@@ -34,61 +33,97 @@ public class InMemoryFilmStorage implements FilmStorage {
         return numberId;
     }
 
-    @Override
     public Film newFilm(@Valid @RequestBody Film film) {
-        Boolean validIO = true;
-        Film retFilm;
         log.info("newFilm: {}", film);
-        film.setId(servisId());
-        if (films.containsKey(film.getId()) && (validIO == true)) {
-            log.error("ERR01 {}", films.containsKey(film.getId()));
-            validIO = false;
+        film.setIdFilm(servisId());
+        if (films.containsKey(film.getIdFilm())) {
+            log.error("ERR01 {}", films.containsKey(film.getIdFilm()));
             throw new ValidationException("E01 Фильм с таким ID уже внесён. Смените ID.");
         }
-        if ((film.getReleaseDate().compareTo(localDateMinFilm) <= 0) && (validIO == true)) {
+        if (film.getReleaseDate().compareTo(localDateMinFilm) <= 0) {
             log.error("ERR04 - {}", film.getReleaseDate());
-            validIO = false;
             throw new ValidationException("E04 Дата релиза должна быть не ранее {}" +
                     localDateMinFilm.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         }
-        if (validIO == true) {
-            films.put(film.getId(), film);
-            log.info("newFilm post Ok. {}", film);
-            retFilm = film;
-            return retFilm;
-        } else {
-            log.error("newFilm not post`s {}", film);
-            return null;
-        }
+        films.put(film.getIdFilm(), film);
+        log.info("newFilm post Ok. {}", film);
+        return film;
     }
 
-    @Override
     public Film changeFilm(@Valid @RequestBody Film film) {
-        Boolean validIO = true;
+        Film retFilm;
         log.info("changeFilm: {}", film);
-        int buferId = film.getId();
+        int buferId = film.getIdFilm();
         log.info("buferId: {}", buferId);
         log.info("films.containsKey(buferId): {}", films.containsKey(buferId));
-        if (films.containsKey(buferId) != true && (validIO == true)) {
+        if (films.containsKey(buferId)) {
+            films.remove(buferId);
+            films.put(buferId, film);
+            log.info("changeFilm put Ok. {}", film);
+        } else {
             log.error("ERR05 - {}", films.containsKey(buferId));
-            validIO = false;
             throw new MethodArgumentNotException("E05 Фильм с таким ID не существует. Смените ID.");
         }
-        if (validIO == true) {
-            films.remove(buferId);
-             films.put(buferId, film);
-            log.info("changeFilm put Ok. {}", film);
-            return film;
-        } else {
-            log.error("changeFilm not put`s {}", films.get(buferId));
-            return null;
-        }
+        return film;
     }
 
     @Override
-    public Film getFilm(int id) {
-        log.info("getFilm: {}", id);
-        return films.get(id);
+    public Film create(Film film) {
+        return null;
     }
 
+    @Override
+    public long getCollectionSize() {
+        return 0;
+    }
+
+    @Override
+    public List<Film> getFilmsToRate(int IdRate) {
+        return null;
+    }
+
+    @Override
+    public Collection<Film> getCollectionFilm() {
+        return null;
+    }
+
+    @Override
+    public void deleteByIdFilm(int idFilm) {
+
+    }
+
+    @Override
+    public Collection<Film> getMaxPopular(int scoring) {
+        return null;
+    }
+
+    @Override
+    public Film getByIdFilm(int idFilm) {
+        return null;
+    }
+
+    @Override
+    public Film update(Film film) {
+        return null;
+    }
+
+    @Override
+    public Set<Long> getLikes(int idFilm) {
+        return null;
+    }
+
+    @Override
+    public void addLike(int idFilm, int idUser) {
+
+    }
+
+    @Override
+    public void deleteLike(int idFilm, int idUser) {
+
+    }
+
+    @Override
+    public boolean getLikeExist(int idFilm, int idUser) {
+        return false;
+    }
 }

@@ -1,17 +1,17 @@
 package ru.yandex.practicum.filmorate.dataService;
 
 public enum GenreDate {
-    COMEDY ("Комедия"),
-    DRAMA ("Драма"),
-    CARTOON ("Мультфильм"),
-    TRILLER ("Триллер"),
-    DOCUMENTARY ("Документальный"),
-    HITMAN ("Боевик"),
-    INDISTINCT("Неясный"); // неясный по умолчанию
+    COMEDY(1, "Комедия"),
+    DRAMA(2, "Драма"),
+    CARTOON(3, "Мультфильм"),
+    TRILLER(4, "Триллер"),
+    DOCUMENTARY(5, "Документальный"),
+    HITMAN(6, "Боевик"),
+    INDISTINCT(7, "Неясный"); // неясный по умолчанию
 
-    private String title;
+    private final String title;
 
-    GenreDate(String title) {
+    GenreDate(int idGenre, String title) {
         this.title = title;
     }
 

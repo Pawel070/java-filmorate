@@ -1,35 +1,18 @@
 
-E
-java:S54116"(Use a primitive boolean expression here.(ËÒÈ8™ã…§÷0
-E
-java:S5411M"(Use a primitive boolean expression here.(ËÒÈ8™ã…§÷0
-Y
-java:S2589+"7Remove this expression which always evaluates to "true"(ŞìÅ†ÿÿÿÿÿ8±ã…§÷0
-T
-java:S2589H"7Remove this expression which always evaluates to "true"(¥·Ï’8°ã…§÷0
-Y
-java:S25890"7Remove this expression which always evaluates to "true"(şÁèÀÿÿÿÿÿ8±ã…§÷0
-`
-java:S2583M"CChange this condition so that it does not always evaluate to "true"(ËÒÈ8±ã…§÷0
-`
-java:S25836"CChange this condition so that it does not always evaluate to "true"(ËÒÈ8±ã…§÷0
-S
-java:S2696 "6Make the enclosing method "static" or remove this set.(ãƒ„¹8¸ã…§÷0
-X
-java:S1854-";Remove this useless assignment to local variable "validIO".(ë—åı8¹ã…§÷0
-X
-java:S18542";Remove this useless assignment to local variable "validIO".(ë—åı8¹ã…§÷0
-I
-java:S1125+"'Remove the unnecessary boolean literal.(ŞìÅ†ÿÿÿÿÿ8»ã…§÷0
-I
-java:S11250"'Remove the unnecessary boolean literal.(şÁèÀÿÿÿÿÿ8¾ã…§÷0
-D
-java:S11256"'Remove the unnecessary boolean literal.(ËÒÈ8¿ã…§÷0
-X
-java:S1854J";Remove this useless assignment to local variable "validIO".(ë—åı8Àã…§÷0
-D
-java:S1125H"'Remove the unnecessary boolean literal.(¥·Ï’8Âã…§÷0
-D
-java:S1125H"'Remove the unnecessary boolean literal.(¥·Ï’8Âã…§÷0
-D
-java:S1125M"'Remove the unnecessary boolean literal.(ËÒÈ8Ãã…§÷0
+r	java:S117Q"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ŞÂ…Øÿÿÿÿÿ8å®‡‰€1
+
+java:S1186["€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ô¬ÊÖ8ğ®‡‰€1
+£
+java:S1186t"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(¡Ê€¶ûÿÿÿÿ8ğ®‡‰€1
+£
+java:S1186y"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(Ÿ±Ìãûÿÿÿÿ8ğ®‡‰€1
+N
+java:S14816",Remove this unused "retFilm" local variable.(ç±ôıÿÿÿÿ8÷®‡‰€1
+H
+java:S1168R"+Return an empty collection instead of null.(¥¹ï8ù®‡‰€1
+H
+java:S1168W"+Return an empty collection instead of null.(¥¹ï8ù®‡‰€1
+H
+java:S1168a"+Return an empty collection instead of null.(¥¹ï8ú®‡‰€1
+H
+java:S1168p"+Return an empty collection instead of null.(¥¹ï8û®‡‰€1

@@ -1,17 +1,18 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import jakarta.validation.Valid;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import ru.yandex.practicum.filmorate.Service.FilmService;
-import ru.yandex.practicum.filmorate.Service.UserService;
-import ru.yandex.practicum.filmorate.model.Film;
 
+import ru.yandex.practicum.filmorate.Service.FilmService;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 
 import java.util.*;
 
@@ -19,15 +20,14 @@ import java.util.*;
 @RestController
 @Validated
 @RequestMapping("/films")
-public class FilmController {
+public class FilmController implements ControllerInterface<Film> {
 
-    private FilmStorage inMemoryFilmStorage;
-    private UserService userService;
+    private FilmStorage filmStorage;
     private FilmService filmService;
 
     @Autowired
-    public void FilmController(FilmService filmService) {
-        this.filmService = filmService;
+    public void filmController(FilmService filmservice) {
+        filmService = filmservice;
     }
 
     @GetMapping("/help")
@@ -35,44 +35,60 @@ public class FilmController {
         throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Метод /feed ещё не реализован.");
     }
 
+    @Override
     @GetMapping("/{id}")
-    public Film findFilmById(@PathVariable String id) {
+    public Film getById(@PathVariable int id) {
         log.info("Контроллер GET фильм по Id> {}", id);
         return filmService.findFilmById(id);
     }
 
+    @Override
     @GetMapping
-    public Collection<Film> returnAllFilms() {
+    public Collection<Film> selectGetting() {
+        log.info("Запрос всех фильмов");
         return filmService.returnAllFilms();
     }
 
+    @Override
     @PutMapping
-    public Film update(@RequestBody Film film) {
-        return inMemoryFilmStorage.changeFilm(film);
+    public Film update(@RequestBody @Valid Film film) {
+        log.info("Обновление информации о фильме {}", film);
+        return filmStorage.update(film);
     }
 
+    @Override
     @PostMapping
-    public Film create(@RequestBody Film film) {
-        return inMemoryFilmStorage.newFilm(film);
+    public Film create(@RequestBody @Valid Film film) {
+        log.info("Добавление фильма {}", film);
+        return filmStorage.create(film);
     }
+
+    @Override
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable int id) {
+        log.info("Удаление фильма из базы по id {}", id);
+        filmStorage.deleteByIdFilm(id);
+    }
+
 
     @PutMapping("/{id}/like/{userId}")
-    public Film addLikeUserById(@PathVariable String id, @PathVariable String userId) {
-        log.info("Контроллер PUT лайк фильму ставит> {} - {}", id, userId);
-        return filmService.addLikeUserById(id, userId);
+    public void addLikeUserById(@PathVariable int id, @PathVariable int userId) {
+        log.info("Контроллер PUT лайк фильму ставит> User с Id {} - {}", id, userId);
+        filmStorage.addLike(id, userId);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
-    public Film deleteLikeUserById(@PathVariable String id, @PathVariable String userId) {
+    public void deleteLikeUserById(@PathVariable int id, @PathVariable int userId) {
         log.info("Контроллер DELETE лайк фильму удаляет> {} , {}", id, userId);
-        return filmService.deleteLikeUserById(id, userId);
+        filmStorage.deleteLike(id, userId);
     }
 
     @GetMapping("/popular?count={count}")
-    public Collection<Film> maxLikeFilm(@PathVariable Optional<String> count ) {
-        String countStr = count.orElse("10");
-        log.info("Контроллер GET  список из первых  по количеству лайков> {}", countStr);
-        return filmService.maxLikeFilm(countStr);
+    @Validated
+    public Collection<Film> maxLikeFilm(@PathVariable Optional<String> count) {
+        int countInt = Integer.parseInt(count.orElse("10"));
+        log.info("Контроллер GET  список из первых  по количеству лайков> {}", countInt);
+        return filmService.maxLikeFilm(countInt);
     }
 
 }
