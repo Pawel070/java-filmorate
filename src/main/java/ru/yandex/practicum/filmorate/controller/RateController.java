@@ -1,0 +1,60 @@
+package ru.yandex.practicum.filmorate.controller;
+
+import java.util.Collection;
+
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+
+import ru.yandex.practicum.filmorate.Service.RateService;
+import ru.yandex.practicum.filmorate.model.Rating;
+
+
+@Slf4j
+@RestController
+@RequestMapping("/ratings")
+public class RateController implements ControllerInterface<Rating> {
+
+    private final RateService service;
+
+    @Autowired
+    public RateController(RateService service) {
+        this.service = service;
+    }
+
+    @Override
+    @GetMapping("/ratings")
+    public Collection<Rating> selectGetting() {
+        log.info("Контроллер GET список рейтингов.");
+        return service.findAll();
+    }
+
+    @Override
+    @GetMapping("/ratings/{id}")
+    public Rating getById(@PathVariable int id) {
+        log.info("Контроллер GET рейтинг по Id {} ", id);
+        return service.findById(id);
+    }
+
+    @Override
+    public Rating create(Rating rating) {
+        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Метод /feed ещё не реализован.");
+    }
+
+    @Override
+    public Rating update(Rating rating) {
+        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Метод /feed ещё не реализован.");
+    }
+
+    @Override
+    public void delete(int id) {
+        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Метод /feed ещё не реализован.");
+    }
+
+}

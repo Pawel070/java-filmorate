@@ -3,14 +3,17 @@ package ru.yandex.practicum.filmorate.storage.user;
 import jakarta.validation.Valid;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+
 import ru.yandex.practicum.filmorate.ErrorsIO.MethodArgumentNotException;
 import ru.yandex.practicum.filmorate.ErrorsIO.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -20,11 +23,11 @@ import java.util.Map;
 @Validated
 @Repository
 @Component
-public class InMemoryUserStorage implements UserStorage {
+public abstract class InMemoryUserStorage implements UserStorage {
 
     private Map<Integer, User> users = new HashMap<>();
 
-    private static int numberId = 0;
+    private int numberId;
 
     private int servisId() {
         numberId++;
@@ -33,9 +36,9 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User newUser(@Valid @RequestBody User user) {
+    public User create(@Valid @RequestBody User user) {
         User userRet;
-        int buferId = user.getId();
+        int buferId = user.getIdUser();
         if (user.getName() == null) {
             log.info("ERR06  было >{}", user);
             user.setName(user.getLogin());
@@ -50,42 +53,44 @@ public class InMemoryUserStorage implements UserStorage {
                 userRet = null;
             }
         }
-        if (userRet == null) {
+        if (userRet != null) {
+            user.setIdUser(servisId());
+            users.put(user.getIdUser(), user);
+            log.info("newUser post Ok. {}", user);
+        } else {
             log.info("Email уже существует: {}", user.getEmail());
             throw new ValidationException("E09 Пользователь с таким Email уже внесён.");
-        } else {
-            user.setId(servisId());
-            users.put(user.getId(), user);
-            log.info("newUser post Ok. {}", user);
-            userRet = user;
-        }
-        if (userRet != null) {
-            user.setFriends(new HashSet<>());
         }
         return user;
     }
 
     @Override
-    public User changeUser(@Valid @RequestBody User user) {
-        Boolean validIO = true;
-        log.info("changeUser: {}", user);
-        int buferId = user.getId();
-        log.info("buferId: {}", buferId);
-        log.info("users.containsKey(buferId): {}", users.containsKey(buferId));
-        if (users.containsKey(buferId) != true && validIO == true) {
+    public User update(@Valid @RequestBody User user) {
+        int buferId = user.getIdUser();
+        log.info("changeUser: {}  buferId: {} users.containsKey(buferId): {}", user, buferId, users.containsKey(buferId));
+        if (users.containsKey(buferId)) {
+            users.remove(buferId);
+            users.put(user.getIdUser(), user);
+            log.info("changeUser put Ok. {}", user);
+        } else {
             log.error("ERR05 - {}", users.containsKey(buferId));
-            validIO = false;
             throw new MethodArgumentNotException("E05 Пользователь с таким ID не существует. Смените ID.");
         }
-        if (validIO == true) {
-            users.remove(buferId);
-            users.put(user.getId(), user);
-            log.info("changeUser put Ok. {}", user);
-            return user;
-        } else {
-            log.error("changeFilm not put`s {}", users.get(buferId));
-            return null;
-        }
+        return user;
+    }
+
+    @Override
+    public void deleteByIdUser(int idUser) {
+    }
+
+    @Override
+    public Collection<User> getAllUser() {
+        return null;
+    }
+
+    @Override
+    public User getByIdUser(int idUser) {
+        return null;
     }
 
 }

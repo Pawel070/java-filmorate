@@ -17,4 +17,4 @@ public class ErrorResponse {
         this.description = description;
     }
 
- }
+}

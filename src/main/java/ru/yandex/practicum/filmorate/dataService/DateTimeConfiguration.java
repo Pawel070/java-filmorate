@@ -27,7 +27,7 @@ public class DateTimeConfiguration {
 
             // formatter
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            DateTimeFormatter dateTimeFormatter =  DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
             // deserializers
             builder.deserializers(new LocalDateDeserializer(dateFormatter));
