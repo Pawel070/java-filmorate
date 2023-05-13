@@ -19,8 +19,8 @@ public class FilmTest {
         List<Genre> genres = new ArrayList<>();
         Film.builder()
                 .idFilm(1)
-                .name("Фильм")
-                .description("Описание")
+                .nameFilm("Фильм01")
+                .description("Описание01")
                 .releaseDate(LocalDate.of(1995, 12, 28))
                 .duration(50)
                 .likes(like)

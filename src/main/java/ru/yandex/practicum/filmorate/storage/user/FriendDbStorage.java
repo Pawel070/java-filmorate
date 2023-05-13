@@ -26,55 +26,75 @@ public class FriendDbStorage implements FriendStorage {
     @Autowired
     public UserDbStorage userDbStorage;
 
+
+    private List<User> getFriends(int idUser, int idType) {
+        String sqlQuery = "SELECT U.ID_USER, U.NAME_USER, U.BIRTHDAY, U.EMAIL, U.LOGIN  FROM FILMORATE_SHEMA.USERS AS U " +
+                "LEFT JOIN FILMORATE_SHEMA.FRIENDS AS F " +
+                "ON (U.ID_USER = F.ID_USER) WHERE F.ID_TYPE = ? AND U.ID_USER = ?";
+        log.info("Запрос getFriends > {} type {}", sqlQuery, idType);
+        List<User> result = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> userDbStorage.mapToUser(rs, rowNum), idType, idUser);
+        log.info("Возврат getFriends > id {} type {} > {}", idUser, idType, result);
+        return result;
+    }
+
     @Override
     public List<User> getFriendsUser(int idUser) {
-        String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.USERS AS U " +
-                "LEFT JOIN FILMORATE_SHEMA.FRIENDS AS F " +
-                "ON (U.ID_USER = F.ID_USER) WHERE F.ID_TYPE = 1 AND F.ID_USER = ?";
-        return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> userDbStorage.mapToUser(rs, rowNum), idUser);
+        return getFriends(idUser, 1);
     }
 
     @Override
     public List<User> getFriendsRequests(int idUser) {
-        String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.USERS AS U " +
-                "LEFT JOIN FILMORATE_SHEMA.FRIENDS AS F " +
-                "ON (U.ID_USER = F.ID_USER) WHERE F.ID_TYPE = 3 AND F.ID_USER = ?";
-        return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> userDbStorage.mapToUser(rs, rowNum), idUser);
+        return getFriends(idUser, 3);
     }
 
     @Override
     public void updateFriends(int idUser, int idFriend) {
-        jdbcTemplate.update("INSERT INTO FRIENDS (USER_ID, FRIEND_ID) VALUES (?,?,1)", idUser, idFriend);
+        String sqlQuery = "INSERT INTO FILMORATE_SHEMA.FRIENDS (ID_USER, ID_FRIEND, ID_TYPE) VALUES (?,?,1)";
+        log.info("Запрос updateFriends > {}", sqlQuery);
+        jdbcTemplate.update(sqlQuery, idUser, idFriend);
     }
 
     @Override
     public void updateNoFriends(int idUser, int idFriend) {
-        jdbcTemplate.update("INSERT INTO FRIENDS (USER_ID, FRIEND_ID) VALUES (?,?,2)", idUser, idFriend);
+        String sqlQuery = "INSERT INTO FILMORATE_SHEMA.FRIENDS (ID_USER, ID_FRIEND, ID_TYPE) VALUES (?,?,2)";
+        log.info("Запрос updateNoFriends > {}", sqlQuery);
+        jdbcTemplate.update(sqlQuery, idUser, idFriend);
     }
 
     @Override
     public void deleteFriend(int idUser, int idFriend) {
-        jdbcTemplate.update("DELETE FRIENDS WHERE USER_ID = ? AND FRIEND_ID = ?", idUser, idFriend);
+        String sqlQuery = "DELETE FILMORATE_SHEMA.FRIENDS WHERE ID_USER = ? AND ID_FRIEND = ?";
+        log.info("Запрос deleteFriend > {}", sqlQuery);
+        jdbcTemplate.update(sqlQuery, idUser, idFriend);
     }
 
     @Override
     public void setRequestsFriends(int idUser, int idFriend) {
-        jdbcTemplate.update("INSERT INTO FRIENDS (USER_ID, FRIEND_ID) VALUES (?,?,3)", idFriend, idUser);
+        String sqlQuery = "INSERT INTO FILMORATE_SHEMA.FRIENDS (ID_USER, ID_FRIEND, ID_TYPE) VALUES (?,?,3)";
+        log.info("Запрос setRequestsFriends > {}", sqlQuery);
+        jdbcTemplate.update(sqlQuery, idUser, idFriend);
     }
 
     @Override
-    public List<User> getFriendsToFriends(int firstId, int secondId) {
-        String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.USERS AS U LEFT JOIN FILMORATE_SHEMA.FRIENDS AS F ON (U.ID_USER = F.ID_USER) " +
-                "WHERE F.ID_TYPE = 1 AND(F.ID_USER, F.ID_FRIEND) IN((F.ID_FRIEND, F.ID_USER), (F.ID_USER, F.ID_FRIEND) )";
-        return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> userDbStorage.mapToUser(rs, rowNum), firstId);
+    public List<User> getFriendsToFriends(int idType) {
+        String sqlQuery = "SELECT U.ID_USER, U.NAME_USER, U.BIRTHDAY, U.EMAIL, U.LOGIN  " +
+                "FROM FILMORATE_SHEMA.USERS AS U LEFT JOIN FILMORATE_SHEMA.FRIENDS AS F ON (U.ID_USER = F.ID_USER) " +
+                "WHERE F.ID_TYPE = ? AND(F.ID_USER, F.ID_FRIEND) IN((F.ID_FRIEND, F.ID_USER), (F.ID_USER, F.ID_FRIEND) )";
+        log.info("Запрос getFriendsToFriends > {} type {}", sqlQuery, idType);
+        List<User> result = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> userDbStorage.mapToUser(rs, rowNum), idType);
+        log.info("Возврат getFriends > type {} > {}", idType, result);
+        return result;
     }
 
     @Override
     public List<User> getCommonFriends(int firstId, int secondId) {
-        String sql = "SELECT * FROM USERS " +
-                "WHERE ID IN (SELECT FRIEND_ID FROM FRIENDS " +
-                "WHERE USER_ID = ? OR USER_ID = ? GROUP BY FRIEND_ID HAVING COUNT(*) = 2);";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> userDbStorage.mapToUser(rs, rowNum), firstId, secondId);
+        String sqlQuery = "SELECT U.ID_USER, U.NAME_USER, U.BIRTHDAY, U.EMAIL, U.LOGIN  FROM FILMORATE_SHEMA.USERS AS U\n" +
+                " WHERE ID_USER IN (SELECT ID_FRIEND FROM FILMORATE_SHEMA.FRIENDS\n" +
+                " WHERE ID_USER = ? OR ID_USER = ? GROUP BY ID_FRIEND HAVING COUNT(*) = 2);"; // без учета типа дружбы
+        log.info("Запрос getFriendsToFriends > первый {} второй {} > {}", firstId, secondId, sqlQuery);
+        List<User> result = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> userDbStorage.mapToUser(rs, rowNum), firstId, secondId);
+        log.info("Возврат getFriends > {}", result);
+        return result;
     }
 
 }

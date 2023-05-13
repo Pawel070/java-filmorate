@@ -22,7 +22,7 @@ import java.util.Collection;
 public class UserDbStorage implements UserStorage {
 
     private final JdbcTemplate jdbcTemplate;
-    static final String sqlQueryCreateUser = "INSERT INTO USERS (NAME, BIRTHDAY, EMAIL, LOGIN) VALUES (?,?,?,?)";
+    static final String sqlQueryCreateUser = "INSERT INTO FILMORATE_SHEMA.USERS (NAME_USER, BIRTHDAY, EMAIL, LOGIN) VALUES (?,CAST (? AS DATE),?,?)";
 
 
     private UserDbStorage(JdbcTemplate jdbcTemplate) {
@@ -30,9 +30,10 @@ public class UserDbStorage implements UserStorage {
     }
 
     protected User mapToUser(ResultSet rs, int rowNum) throws SQLException {
+        log.info("Запрос mapToUser ResultSet > {}", rs);
         return User.builder()
                 .idUser(rs.getInt("ID_USER"))
-                .name(rs.getString("NAME"))
+                .nameUser(rs.getString("NAME_USER"))
                 .birthday(rs.getDate("BIRTHDAY").toLocalDate())
                 .email(rs.getString("EMAIL"))
                 .login(rs.getString("LOGIN"))
@@ -41,20 +42,22 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public boolean getIdExist(int idUser) {
-        SqlRowSet idRows = jdbcTemplate.queryForRowSet("SELECT ID_USERS FROM USERS WHERE ID_USERS = ?", idUser);
+        String sqlQuery = "SELECT ID_USER FROM FILMORATE_SHEMA.USERS WHERE ID_USER = ?";
+        log.info("Запрос getIdExist User > {}", sqlQuery);
+        SqlRowSet idRows = jdbcTemplate.queryForRowSet(sqlQuery, idUser);
         return idRows.next();
     }
 
     @Override
     public User create(User user) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        log.info("Запрос > {}", sqlQueryCreateUser);
+        log.info("Запрос create > {}", sqlQueryCreateUser);
         jdbcTemplate.update(connection -> {
             PreparedStatement stmt = connection.prepareStatement(sqlQueryCreateUser, Statement.RETURN_GENERATED_KEYS);
-            stmt.setString(2, user.getName());
-            stmt.setDate(4, Date.valueOf(user.getBirthday()));
-            stmt.setString(5, user.getEmail());
-            stmt.setString(6, user.getLogin());
+            stmt.setString(1, user.getNameUser());
+            stmt.setDate(2, Date.valueOf(user.getBirthday()));
+            stmt.setString(3, user.getEmail());
+            stmt.setString(4, user.getLogin());
             return stmt;
         }, keyHolder);
         int id = keyHolder.getKey().intValue();
@@ -64,32 +67,31 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User update(User user) {
-        String sqlQuery = "UPDATE USERS SET ID_USER = ?, NAME = ?, BIRTHDAY = ?, " +
+        String sqlQuery = "UPDATE FILMORATE_SHEMA.USERS SET NAME_USER = ?, BIRTHDAY = CAST (? AS DATE), " +
                 "EMAIL = ?, LOGIN = ? ";
-        log.info("Запрос > {}", sqlQuery);
-        jdbcTemplate.update(sqlQuery, user.getIdUser(), user.getName(), user.getBirthday(),
-                user.getEmail(), user.getLogin());
+        log.info("Запрос update > {}", sqlQuery);
+        jdbcTemplate.update(sqlQuery, user.getNameUser(), user.getBirthday(), user.getEmail(), user.getLogin());
         return user;
     }
 
     @Override
     public User getByIdUser(int idUser) {
-        String sqlQuery = "SELECT * FROM USERS WHERE ID_USER = ?";
-        log.info("Запрос > {}", sqlQuery);
+        String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.USERS WHERE ID_USER = ?";
+        log.info("Запрос getByIdUser > {}", sqlQuery);
         return jdbcTemplate.queryForObject(sqlQuery, this::mapToUser, idUser);
     }
 
     @Override
     public void deleteByIdUser(int idUser) {
-        String sqlQuery = "DELETE FROM USERS WHERE ID_USER = ?";
-        log.info("Запрос > {}", sqlQuery);
+        String sqlQuery = "DELETE FROM FILMORATE_SHEMA.USERS WHERE ID_USER = ?";
+        log.info("Запрос deleteByIdUser > {}", sqlQuery);
         jdbcTemplate.update(sqlQuery, idUser);
     }
 
     @Override
     public Collection<User> getAllUser() {
-        String sqlQuery = "SELECT * FROM USERS AS U";
-        log.info("Запрос > {}", sqlQuery);
+        String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.USERS AS U";
+        log.info("Запрос Collection > {}", sqlQuery);
         return jdbcTemplate.query(sqlQuery, this::mapToUser);
     }
 

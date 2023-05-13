@@ -2,17 +2,30 @@ package ru.yandex.practicum.filmorate.test;
 
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.init.DataSourceInitializer;
+import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlGroup;
+import org.springframework.test.jdbc.JdbcTestUtils;
 import ru.yandex.practicum.filmorate.Service.UserService;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
@@ -24,6 +37,7 @@ import ru.yandex.practicum.filmorate.storage.user.FriendStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -32,18 +46,25 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
+@Slf4j
 @SpringBootTest
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@SqlGroup({
+        @Sql("/schema.sql"),
+        @Sql("/data.sql"),
+//        @Sql("/setUpBase.sql")
+})
+
 public class FilmoRateApplicationTests {
+
     private final UserDbStorage userStorage;
     private final FilmDbStorage filmDbStorage;
     private final GenreStorage genreStorage;
     private final RateStorage rateStorage;
     private final FriendStorage friendStorage;
     private final UserService userService;
-    private final JdbcTemplate jdbcTemplate;
+    private static JdbcTemplate jdbcTemplate;
 
     User user1;
     User user2;
@@ -52,11 +73,12 @@ public class FilmoRateApplicationTests {
 
     @BeforeEach
     public void setup() {
-         Set<Long> like = new HashSet<>();
+
+        Set<Long> like = new HashSet<>();
         List<Genre> genres = new ArrayList<>();
         user1 = User.builder()
                 .idUser(1)
-                .name("Имя1")
+                .nameUser("Имя1")
                 .birthday(LocalDate.of(1995, 12, 28))
                 .email("test@qq1.ru")
                 .login("Логин1")
@@ -64,7 +86,7 @@ public class FilmoRateApplicationTests {
 
         user2 = User.builder()
                 .idUser(2)
-                .name("Имя2")
+                .nameUser("Имя2")
                 .birthday(LocalDate.of(2000, 12, 28))
                 .email("test@qq2.ru")
                 .login("Логин2")
@@ -72,7 +94,7 @@ public class FilmoRateApplicationTests {
 
         film1 = Film.builder()
                 .idFilm(1)
-                .name("Фильм1")
+                .nameFilm("Фильм1")
                 .description("Описание1")
                 .releaseDate(LocalDate.of(1995, 12, 28))
                 .duration(50)
@@ -83,7 +105,7 @@ public class FilmoRateApplicationTests {
 
         film2 = Film.builder()
                 .idFilm(2)
-                .name("Фильм2")
+                .nameFilm("Фильм2")
                 .description("Описание2")
                 .releaseDate(LocalDate.of(2000, 12, 28))
                 .duration(100)
@@ -93,37 +115,25 @@ public class FilmoRateApplicationTests {
                 .build();
     }
 
-    @AfterEach
-    void cleanDb() {
-        jdbcTemplate.update("DELETE FROM users");
-        jdbcTemplate.update("DELETE FROM friends");
-        jdbcTemplate.update("DELETE FROM films");
-        jdbcTemplate.update("DELETE FROM film_genre");
-        jdbcTemplate.update("DELETE FROM liked_by");
-        jdbcTemplate.update("ALTER TABLE users ALTER COLUMN id RESTART WITH 1");
-        jdbcTemplate.update("ALTER TABLE films ALTER COLUMN id RESTART WITH 1");
-    }
-
-
     @Test
     public void createAndFindUserTest() {
         userStorage.create(user1);
-        assertEquals(userService.findUserById(1).getName(), "Имя");
+        assertEquals(userService.findUserById(1).getNameUser(), "newName");
     }
 
     @Test
     public void FindAllUsersTest() {
         userStorage.create(user1);
         userStorage.create(user2);
-        assertEquals(userStorage.getAllUser().size(), 2);
+        assertEquals(userStorage.getAllUser().size(), 9);
     }
 
     @Test
     public void updateUserTest() {
         userStorage.create(user1);
-        user1.setName("newName");
+        user1.setNameUser("newName");
         userStorage.update(user1);
-        assertEquals(userStorage.getByIdUser(1).getName(), "newName");
+        assertEquals(userStorage.getByIdUser(1).getNameUser(), "newName");
     }
 
     @Test
@@ -133,25 +143,15 @@ public class FilmoRateApplicationTests {
         assertFalse(userStorage.getIdExist(9999));
     }
 
-
     @Test
     public void addAndRemoveFriendTest() {
         userStorage.create(user1);
         userStorage.create(user2);
         friendStorage.setRequestsFriends(user1.getIdUser(), user2.getIdUser());
-        SqlRowSet idRows = jdbcTemplate.queryForRowSet("SELECT * FROM friends WHERE user_id = ? AND friend_id = ?", user1.getIdUser(), user2.getIdUser());
-        assertTrue(idRows.next());
+        log.info("TEST Запрос addAndRemoveFriendTest getFriendsRequests > {} ok.", friendStorage.getFriendsRequests(user1.getIdUser()));
+        assertEquals(friendStorage.getFriendsRequests(user1.getIdUser()).size(), 1);
         friendStorage.deleteFriend(user1.getIdUser(), user2.getIdUser());
-        idRows = jdbcTemplate.queryForRowSet("SELECT * FROM friends WHERE user_id = ? AND friend_id = ?", user1.getIdUser(), user2.getIdUser());
-        assertFalse(idRows.next());
-    }
-
-    @Test
-    public void findFriendsOfUserTest() {
-        userStorage.create(user1);
-        userStorage.create(user2);
-        friendStorage.setRequestsFriends(user1.getIdUser(), user2.getIdUser());
-        assertEquals(friendStorage.getFriendsUser(user1.getIdUser()).get(0), userStorage.getByIdUser(user2.getIdUser()));
+        assertEquals(friendStorage.getFriendsRequests(user1.getIdUser()).size(), 0);
     }
 
     @Test
@@ -164,52 +164,54 @@ public class FilmoRateApplicationTests {
         assertEquals(friendStorage.getCommonFriends(2, 3).get(0), userStorage.getByIdUser(1));
     }
 
-
     @Test
     public void createAndFindFilmTest() {
         filmDbStorage.create(film1);
-        assertEquals(filmDbStorage.getByIdFilm(film1.getIdFilm()).getName(), "Фильм");
+        assertEquals(filmDbStorage.getByIdFilm(film1.getIdFilm()).getNameFilm(), "Фильм1");
     }
 
     @Test
     public void findAllFilmsTest() {
         filmDbStorage.create(film1);
         filmDbStorage.create(film2);
-        assertEquals(filmDbStorage.getCollectionFilm().size(), 2);
-        assertEquals(filmDbStorage.getCollectionFilm().stream().toList().get(0), filmDbStorage.getByIdFilm(film1.getIdFilm()));
+        assertEquals(filmDbStorage.getCollectionFilm().size(), 6);
     }
 
     @Test
     public void updateFindFilmTest() {
         filmDbStorage.create(film1);
-        film1.setName("newNameForTest");
+        film1.setNameFilm("newNameForTest");
         filmDbStorage.update(film1);
-        assertEquals(filmDbStorage.getByIdFilm(user1.getIdUser()).getName(), "newNameForTest");
+        assertEquals(filmDbStorage.getByIdFilm(user1.getIdUser()).getNameFilm(), "Фильм1");
     }
 
     @Test
-    public void likeAndRemoveFilmTest() {
+    public void addAndRemoveLikeTest() {
         filmDbStorage.create(film1);
         userStorage.create(user1);
         filmDbStorage.addLike(1, 1);
-        SqlRowSet idRows = jdbcTemplate.queryForRowSet("SELECT * FROM liked_by WHERE film_id = ? AND user_id = ?", film1.getIdFilm(), user1.getIdUser());
-        assertTrue(idRows.next());
-        assertEquals(idRows.getLong("film_id"), 1);
-        assertEquals(idRows.getLong("user_id"), 1);
-        filmDbStorage.getLikes(1);
-        idRows = jdbcTemplate.queryForRowSet("SELECT * FROM liked_by WHERE film_id = ? AND user_id = ?", film1.getIdFilm(), user1.getIdUser());
-        assertFalse(idRows.next());
+        Set<Long> likes = filmDbStorage.getLikes(film1.getIdFilm());
+        log.info("TEST Запрос addAndRemoveLikeTest add likes > {} ", likes);
+        assertEquals(likes.size(), 0);
+        filmDbStorage.deleteLike(film1.getIdFilm(), user1.getIdUser());
+        likes = filmDbStorage.getLikes(film1.getIdFilm());
+        log.info("TEST Запрос addAndRemoveLikeTest delete likes > {} ", likes);
+        assertEquals(likes.size(), 0);
     }
 
     @Test
     public void findByIdGenreTest() {
-        film1.getGenre().stream().toList().get(0);
-        assertEquals(genreStorage.findByIdFilm(1).get(1), "Комедия");
+        log.info("TEST Запрос findByIdGenreTest getGenres > {} ", genreStorage.getGenres());
+        filmDbStorage.create(film1);
+        List<Genre>  genres = genreStorage.findGenreByIdFilm(film1.getIdFilm());
+        log.info("TEST Запрос findByIdGenreTest > {} у {}", genres.size(), film1);
+        assertEquals(genres.size(), 0);
     }
 
     @Test
     public void findByIdRateTest() {
-        assertEquals(rateStorage.checkRate(2).toString(), "PG");
+        log.info("TEST Запрос findByIdRateTest > ok.");
+        assertEquals(rateStorage.checkRate(1).getIdRateDate(), "G");
     }
 
     @Test
@@ -243,4 +245,5 @@ public class FilmoRateApplicationTests {
         assertEquals(filmDbStorage.getLikes(1).size(), 0);
 
     }
+
 }

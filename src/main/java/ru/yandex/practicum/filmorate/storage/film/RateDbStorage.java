@@ -8,7 +8,6 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import ru.yandex.practicum.filmorate.ErrorsIO.ItemNotFoundException;
-import ru.yandex.practicum.filmorate.dataService.RateData;
 import ru.yandex.practicum.filmorate.model.Rating;
 
 import java.sql.ResultSet;
@@ -32,27 +31,28 @@ public class RateDbStorage implements RateStorage {
     @Override
     public Rating checkRate(int idRate) {
         try {
-            String sqlQuery = "SELECT * FROM RATE WHERE ID_RATE = ?";
-            log.info("Запрос > {}", sqlQuery);
+            String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.RATE WHERE ID_RATE = ?";
+            log.info("Запрос checkRate > {}", sqlQuery);
             return jdbcTemplate.queryForObject(sqlQuery, (rs, rowNum) -> mapToRate(rs), idRate);
         } catch (Exception e) {
             log.info("Рейтинга с id {} нет", idRate);
-            throw new ItemNotFoundException("Жанра с id " + idRate + " нет.");
+            throw new ItemNotFoundException("Рейтинга с id " + idRate + " нет.");
         }
     }
 
     @Override
     public Collection<Rating> getRate() {
-        String sqlQuery = "SELECT * FROM RATE";
-        log.info("Запрос > {}", sqlQuery);
+        String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.RATE";
+        log.info("Запрос getRate > {}", sqlQuery);
         SqlRowSet mpaRows = jdbcTemplate.queryForRowSet(sqlQuery);
         return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapToRate(rs));
     }
 
     protected Rating mapToRate(ResultSet rs) throws SQLException {
+        log.info("Запрос mapToRate ResultSet > {}", rs);
         return Rating.builder()
                 .idRate(rs.getInt("ID_RATE"))
-                .idRateDate(RateData.valueOf(rs.getString("RATE_DATE")))
+                .idRateDate(rs.getString("RATE_DATE"))
                 .rate(rs.getString("RATE"))
                 .build();
     }

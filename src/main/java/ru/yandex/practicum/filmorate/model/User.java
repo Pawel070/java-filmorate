@@ -25,7 +25,7 @@ public class User {
     @Past(message = "E10 Дата рождения не может быть в будущем.")
     private LocalDate birthday;
 
-    private String name;
+    private String nameUser;
 
     @Override
     public boolean equals(Object o) {

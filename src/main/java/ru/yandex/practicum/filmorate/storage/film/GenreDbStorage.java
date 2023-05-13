@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.ErrorsIO.ItemNotFoundException;
-import ru.yandex.practicum.filmorate.dataService.GenreDate;
 import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.sql.ResultSet;
@@ -30,13 +29,14 @@ public class GenreDbStorage implements GenreStorage {
     }
 
     @Override
-    public List<Genre> findByIdFilm(int idFilm) {
-        String sqlQuery = "SELECT * FROM GENRE AS G JOIN GENRE_SET AS GS ON GS.ID_GENRE=G.ID_GENRE WHERE GS.ID_FILM = ?";
-        log.info("Запрос > {}", sqlQuery);
-        return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapToGenre(rs), idFilm);
+    public List<Genre> findGenreByIdFilm(int idFilm) {
+        String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.GENRE AS G JOIN FILMORATE_SHEMA.GENRE_SET AS GS ON GS.ID_GENRE=G.ID_GENRE WHERE GS.ID_FILM = ?";
+        log.info("Запрос findByIdFilm > {}", sqlQuery);
+        return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapToGenre(rs), idFilm).stream().toList();
     }
 
     protected Genre mapToGenre(ResultSet rs) throws SQLException {
+        log.info("Запрос mapToGenre ResultSet > {}", rs);
         return Genre.builder()
                 .idGenre(rs.getInt("ID_GENRE"))
                 .idGenreDate(rs.getString("GENRE_DATE"))
@@ -46,16 +46,16 @@ public class GenreDbStorage implements GenreStorage {
 
     @Override
     public Collection<Genre> getGenres() {
-        String sqlQuery = "SELECT * FROM GENRE_SET";
-        log.info("Запрос > {}", sqlQuery);
+        String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.GENRE";
+        log.info("Запрос коллекции getGenres > {}", sqlQuery);
         return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapToGenre(rs));
     }
 
     @Override
     public Genre checkGenre(int idGenre) {
         try {
-            String sqlQuery = "SELECT * FROM GENRE_SET WHERE ID_GENRE = ?";
-            log.info("Запрос > {}", sqlQuery);
+            String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.GENRE_SET WHERE ID_GENRE = ?";
+            log.info("Запрос checkGenre > {}", sqlQuery);
             return jdbcTemplate.queryForObject(sqlQuery, (rs, rowNum) -> mapToGenre(rs), idGenre);
         } catch (Exception e) {
             log.info("Жанра с id {} нет", idGenre);

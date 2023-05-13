@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.Service;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.*;
 
+@Data
 @Slf4j
 @Service
 public class UserService {
@@ -65,13 +67,13 @@ public class UserService {
         return friendsUser;
     }
 
-    public List<User> findFriends2UserById(int userId, int otherId) {
-        if (userStorage.getByIdUser(userId) == null || userStorage.getByIdUser(otherId) == null) {
-            log.info("Запрос парных друзей по Id пользавателей невыполним.");
-            throw new MethodArgumentNotException("Запрос парных друзей по указанным Id пользавателей невыполним.");
+    public List<User> findFriends2UserById(int idType) {
+        if (idType < 1 || idType > 3) {
+            log.info("Указанный статус дружбы пока неизвестен.");
+            throw new MethodArgumentNotException("ЗУказанный статус дружбы пока неизвестен.");
         }
-        log.info("Запрос парных друзей по указанным Id пользавателей создан");
-        return friendStorage.getFriendsToFriends(userId, otherId);
+        log.info("Запрос парных друзей с обоюдным статусом {} создан", idType);
+        return friendStorage.getFriendsToFriends(idType);
     }
 
     public void addFriendsUserById(int userId, int friendId) {

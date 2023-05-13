@@ -1,6 +1,3 @@
-# Default ignored files
-/shelf/
-/workspace.xml
 *.class
 *.log
 *.jar
@@ -12,8 +9,14 @@
 .rar
 hs_err_pid
 out/
-target/
+../../../target/
 !.mvn/wrapper/maven-wrapper.jar
-!/src/main//target/
-!/src/test//target/
+!/src/main/target/
+!/src/test/target/
 !/sonarlint/
+
+/shelf/
+/workspace.xml
+*.meta
+/sonarlint/
+!./sonarlint/

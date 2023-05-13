@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -12,16 +13,21 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.Service.UserService;
 import ru.yandex.practicum.filmorate.model.Friend;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.user.FriendStorage;
 
 
 @Slf4j
 @Validated
 @RestController
 @RequestMapping("/users")
-public class FriendController implements ControllerInterface<Friend> {
+public class FriendController {
 
     private final UserService userService;
 
+    @Autowired
+    private FriendStorage friendStorage;
+
+    @Autowired
     public FriendController(UserService userService) {
         this.userService = userService;
     }
@@ -35,7 +41,7 @@ public class FriendController implements ControllerInterface<Friend> {
     @GetMapping("/{id}/friends/common/{otherId}")
     public Collection<User> findFriends2UserById(@PathVariable int id, @PathVariable int otherId) {
         log.info("Контроллер GET User friends to User> {} , {}", id, otherId);
-        return userService.findFriends2UserById(id, otherId);
+        return friendStorage.getCommonFriends(id, otherId);
     }
 
     @PutMapping("/{id}/friends/{friendId}")
@@ -50,28 +56,4 @@ public class FriendController implements ControllerInterface<Friend> {
         userService.deleteFriendsUserById(id, friendId);
     }
 
-    @Override
-    public Friend create(Friend friend) {
-        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Метод ещё не реализован.");
-    }
-
-    @Override
-    public Friend update(Friend friend) {
-        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Метод ещё не реализован.");
-    }
-
-    @Override
-    public Collection<Friend> selectGetting() {
-        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Метод ещё не реализован.");
-    }
-
-    @Override
-    public Friend getById(int id) {
-        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Метод ещё не реализован.");
-    }
-
-    @Override
-    public void delete(int id) {
-        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Метод ещё не реализован.");
-    }
 }
