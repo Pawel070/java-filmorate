@@ -20,7 +20,7 @@ public class Film {
     private int idFilm;
 
     @NotBlank(message = "E01 Название фильма не может быть пустым.")
-    private String name;
+    private String nameFilm;
 
     @Size(min = 1, max = 200, message = "E11 Длина описания не более 200 символов.")
     private String description;

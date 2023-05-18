@@ -70,7 +70,6 @@ public class FilmController implements ControllerInterface<Film> {
         filmStorage.deleteByIdFilm(id);
     }
 
-
     @PutMapping("/{id}/like/{userId}")
     public void addLikeUserById(@PathVariable int id, @PathVariable int userId) {
         log.info("Контроллер PUT лайк фильму ставит> User с Id {} - {}", id, userId);
@@ -85,10 +84,9 @@ public class FilmController implements ControllerInterface<Film> {
 
     @GetMapping("/popular?count={count}")
     @Validated
-    public Collection<Film> maxLikeFilm(@PathVariable Optional<String> count) {
-        int countInt = Integer.parseInt(count.orElse("10"));
-        log.info("Контроллер GET  список из первых  по количеству лайков> {}", countInt);
-        return filmService.maxLikeFilm(countInt);
+    public Collection<Film> maxLikeFilm(@PathVariable @RequestParam(defaultValue = "10") int count) {
+        log.info("Контроллер GET  список из первых  по количеству лайков> {}", count);
+        return filmService.maxLikeFilm(count);
     }
 
 }

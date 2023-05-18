@@ -19,7 +19,7 @@ public interface FriendStorage {
 
     void deleteFriend(int idUser, int idFriend);
 
-    List<User> getFriendsToFriends(int firstId, int secondId); // взаимные друзья
+    List<User> getFriendsToFriends(int idType); // взаимные друзья и т.п.(одинаковый тип)
 
     List<User> getCommonFriends(int firstId, int secondId); // друзья друзей
 }

@@ -27,7 +27,7 @@ public class GenreService {
 
     public List<Genre> findById(int id) {
         log.info("Возврат списка жанров фильма с id {} ", id);
-        return storage.findByIdFilm(id);
+        return storage.findGenreByIdFilm(id);
     }
 
     public Genre getGenreById(int id) {

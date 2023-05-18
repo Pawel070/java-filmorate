@@ -28,7 +28,7 @@ import java.util.*;
 public class FilmDbStorage implements FilmStorage {
 
     private final JdbcTemplate jdbcTemplate;
-    static final String sqlQueryCreate = "INSERT INTO FILMS (ID_RATE, DURATION, RELEASE_DATE, DESCRIPTION, NAME) VALUES (?,?,?,?,?)";
+    static final String sqlQueryCreate = "INSERT INTO FILMORATE_SHEMA.FILMS (ID_RATE, DURATION, RELEASE_DATE, DESCRIPTION, NAME_FILMS) VALUES (?,?,CAST (? AS DATE),?,?)";
 
     @Autowired
     private GenreDbStorage genreDbStorage;
@@ -39,7 +39,8 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     protected Film mapToFilm(ResultSet rs, int rowNum) throws SQLException {
-        List<Genre> genres = genreDbStorage.findByIdFilm(rs.getInt("ID_FILM"));
+        log.info("Запрос mapToFilm ResultSet > {}", rs);
+        List<Genre> genres = genreDbStorage.findGenreByIdFilm(rs.getInt("ID_FILM"));
         Set<Long> likesF = getLikes(rs.getInt("ID_FILM"));
         return Film.builder()
                 .idFilm(rs.getInt("ID_FILM"))
@@ -47,7 +48,7 @@ public class FilmDbStorage implements FilmStorage {
                 .description(rs.getString("DESCRIPTION"))
                 .releaseDate(rs.getDate("RELEASE_DATE").toLocalDate())
                 .duration(rs.getLong("DURATION"))
-                .name(rs.getString("NAME"))
+                .nameFilm(rs.getString("NAME_FILMS"))
                 .likes(likesF)
                 .genre(genres)
                 .build();
@@ -56,14 +57,14 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public Film create(Film film) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        log.info("Запрос > {}", sqlQueryCreate);
+        log.info("Запрос create > {}", sqlQueryCreate);
         jdbcTemplate.update(connection -> {
             PreparedStatement stmt = connection.prepareStatement(sqlQueryCreate, Statement.RETURN_GENERATED_KEYS);
-            stmt.setInt(2, film.getIdRate());
-            stmt.setLong(3, film.getDuration());
-            stmt.setDate(4, Date.valueOf(film.getReleaseDate()));
-            stmt.setString(5, film.getDescription());
-            stmt.setString(6, film.getName());
+            stmt.setInt(1, film.getIdRate());
+            stmt.setLong(2, film.getDuration());
+            stmt.setDate(3, Date.valueOf(film.getReleaseDate()));
+            stmt.setString(4, film.getDescription());
+            stmt.setString(5, film.getNameFilm());
             return stmt;
         }, keyHolder);
         int id = keyHolder.getKey().intValue();
@@ -73,91 +74,91 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public long getCollectionSize() {
-        String sqlQuery = "SELECT COUNT(*) FROM FILMS";
-        log.info("Запрос > {}", sqlQuery);
+        String sqlQuery = "SELECT COUNT(*) FROM FILMORATE_SHEMA.FILMS";
+        log.info("Запрос getCollectionSize > {}", sqlQuery);
         return jdbcTemplate.queryForObject(sqlQuery, Long.class);
     }
 
     @Override
     public List<Film> getFilmsToRate(int idRate) {
-        String sqlQuery = "SELECT * FROM FILMS WHERE ID_RATE = ?";
-        log.info("Запрос > {}", sqlQuery);
+        String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.FILMS WHERE ID_RATE = ?";
+        log.info("Запрос getFilmsToRate > {}", sqlQuery);
         return jdbcTemplate.query(sqlQuery, this::mapToFilm, idRate);
     }
 
     @Override
     public Collection<Film> getCollectionFilm() {
         String sqlQuery = "SELECT * FROM " +
-                "(FILMS AS F LEFT JOIN RATE AS R ON F.ID_RATE = R.ID_RATE) " +
-                "LEFT JOIN LIKES_SET AS LS ON F.ID_FILM = LS.ID_FILM";
-        log.info("Запрос > {}", sqlQuery);
+                "(FILMORATE_SHEMA.FILMS AS F LEFT JOIN FILMORATE_SHEMA.RATE AS R ON F.ID_RATE = R.ID_RATE) " +
+                "LEFT JOIN FILMORATE_SHEMA.LIKES_SET AS LS ON F.ID_FILM = LS.ID_FILM";
+        log.info("Запрос getCollectionFilm > {}", sqlQuery);
         return jdbcTemplate.query(sqlQuery, this::mapToFilm);
     }
 
     @Override
     public void deleteByIdFilm(int idFilm) {
-        String sqlQuery = "DELETE FROM FILMS WHERE ID_FILM = ?";
-        log.info("Запрос > {}", sqlQuery);
+        String sqlQuery = "DELETE FROM FILMORATE_SHEMA.FILMS WHERE ID_FILM = ?";
+        log.info("Запрос deleteByIdFilm > {}", sqlQuery);
         jdbcTemplate.update(sqlQuery, idFilm);
     }
 
     @Override
     public Collection<Film> getMaxPopular(int scoring) {
         String sqlQuery = "SELECT * " +
-                //"F.ID_FILM, F.ID_RATE, F.DURATION, F.RELEASE_DATE, F.DESCRIPTION, F.NAME, " +
-                //"R.RATE_DATE, LS.ID_USER " +
-                "FROM (FILMS AS F LEFT JOIN RATE AS R ON F.ID_RATE = R.ID_RATE GROUP BY F.ID_FILM) " +
-                "LEFT JOIN LIKES_SET AS LS ON F.ID_FILM = LS.ID_FILM " +
+                "FROM (FILMORATE_SHEMA.FILMS AS F LEFT JOIN FILMORATE_SHEMA.RATE AS R ON F.ID_RATE = R.ID_RATE GROUP BY F.ID_FILM) " +
+                "LEFT JOIN FILMORATE_SHEMA.LIKES_SET AS LS ON F.ID_FILM = LS.ID_FILM " +
                 "ORDER BY COUNT(LS.ID_USER) DESC, F.ID_RATE LIMIT = ?";
-        log.info("Запрос > {}", sqlQuery);
+        log.info("Запрос getMaxPopular > {}", sqlQuery);
         return jdbcTemplate.query(sqlQuery, this::mapToFilm, scoring);
     }
 
     @Override
     public Film getByIdFilm(int idFilm) {
-        String sqlQuery = "SELECT * FROM FILMS WHERE ID_FILM = ?";
-        log.info("Запрос > {}", sqlQuery);
+        String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.FILMS WHERE ID_FILM = ?";
+        log.info("Запрос getByIdFilm > {}", sqlQuery);
         return jdbcTemplate.queryForObject(sqlQuery, this::mapToFilm, idFilm);
     }
 
     @Override
     public Film update(Film film) {
-        String sqlQuery = "UPDATE FILMS SET ID_FILM = ?, ID_RATE = ?, DURATION = ?, " +
-                "RELEASE_DATE = ?, DESCRIPTION = ?, NAME = ? ";
-        log.info("Запрос > {}", sqlQuery);
-        jdbcTemplate.update(sqlQuery, film.getIdFilm(), film.getIdRate(), film.getDuration(),
-                film.getReleaseDate(), film.getDescription(), film.getName());
+        String sqlQuery = "UPDATE FILMORATE_SHEMA.FILMS SET ID_RATE = ?, DURATION = ?, RELEASE_DATE = CAST (? AS DATE)," +
+                "DESCRIPTION = ?, NAME_FILMS = ? WHERE ID_FILM = ?";
+        log.info("Запрос update > {}", sqlQuery);
+        jdbcTemplate.update(sqlQuery, film.getIdRate(), film.getDuration(),
+                film.getReleaseDate(), film.getDescription(), film.getNameFilm(), film.getIdFilm());
         return film;
     }
 
     @Override
     public Set<Long> getLikes(int idFilm) {
         Set<Long> likes = new HashSet<>();
-        String sqlQuery = "SELECT ID_USER FROM LIKES_SET WHERE ID_FILM = ?";
-        log.info("Запрос > {}", sqlQuery);
+        String sqlQuery = "SELECT ID_USER FROM FILMORATE_SHEMA.LIKES_SET WHERE ID_FILM = ?";
+        log.info("Запрос getLikes > {}", sqlQuery);
         SqlRowSet likeRows = jdbcTemplate.queryForRowSet(sqlQuery, idFilm);
         while (likeRows.next()) {
-            likes.add(likeRows.getLong("user_id"));
+            likes.add(likeRows.getLong("id_user"));
         }
         return likes;
     }
 
     @Override
     public void addLike(int idFilm, int idUser) {
-        String sqlQuery = "INSERT INTO LIKES_SET (ID_FILM, ID_USER) VALUES (?, ?)";
-        log.info("Запрос > {}", sqlQuery);
+        String sqlQuery = "INSERT INTO FILMORATE_SHEMA.LIKES_SET (ID_FILM, ID_USER) VALUES (?, ?)";
+        log.info("Запрос addLike > {}", sqlQuery);
         jdbcTemplate.update(sqlQuery, idFilm, idUser);
     }
 
     @Override
     public void deleteLike(int idFilm, int idUser) {
-        String sqlQuery = "DELETE FROM FILMS_LIKES WHERE ID_FILM = ? AND ID_USER = ?";
-        log.info("Запрос > {}", sqlQuery);
+        String sqlQuery = "DELETE FROM FILMORATE_SHEMA.LIKES_SET WHERE ID_FILM = ? AND ID_USER = ?";
+        log.info("Запрос deleteLike > {}", sqlQuery);
         jdbcTemplate.update(sqlQuery, idFilm, idUser);
     }
     @Override
     public boolean getLikeExist(int idFilm, int idUser) {
-        SqlRowSet idRows = jdbcTemplate.queryForRowSet("SELECT * FROM LIKES_SET WHERE ID_FILM = ? AND ID_USER = ?", idFilm, idUser);
+        String sqlQuery = "SELECT ID_USER = ? FROM FILMORATE_SHEMA.LIKES_SET WHERE ID_FILM = ?";
+        log.info("Запрос getIdExist > {}", sqlQuery);
+        SqlRowSet idRows = jdbcTemplate.queryForRowSet(sqlQuery, idUser, idFilm);
         return idRows.next();
     }
 }

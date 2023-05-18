@@ -17,7 +17,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/genres")
-public class GenreController implements ControllerInterface<Genre> {
+public class GenreController {
 
     private final GenreService service;
 
@@ -26,7 +26,6 @@ public class GenreController implements ControllerInterface<Genre> {
         this.service = service;
     }
 
-    @Override
     @GetMapping("/genres")
     public Collection<Genre> selectGetting() {
         log.info("Контроллер GET список жанров.");
@@ -39,25 +38,4 @@ public class GenreController implements ControllerInterface<Genre> {
         return service.findById(id);
     }
 
-    @Override
-    public Genre create(Genre genre) {
-        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Метод ещё не реализован.");
-    }
-
-    @Override
-    public Genre update(Genre genre) {
-        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Метод ещё не реализован.");
-    }
-
-    @Override
-    @GetMapping("/{id}")
-    public Genre getById(@PathVariable int id) {
-        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Метод ещё не реализован.");
-    }
-
-    @Override
-    public void delete(int id) {
-        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Метод ещё не реализован.");
-    }
-
-}
+ }

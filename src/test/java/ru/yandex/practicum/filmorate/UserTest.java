@@ -11,10 +11,10 @@ public class UserTest {
     public void createUserTest() {
         User.builder()
                 .idUser(1)
-                .name("Имя")
+                .nameUser("Имя01")
                 .birthday(LocalDate.of(1995, 12, 28))
                 .email("test@qq.ru")
-                .login("Логин")
+                .login("Логин01")
                 .build();
     }
 }
