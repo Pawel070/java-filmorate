@@ -1,10 +1,10 @@
-MERGE INTO FILMORATE_SHEMA.rate(id_rate, rate_Date, rate)
+MERGE INTO FILMORATE_SHEMA.rate(id_rate, name)
     VALUES
-        (1, 'G', 'G у фильма нет возрастных ограничений'),
-        (2, 'PG', 'PG детям рекомендуется смотреть фильм с родителями'),
-        (3, 'PG14', 'PG-13 детям до 13 лет просмотр не желателен'),
-        (4, 'R', 'R лицам до 17 лет просматривать фильм можно только в присутствии взрослого'),
-        (5, 'NC17', 'NC-17 лицам до 18 лет просмотр запрещён');
+        (1, 'G'),
+        (2, 'PG'),
+        (3, 'PG14'),
+        (4, 'R'),
+        (5, 'NC17');
 
 MERGE INTO FILMORATE_SHEMA.genre(id_genre, genre_date, genre_rus)
     VALUES

@@ -32,8 +32,8 @@ public class UserDbStorage implements UserStorage {
     protected User mapToUser(ResultSet rs, int rowNum) throws SQLException {
         log.info("Запрос mapToUser ResultSet > {}", rs);
         return User.builder()
-                .idUser(rs.getInt("ID_USER"))
-                .nameUser(rs.getString("NAME_USER"))
+                .id(rs.getInt("ID_USER"))
+                .name(rs.getString("NAME_USER"))
                 .birthday(rs.getDate("BIRTHDAY").toLocalDate())
                 .email(rs.getString("EMAIL"))
                 .login(rs.getString("LOGIN"))
@@ -51,17 +51,17 @@ public class UserDbStorage implements UserStorage {
     @Override
     public User create(User user) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        log.info("Запрос create > {}", sqlQueryCreateUser);
+        log.info("Запрос create > {} --> {}", user, sqlQueryCreateUser);
         jdbcTemplate.update(connection -> {
             PreparedStatement stmt = connection.prepareStatement(sqlQueryCreateUser, Statement.RETURN_GENERATED_KEYS);
-            stmt.setString(1, user.getNameUser());
+            stmt.setString(1, user.getName());
             stmt.setDate(2, Date.valueOf(user.getBirthday()));
             stmt.setString(3, user.getEmail());
             stmt.setString(4, user.getLogin());
             return stmt;
         }, keyHolder);
         int id = keyHolder.getKey().intValue();
-        user.setIdUser(id);
+        user.setId(id);
         return user;
     }
 
@@ -70,7 +70,7 @@ public class UserDbStorage implements UserStorage {
         String sqlQuery = "UPDATE FILMORATE_SHEMA.USERS SET NAME_USER = ?, BIRTHDAY = CAST (? AS DATE), " +
                 "EMAIL = ?, LOGIN = ? ";
         log.info("Запрос update > {}", sqlQuery);
-        jdbcTemplate.update(sqlQuery, user.getNameUser(), user.getBirthday(), user.getEmail(), user.getLogin());
+        jdbcTemplate.update(sqlQuery, user.getName(), user.getBirthday(), user.getEmail(), user.getLogin());
         return user;
     }
 

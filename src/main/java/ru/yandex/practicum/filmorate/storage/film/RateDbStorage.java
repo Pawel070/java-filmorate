@@ -51,9 +51,8 @@ public class RateDbStorage implements RateStorage {
     protected Rating mapToRate(ResultSet rs) throws SQLException {
         log.info("Запрос mapToRate ResultSet > {}", rs);
         return Rating.builder()
-                .idRate(rs.getInt("ID_RATE"))
-                .idRateDate(rs.getString("RATE_DATE"))
-                .rate(rs.getString("RATE"))
+                .id(rs.getInt("ID_RATE"))
+                .name(rs.getString("NAME"))
                 .build();
     }
 
