@@ -9,23 +9,25 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Rating;
 
 
 public class FilmTest {
 
     @Test
     public void createFilmTest() {
+        Rating rating = new Rating(1, "");
         Set<Long> like = new HashSet<>();
         List<Genre> genres = new ArrayList<>();
         Film.builder()
-                .idFilm(1)
-                .nameFilm("Фильм01")
+                .id(1)
+                .name("Фильм01")
                 .description("Описание01")
                 .releaseDate(LocalDate.of(1995, 12, 28))
                 .duration(50)
                 .likes(like)
                 .genre(genres)
-                .idRate(1)
+                .mpa(rating)
                 .build();
     }
 
