@@ -14,7 +14,6 @@ import java.util.Objects;
 
 @Data
 @Builder
-@Validated
 public class User {
 
     private int id;
@@ -63,6 +62,5 @@ public class User {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
     }
-
 }
 
