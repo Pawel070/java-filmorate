@@ -1,5 +1,5 @@
 
-{	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(Î’ÈÙþÿÿÿÿ8’ÐÓ­1
-r	java:S116"VRename this field "FilmStorage" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(äðá‚8œÐÓ­1
+{	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(Î’ÈÙþÿÿÿÿ8ÛÆâ …1
+r	java:S116"VRename this field "FilmStorage" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(äðá‚8«Éâ …1
 `
-java:S1155?">Use isEmpty() to check whether the collection is empty or not.(¤°™†üÿÿÿÿ8¢ÐÓ­1
+java:S1155?">Use isEmpty() to check whether the collection is empty or not.(¤°™†üÿÿÿÿ8ÌÉâ …1

@@ -7,14 +7,13 @@ import lombok.Data;
 @Builder
 public class Rating {
 
-    private int idRate;
-    private String idRateDate;
-    private String rate;
+    private int id;
+    private String name;
 
-    public Rating(int idRate, String idRateDate, String rate) {
-        this.idRate = idRate;
-        this.idRateDate = idRateDate;
-        this.rate = rate;
+
+    public Rating(int idRate, String name) {
+        this.id = idRate;
+        this.name = name;
     }
 
 }

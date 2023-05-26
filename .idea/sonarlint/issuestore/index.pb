@@ -23,10 +23,6 @@ x
 Hsrc/main/java/ru/yandex/practicum/filmorate/controller/ErrorHandler.java,5\b\5bde14fec04ae3ec4c73f906da52a9a9c788f5fc
 
 Osrc/main/java/ru/yandex/practicum/filmorate/controller/ControllerInterface.java,e\c\ec28ebee032f796feb7f768b013cf630016e120a
-7
-pom.xml,4\4\442292b8a7efeabbe4cc176709b833b1792140ec
-Å
-Qsrc/main/java/ru/yandex/practicum/filmorate/storage/film/InMemoryFilmStorage.java,9\9\99ac8af38ffd491f6bb4031d3154844ddb5f46d4
 y
 Isrc/main/java/ru/yandex/practicum/filmorate/storage/film/FilmStorage.java,a\e\ae54a34bc50ab599d32df625b6a6bc23d1fc3027
 y
@@ -42,16 +38,10 @@ Isrc/main/java/ru/yandex/practicum/filmorate/storage/user/UserStorage.java,4\6\
 :
 
 .gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302
-k
-;src/main/java/ru/yandex/practicum/filmorate/model/Film.java,e\1\e148409a6f6356d8545f985c6fc728990c2e97b1
 t
 Dsrc/main/java/ru/yandex/practicum/filmorate/Service/FilmService.java,9\2\92e699e84864c51e6e85be9c991c7c973fc11d5b
 v
 Fsrc/main/java/ru/yandex/practicum/filmorate/Service/FriendService.java,f\a\faabfea77d12d225f5f634cd6cf160d67ee96823
-k
-;src/main/java/ru/yandex/practicum/filmorate/model/User.java,a\6\a67a0ad7b203b3dde185a44550c24555f5335d9f
-u
-Esrc/main/java/ru/yandex/practicum/filmorate/FilmorateApplication.java,4\7\47bce922f4c4649cbfbb4a9e3e08ba326c480a30
 }
 Msrc/main/java/ru/yandex/practicum/filmorate/storage/user/FriendDbStorage.java,3\e\3e60beecc57ce87436d69556e2b846a5238c8b68
 {
@@ -62,7 +52,3 @@ l
 <src/main/java/ru/yandex/practicum/filmorate/model/Genre.java,0\2\02592284dbda57d48a27e6f4730433d65543f4bb
 u
 Esrc/main/java/ru/yandex/practicum/filmorate/Service/GenreService.java,e\0\e0de57bb3872efbd71dc6c6e8a1fe8ba5c7263b5
-m
-=src/main/java/ru/yandex/practicum/filmorate/model/Rating.java,7\e\7ea5e3cf0dfc9e1ea398b900a398a927d4213ac3
-{
-Ksrc/main/java/ru/yandex/practicum/filmorate/storage/film/RateDbStorage.java,f\5\f5d765130bcea800aa6136c6ecb53af190e40273

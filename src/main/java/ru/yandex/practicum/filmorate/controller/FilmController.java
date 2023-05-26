@@ -18,16 +18,16 @@ import java.util.*;
 
 @Slf4j
 @RestController
-@Validated
 @RequestMapping("/films")
 public class FilmController implements ControllerInterface<Film> {
 
-    private FilmStorage filmStorage;
-    private FilmService filmService;
+    private final FilmStorage filmStorage;
+    private final FilmService filmService;
 
     @Autowired
-    public void filmController(FilmService filmservice) {
-        filmService = filmservice;
+    public FilmController(FilmStorage filmStorage, FilmService filmService) {
+        this.filmStorage = filmStorage;
+        this.filmService = filmService;
     }
 
     @GetMapping("/help")
