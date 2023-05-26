@@ -220,7 +220,7 @@
     <foreign-key id="180" parent="166" name="CONSTRAINT_3F">
       <ColNames>ID_RATE</ColNames>
       <NameSurrogate>1</NameSurrogate>
-      <OnDelete>restrict</OnDelete>
+      <OnDelete>cascade</OnDelete>
       <OnUpdate>restrict</OnUpdate>
       <RefKeyName>CONSTRAINT_2</RefKeyName>
       <RefTableName>RATE</RefTableName>
@@ -254,7 +254,7 @@
     <foreign-key id="187" parent="167" name="CONSTRAINT_70">
       <ColNames>ID_USER</ColNames>
       <NameSurrogate>1</NameSurrogate>
-      <OnDelete>restrict</OnDelete>
+      <OnDelete>cascade</OnDelete>
       <OnUpdate>restrict</OnUpdate>
       <RefKeyName>CONSTRAINT_4D</RefKeyName>
       <RefTableName>USERS</RefTableName>
@@ -262,7 +262,7 @@
     <foreign-key id="188" parent="167" name="CONSTRAINT_7">
       <ColNames>ID_TYPE</ColNames>
       <NameSurrogate>1</NameSurrogate>
-      <OnDelete>restrict</OnDelete>
+      <OnDelete>cascade</OnDelete>
       <OnUpdate>restrict</OnUpdate>
       <RefKeyName>CONSTRAINT_2A</RefKeyName>
       <RefTableName>TYPE_FRIENDS</RefTableName>
@@ -316,7 +316,7 @@ ID_FRIEND</ColNames>
     <foreign-key id="199" parent="169" name="CONSTRAINT_CC">
       <ColNames>ID_FILM</ColNames>
       <NameSurrogate>1</NameSurrogate>
-      <OnDelete>restrict</OnDelete>
+      <OnDelete>cascade</OnDelete>
       <OnUpdate>restrict</OnUpdate>
       <RefKeyName>CONSTRAINT_3</RefKeyName>
       <RefTableName>FILMS</RefTableName>
@@ -324,7 +324,7 @@ ID_FRIEND</ColNames>
     <foreign-key id="200" parent="169" name="CONSTRAINT_C">
       <ColNames>ID_GENRE</ColNames>
       <NameSurrogate>1</NameSurrogate>
-      <OnDelete>restrict</OnDelete>
+      <OnDelete>cascade</OnDelete>
       <OnUpdate>restrict</OnUpdate>
       <RefKeyName>CONSTRAINT_4</RefKeyName>
       <RefTableName>GENRE</RefTableName>
@@ -348,7 +348,7 @@ ID_FRIEND</ColNames>
     <foreign-key id="205" parent="170" name="CONSTRAINT_9">
       <ColNames>ID_FILM</ColNames>
       <NameSurrogate>1</NameSurrogate>
-      <OnDelete>restrict</OnDelete>
+      <OnDelete>cascade</OnDelete>
       <OnUpdate>restrict</OnUpdate>
       <RefKeyName>CONSTRAINT_3</RefKeyName>
       <RefTableName>FILMS</RefTableName>
@@ -356,7 +356,7 @@ ID_FRIEND</ColNames>
     <foreign-key id="206" parent="170" name="CONSTRAINT_9D">
       <ColNames>ID_USER</ColNames>
       <NameSurrogate>1</NameSurrogate>
-      <OnDelete>restrict</OnDelete>
+      <OnDelete>cascade</OnDelete>
       <OnUpdate>restrict</OnUpdate>
       <RefKeyName>CONSTRAINT_4D</RefKeyName>
       <RefTableName>USERS</RefTableName>

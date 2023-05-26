@@ -12,6 +12,7 @@ import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.FriendStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Data
@@ -95,5 +96,25 @@ public class UserService {
             log.info("Удаление из друзей выполнено.");
         }
     }
+
+    public void validateU(User user) {
+        if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {
+            log.info("ValidationException: {}", "Некорректный email");
+            throw new ValidationException("Некорректный email");
+        }
+        if (user.getLogin().isBlank() || user.getLogin().contains(" ")) {
+            log.info("ValidationException: {}", "Логин не может быть пустым или содержать пробелы");
+            throw new ValidationException("Логин не может быть пустым или содержать пробелы");
+        }
+        if (user.getName() == null || user.getName().isBlank()) {
+            user.setName(user.getLogin());
+            log.info("В качестве имени пользователя установлен логин {}", user.getLogin());
+        }
+        if (user.getBirthday().isAfter(LocalDate.now())) {
+            log.info("ValidationException: {}", "Дата рождения не может быть в будущем");
+            throw new ValidationException("Дата рождения не может быть в будущем");
+        }
+    }
+
 
 }

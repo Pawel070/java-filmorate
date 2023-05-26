@@ -3,17 +3,20 @@ package ru.yandex.practicum.filmorate.storage.user;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
+import ru.yandex.practicum.filmorate.ErrorsIO.MethodArgumentNotException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.*;
 
 import java.util.Collection;
+import java.util.List;
 
 @Data
 @Slf4j
@@ -67,18 +70,29 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User update(User user) {
+        if (getIdExist(user.getId())) {
         String sqlQuery = "UPDATE FILMORATE_SHEMA.USERS SET NAME_USER = ?, BIRTHDAY = CAST (? AS DATE), " +
                 "EMAIL = ?, LOGIN = ? ";
         log.info("Запрос update > {}", sqlQuery);
         jdbcTemplate.update(sqlQuery, user.getName(), user.getBirthday(), user.getEmail(), user.getLogin());
+        } else {
+            log.info("Запрос update > нет такого пользователя {}", user);
+            throw new MethodArgumentNotException("Ну нет такого пользователя!");
+        }
         return user;
     }
 
     @Override
     public User getByIdUser(int idUser) {
+        User user;
         String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.USERS WHERE ID_USER = ?";
         log.info("Запрос getByIdUser > {}", sqlQuery);
-        return jdbcTemplate.queryForObject(sqlQuery, this::mapToUser, idUser);
+        try {
+            user = jdbcTemplate.queryForObject(sqlQuery, this::mapToUser, idUser);
+        } catch (DataAccessException e) {
+            throw new MethodArgumentNotException("Ну нет такого пользователя!");
+        }
+        return user;
     }
 
     @Override
@@ -92,7 +106,9 @@ public class UserDbStorage implements UserStorage {
     public Collection<User> getAllUser() {
         String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.USERS AS U";
         log.info("Запрос Collection > {}", sqlQuery);
-        return jdbcTemplate.query(sqlQuery, this::mapToUser);
+        Collection<User> listUser = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapToUser(rs, rowNum));
+        log.info("Collection > {}", listUser);
+        return listUser;
     }
 
 }

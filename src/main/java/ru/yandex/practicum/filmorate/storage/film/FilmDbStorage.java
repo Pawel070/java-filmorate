@@ -11,6 +11,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
+import ru.yandex.practicum.filmorate.ErrorsIO.MethodArgumentNotException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Rating;
@@ -95,7 +96,9 @@ public class FilmDbStorage implements FilmStorage {
                 "(FILMORATE_SHEMA.FILMS AS F LEFT JOIN FILMORATE_SHEMA.RATE AS R ON F.ID_RATE = R.ID_RATE) " +
                 "LEFT JOIN FILMORATE_SHEMA.LIKES_SET AS LS ON F.ID_FILM = LS.ID_FILM";
         log.info("Запрос getCollectionFilm > {}", sqlQuery);
-        return jdbcTemplate.query(sqlQuery, this::mapToFilm);
+        Collection<Film> listFilm = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapToFilm(rs, rowNum));
+        log.info("Collection > {}", listFilm);
+        return listFilm;
     }
 
     @Override
@@ -112,7 +115,10 @@ public class FilmDbStorage implements FilmStorage {
                 "LEFT JOIN FILMORATE_SHEMA.LIKES_SET AS LS ON F.ID_FILM = LS.ID_FILM " +
                 "ORDER BY COUNT(LS.ID_USER) DESC, F.ID_RATE LIMIT = ?";
         log.info("Запрос getMaxPopular > {}", sqlQuery);
-        return jdbcTemplate.query(sqlQuery, this::mapToFilm, scoring);
+        Collection<Film> listFilm = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapToFilm(rs, rowNum), scoring);
+                // jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapToFilm(rs, rowNum));
+        log.info("Collection > {}", listFilm);
+        return listFilm;
     }
 
     @Override
@@ -126,12 +132,25 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Film update(Film film) {
+        if (getIdExist(film.getId())) {
         String sqlQuery = "UPDATE FILMORATE_SHEMA.FILMS SET ID_RATE = ?, DURATION = ?, RELEASE_DATE = CAST (? AS DATE)," +
                 "DESCRIPTION = ?, NAME_FILMS = ? WHERE ID_FILM = ?";
+        log.info("Запрос update > {} --> {} ", sqlQuery, film);
         jdbcTemplate.update(sqlQuery, film.getMpa().getId(), film.getDuration(),
                 film.getReleaseDate(), film.getDescription(), film.getName(), film.getId());
-                log.info("Запрос update > {} --> {} ", sqlQuery, film);
+        } else {
+            log.info("Запрос update > нет такого фильма {}", film);
+            throw new MethodArgumentNotException("Ну нет такого фильма!");
+        }
         return film;
+    }
+
+    @Override
+    public boolean getIdExist(int idFilm) {
+        String sqlQuery = "SELECT ID_FILM FROM FILMORATE_SHEMA.FILMS WHERE ID_FILM = ?";
+        log.info("Запрос getIdExist Film > {}", sqlQuery);
+        SqlRowSet idRows = jdbcTemplate.queryForRowSet(sqlQuery, idFilm);
+        return idRows.next();
     }
 
     @Override

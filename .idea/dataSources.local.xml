@@ -11,10 +11,7 @@
       <schema-mapping>
         <introspection-scope>
           <node kind="database" qname="FILMORATE">
-            <node kind="schema">
-              <name qname="FILMORATE_SHEMA" />
-              <name qname="PUBLIC" />
-            </node>
+            <node kind="schema" qname="PUBLIC" />
           </node>
         </introspection-scope>
       </schema-mapping>
