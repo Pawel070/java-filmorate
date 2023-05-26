@@ -10,8 +10,8 @@ public class UserTest {
     @Test
     public void createUserTest() {
         User.builder()
-                .idUser(1)
-                .nameUser("Имя01")
+                .id(1)
+                .name("Имя01")
                 .birthday(LocalDate.of(1995, 12, 28))
                 .email("test@qq.ru")
                 .login("Логин01")

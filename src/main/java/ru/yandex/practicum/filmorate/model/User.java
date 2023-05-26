@@ -1,6 +1,10 @@
 package ru.yandex.practicum.filmorate.model;
 
-import jakarta.validation.constraints.*;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.validation.annotation.Validated;
@@ -9,11 +13,10 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 @Data
-@Validated
 @Builder
 public class User {
 
-    private int idUser;
+    private int id;
 
     @NotBlank(message = "E07 Логин не может быть пустым или содержать пробелы.")
     private String login;
@@ -25,20 +28,39 @@ public class User {
     @Past(message = "E10 Дата рождения не может быть в будущем.")
     private LocalDate birthday;
 
-    private String nameUser;
+    private String name;
 
     @Override
     public boolean equals(Object o) {
-        return this == o || o instanceof User user && Objects.equals(email, user.email);
-
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof User user)) {
+            return false;
+        }
+        if (id != user.id) {
+            return false;
+        }
+        if (!Objects.equals(login, user.login)) {
+            return false;
+        }
+        if (!email.equals(user.email)) {
+            return false;
+        }
+        if (!Objects.equals(birthday, user.birthday)) {
+            return false;
+        }
+        return Objects.equals(name, user.name);
     }
 
     @Override
     public int hashCode() {
-        if (email != null) {
-            return email.hashCode();
-        }
-        return 0;
+        int result = id;
+        result = 31 * result + (login != null ? login.hashCode() : 0);
+        result = 31 * result + email.hashCode();
+        result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
     }
 }
 
