@@ -1,9 +1,13 @@
 package ru.yandex.practicum.filmorate.model;
 
-import jakarta.validation.constraints.*;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.validation.annotation.Validated;
+
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -34,7 +38,6 @@ public class User {
         if (!(o instanceof User user)) {
             return false;
         }
-
         if (id != user.id) {
             return false;
         }
@@ -59,23 +62,6 @@ public class User {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
     }
-
-    /*
-    @Override
-    public boolean equals(Object o) {
-        return this == o || o instanceof User user && Objects.equals(email, user.email);
-
-    }
-
-    @Override
-    public int hashCode() {
-        if (email != null) {
-            return email.hashCode();
-        }
-        return 0;
-    }
-
- */
 
 }
 

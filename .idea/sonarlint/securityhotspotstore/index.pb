@@ -17,8 +17,6 @@ Tsrc/main/java/ru/yandex/practicum/filmorate/ErrorsIO/MethodArgumentNotException
 Osrc/main/java/ru/yandex/practicum/filmorate/ErrorsIO/ItemNotFoundException.java,2\d\2dbbb6de2c32c756df020db48bf15990c90c9049
 …
 Usrc/main/java/ru/yandex/practicum/filmorate/ErrorsIO/IncorrectParameterException.java,f\e\fee8653f460c64fb8d0c622d99c27b3af13326db
-z
-Jsrc/main/java/ru/yandex/practicum/filmorate/controller/UserController.java,6\e\6ea8713d29c8c23e38d6de7cb86ecdb0c2f0a9f7
 
 Osrc/main/java/ru/yandex/practicum/filmorate/controller/ControllerInterface.java,e\c\ec28ebee032f796feb7f768b013cf630016e120a
 x
@@ -52,3 +50,7 @@ u
 Esrc/main/java/ru/yandex/practicum/filmorate/Service/GenreService.java,e\0\e0de57bb3872efbd71dc6c6e8a1fe8ba5c7263b5
 l
 <src/main/java/ru/yandex/practicum/filmorate/model/Genre.java,0\2\02592284dbda57d48a27e6f4730433d65543f4bb
+i
+9src/test/java/ru/yandex/practicum/filmorate/FilmTest.java,c\e\cefdc8fddc9add68ee0535673a6aeec962277310
+i
+9src/test/java/ru/yandex/practicum/filmorate/UserTest.java,b\5\b51f3e43bc6672c2baa56cb29612bb6b068b96ef
