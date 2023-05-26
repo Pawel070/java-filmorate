@@ -29,8 +29,8 @@ public class ReviewDbStorage implements ReviewStorage {
 
     @Override
     public Review addReview(Review review) {
-        final String sql = "INSERT INTO FILMORATE_SHEMA.REVIEWS (ID_FILM, ID_USER, CONTENT, IS_POSITIVE)" +
-                "Values (?, ?, ?, ?)";
+        final String sql = "INSERT INTO FILMORATE_SHEMA.REVIEWS (ID_FILM, ID_USER, CONTENT, IS_POSITIVE, USEFULL)" +
+                "Values (?, ?, ?, ?, 0)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -78,23 +78,21 @@ public class ReviewDbStorage implements ReviewStorage {
     @Override
     public List<Review> findAllReviews(int filmId, int count) {
         List<Review> allReviews = new ArrayList<>();
-        String sql = "SELECT * FROM FILMORATE_SHEMA.REVIEWS WHERE ID_FILM = ? " +
-                "ORDER BY USEFULL desc LIMIT ?";
+        String sql;
+        if (filmId == 0) {
+            sql = "SELECT * FROM FILMORATE_SHEMA.REVIEWS " +
+                    "ORDER BY USEFULL desc LIMIT ?";
+            allReviews.addAll(jdbcTemplate.query(sql, this::mapRowToReview, count));
+            return allReviews;
+        }
+        sql = "SELECT * FROM FILMORATE_SHEMA.REVIEWS WHERE ID_FILM = ? " +
+                "ORDER BY USEFULL desc LIMIT?";
         try {
             return jdbcTemplate.query(sql, this::mapRowToReview, filmId, count);
         } catch (EmptyResultDataAccessException e) {
             log.info("У фильма с индификатором {} нет отзывов.", filmId);
             throw new ItemNotFoundException("Отзыв не найден");
         }
-    }
-
-    @Override
-    public List<Review> findReviews() {
-        List<Review> allReviews = new ArrayList<>();
-        String sql = "SELECT * FROM FILMORATE_SHEMA.REVIEWS " +
-                "ORDER BY USEFULL";
-        allReviews.addAll(jdbcTemplate.query(sql, this::mapRowToReview));
-        return allReviews;
     }
 
     @Override

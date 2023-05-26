@@ -136,10 +136,10 @@ public class ReviewIntegrationTest {
     }
 
     @Test
-    public void findAllReviews() {
+    public void findAllReviewsTest() {
         reviewDbStorage.addReview(review1);
         reviewDbStorage.addReview(updateReview);
-        List<Review> ans = reviewDbStorage.findAllReviews(1, 1);
+        List<Review> ans = reviewDbStorage.findAllReviews(0, 1);
         assertEquals(ans.size(), 1);
     }
 

@@ -53,21 +53,15 @@ public class ReviewController {
         return request;
     }
 
-    @GetMapping("?filmId={filmId}&count={count}")
-    public List<Review> findAllReviews(@PathVariable @RequestParam int filmId,
-                                       @PathVariable @RequestParam(defaultValue = "10") int count) {
+    @GetMapping
+    public List<Review> findAllReviews(@RequestParam(defaultValue = "0") int filmId,
+                                       @RequestParam(defaultValue = "10") int count) {
         List<Review> request = reviewService.findAllReviews(filmId, count);
         if (filmId == 0) {
             log.debug("Получение отзывов ко всем фильмам. В количестве не более {}", count);
         } else {
             log.debug("Получение отзывов к фильму id = {}. В количестве не более {}", filmId, count);
         }
-        return request;
-    }
-
-    @GetMapping
-    public List<Review> findReviews() {
-        List<Review> request = reviewService.findReviews();
         return request;
     }
 
@@ -99,14 +93,3 @@ public class ReviewController {
         return request;
     }
 }
-//    @GetMapping("?filmId = {filmId} & count = {count}")
-//    public List<Review> findAllReviews(@PathVariable @RequestParam(defaultValue = "0") int filmId,
-//                                       @PathVariable @RequestParam(defaultValue = "10") int count) {
-//        List<Review> request = reviewService.findAllReviews(filmId, count);
-//        if (filmId == 0) {
-//            log.debug("Получение отзывов ко всем фильмам. В количестве не более {}", count);
-//        } else {
-//            log.debug("Получение отзывов к фильму id = {}. В количестве не более {}", filmId, count);
-//        }
-//        return request;
-//    }

@@ -15,8 +15,6 @@ public interface ReviewStorage {
 
     List<Review> findAllReviews(int filmId, int count);
 
-    List<Review> findReviews();
-
     long likeReview(int userId, long id);
 
     long dislikeReview(int userId, long id);

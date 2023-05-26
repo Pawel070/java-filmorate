@@ -41,10 +41,6 @@ public class ReviewService {
         return reviewStorage.findAllReviews(filmId, count);
     }
 
-    public List<Review> findReviews() {
-        return reviewStorage.findReviews();
-    }
-
     public long likeReview(int userId, long id) {
         return reviewStorage.likeReview(userId, id);
     }
