@@ -7,7 +7,6 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -16,16 +15,16 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 @Slf4j
-@Validated
 @RestController
 @RequestMapping("/users")
 public class UserController implements ControllerInterface<User> {
 
-    private UserStorage userStorage;
+    private final UserStorage userStorage;
     private final UserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserStorage userStorage, UserService userService) {
+        this.userStorage = userStorage;
         this.userService = userService;
     }
 
@@ -40,6 +39,7 @@ public class UserController implements ControllerInterface<User> {
     @PostMapping
     public User create(@Valid @RequestBody User user) {
         log.info("Контроллер POST новый User");
+        validate(user);
         return userStorage.create(user);
     }
 
@@ -47,6 +47,7 @@ public class UserController implements ControllerInterface<User> {
     @PutMapping
     public User update(@Valid @RequestBody User user) {
         log.info("Контроллер PUT изменение User");
+        validate(user);
         return userStorage.update(user);
     }
 
@@ -55,6 +56,11 @@ public class UserController implements ControllerInterface<User> {
     public void delete(@PathVariable int id) {
         log.info("Удаление пользователя с id {}", id);
         userStorage.deleteByIdUser(id);
+    }
+
+    @Override
+    public void validate(User user) {
+        userService.validateU(user);
     }
 
     @Override

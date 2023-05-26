@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Data
-public class IncorrectParameterException extends RuntimeException {
+public class IncorrectParameterException extends RuntimeException {   // http:400 Ошибка с полем
 
     private final String parameter;
 

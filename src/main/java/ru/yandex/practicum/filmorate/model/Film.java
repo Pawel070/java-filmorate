@@ -6,21 +6,19 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
 @Data
-@Validated
 @Builder
 public class Film {
 
-    private int idFilm;
+    private int id;
 
     @NotBlank(message = "E01 Название фильма не может быть пустым.")
-    private String nameFilm;
+    private String name;
 
     @Size(min = 1, max = 200, message = "E11 Длина описания не более 200 символов.")
     private String description;
@@ -34,8 +32,7 @@ public class Film {
 
     private List<Genre> genre; //  vмассив жанров
 
-    @NotNull
-    private int idRate;  // рейтинг
+    private Rating mpa; // рейтинг
 
 }
 
