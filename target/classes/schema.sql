@@ -57,7 +57,7 @@ create table IF NOT EXISTS FILMORATE_SHEMA.type_friends
     fri_type nvarchar(255)
 );
 
-CREATE UNIQUE INDEX IF NOT EXISTS FILMORATE_SHEMA.friends_index_0 ON FILMORATE_SHEMA.friends (id_user, id_friend) on delete cascade ;
+CREATE UNIQUE INDEX IF NOT EXISTS FILMORATE_SHEMA.friends_index_0 ON FILMORATE_SHEMA.friends (id_user, id_friend);
 
 ALTER TABLE FILMORATE_SHEMA.genre_set ADD FOREIGN KEY (id_genre) REFERENCES FILMORATE_SHEMA.genre (id_genre) ON DELETE CASCADE;
 

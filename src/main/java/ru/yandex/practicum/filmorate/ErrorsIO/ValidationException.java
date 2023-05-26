@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Data
-public class ValidationException extends RuntimeException {
+public class ValidationException extends RuntimeException {   // http:400 Ошибка валидации
 
     private String parameter;
 
