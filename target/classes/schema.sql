@@ -57,6 +57,16 @@ create table IF NOT EXISTS FILMORATE_SHEMA.type_friends
     fri_type nvarchar(255)
 );
 
+create table IF NOT EXISTS FILMORATE_SHEMA.reviews
+(
+    id_review long auto_increment primary key,
+    id_user integer not null,
+    id_film integer not null,
+    content nvarchar not null,
+    is_positive boolean,
+    usefull integer
+);
+
 create table IF NOT EXISTS FILMORATE_SHEMA.events
 (
     event_id integer primary key not null,
@@ -68,6 +78,10 @@ create table IF NOT EXISTS FILMORATE_SHEMA.events
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS FILMORATE_SHEMA.friends_index_0 ON FILMORATE_SHEMA.friends (id_user, id_friend);
+
+ALTER TABLE FILMORATE_SHEMA.reviews ADD FOREIGN KEY (id_film) REFERENCES FILMORATE_SHEMA.films (id_film);
+
+ALTER TABLE FILMORATE_SHEMA.reviews ADD FOREIGN KEY (id_user) REFERENCES FILMORATE_SHEMA.users (id_user);
 
 ALTER TABLE FILMORATE_SHEMA.genre_set ADD FOREIGN KEY (id_genre) REFERENCES FILMORATE_SHEMA.genre (id_genre) ON DELETE CASCADE;
 
