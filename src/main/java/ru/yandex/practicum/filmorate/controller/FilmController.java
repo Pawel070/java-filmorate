@@ -18,16 +18,16 @@ import java.util.*;
 
 @Slf4j
 @RestController
-@Validated
 @RequestMapping("/films")
 public class FilmController implements ControllerInterface<Film> {
 
-    private FilmStorage filmStorage;
-    private FilmService filmService;
+    private final FilmStorage filmStorage;
+    private final FilmService filmService;
 
     @Autowired
-    public void filmController(FilmService filmservice) {
-        filmService = filmservice;
+    public FilmController(FilmStorage filmStorage, FilmService filmService) {
+        this.filmStorage = filmStorage;
+        this.filmService = filmService;
     }
 
     @GetMapping("/help")
@@ -53,6 +53,7 @@ public class FilmController implements ControllerInterface<Film> {
     @PutMapping
     public Film update(@RequestBody @Valid Film film) {
         log.info("Обновление информации о фильме {}", film);
+        validate(film);
         return filmStorage.update(film);
     }
 
@@ -60,6 +61,7 @@ public class FilmController implements ControllerInterface<Film> {
     @PostMapping
     public Film create(@RequestBody @Valid Film film) {
         log.info("Добавление фильма {}", film);
+        validate(film);
         return filmStorage.create(film);
     }
 
@@ -68,6 +70,11 @@ public class FilmController implements ControllerInterface<Film> {
     public void delete(@PathVariable int id) {
         log.info("Удаление фильма из базы по id {}", id);
         filmStorage.deleteByIdFilm(id);
+    }
+
+    @Override
+    public void validate(Film film) {
+        filmService.validateF(film);
     }
 
     @PutMapping("/{id}/like/{userId}")
@@ -82,11 +89,12 @@ public class FilmController implements ControllerInterface<Film> {
         filmStorage.deleteLike(id, userId);
     }
 
-    @GetMapping("/popular?count={count}")
-    @Validated
-    public Collection<Film> maxLikeFilm(@PathVariable @RequestParam(defaultValue = "10") int count) {
+    @GetMapping("/popular")
+    public Collection<Film> getPopular(@RequestParam Optional<Integer> count) {
+        int number;
         log.info("Контроллер GET  список из первых  по количеству лайков> {}", count);
-        return filmService.maxLikeFilm(count);
+        if (count.isPresent()) { number = count.get(); } else { number = 10; }
+        return filmService.maxLikeFilm(number);
     }
 
 }

@@ -43,6 +43,7 @@ import java.util.Set;
         @Sql("/data.sql"),
 //        @Sql("/setUpBase.sql")
 })
+
 public class FilmoRateApplicationTests {
 
     private final UserDbStorage userStorage;
@@ -53,10 +54,10 @@ public class FilmoRateApplicationTests {
     private final UserService userService;
     private static JdbcTemplate jdbcTemplate;
 
-    private User user1;
-    private User user2;
-    private Film film1;
-    private Film film2;
+    User user1;
+    User user2;
+    Film film1;
+    Film film2;
 
     @BeforeEach
     public void setup() {
@@ -64,24 +65,24 @@ public class FilmoRateApplicationTests {
         Set<Long> like = new HashSet<>();
         List<Genre> genres = new ArrayList<>();
         user1 = User.builder()
-                .idUser(1)
-                .nameUser("Имя1")
+                .id(1)
+                .name("Имя1")
                 .birthday(LocalDate.of(1995, 12, 28))
                 .email("test@qq1.ru")
                 .login("Логин1")
                 .build();
 
         user2 = User.builder()
-                .idUser(2)
-                .nameUser("Имя2")
+                .id(2)
+                .name("Имя2")
                 .birthday(LocalDate.of(2000, 12, 28))
                 .email("test@qq2.ru")
                 .login("Логин2")
                 .build();
-
+        Rating rating = new Rating(1, "");
         film1 = Film.builder()
-                .idFilm(1)
-                .nameFilm("Фильм1")
+                .id(1)
+                .name("Фильм1")
                 .description("Описание1")
                 .releaseDate(LocalDate.of(1995, 12, 28))
                 .duration(50)
@@ -91,21 +92,21 @@ public class FilmoRateApplicationTests {
                 .build();
 
         film2 = Film.builder()
-                .idFilm(2)
-                .nameFilm("Фильм2")
+                .id(2)
+                .name("Фильм2")
                 .description("Описание2")
                 .releaseDate(LocalDate.of(2000, 12, 28))
                 .duration(100)
                 .likes(like)
                 .genre(genres)
-                .idRate(2)
+                .mpa(rating)
                 .build();
     }
 
     @Test
     public void createAndFindUserTest() {
         userStorage.create(user1);
-        assertEquals(userService.findUserById(1).getNameUser(), "newName");
+        assertEquals(userService.findUserById(1).getName(), "newName");
     }
 
     @Test
@@ -118,15 +119,15 @@ public class FilmoRateApplicationTests {
     @Test
     public void updateUserTest() {
         userStorage.create(user1);
-        user1.setNameUser("newName");
+        user1.setName("newName");
         userStorage.update(user1);
-        assertEquals(userStorage.getByIdUser(1).getNameUser(), "newName");
+        assertEquals(userStorage.getByIdUser(1).getName(), "newName");
     }
 
     @Test
     public void isIdExistUserTest() {
         userStorage.create(user1);
-        assertTrue(userStorage.getIdExist(user1.getIdUser()));
+        assertTrue(userStorage.getIdExist(user1.getId()));
         assertFalse(userStorage.getIdExist(9999));
     }
 
@@ -134,11 +135,11 @@ public class FilmoRateApplicationTests {
     public void addAndRemoveFriendTest() {
         userStorage.create(user1);
         userStorage.create(user2);
-        friendStorage.setRequestsFriends(user1.getIdUser(), user2.getIdUser());
-        log.info("TEST Запрос addAndRemoveFriendTest getFriendsRequests > {} ok.", friendStorage.getFriendsRequests(user1.getIdUser()));
-        assertEquals(friendStorage.getFriendsRequests(user1.getIdUser()).size(), 1);
-        friendStorage.deleteFriend(user1.getIdUser(), user2.getIdUser());
-        assertEquals(friendStorage.getFriendsRequests(user1.getIdUser()).size(), 0);
+        friendStorage.setRequestsFriends(user1.getId(), user2.getId());
+        log.info("TEST Запрос addAndRemoveFriendTest getFriendsRequests > {} ok.", friendStorage.getFriendsRequests(user1.getId()));
+        assertEquals(friendStorage.getFriendsRequests(user1.getId()).size(), 1);
+        friendStorage.deleteFriend(user1.getId(), user2.getId());
+        assertEquals(friendStorage.getFriendsRequests(user1.getId()).size(), 0);
     }
 
     @Test
@@ -154,7 +155,7 @@ public class FilmoRateApplicationTests {
     @Test
     public void createAndFindFilmTest() {
         filmDbStorage.create(film1);
-        assertEquals(filmDbStorage.getByIdFilm(film1.getIdFilm()).getNameFilm(), "Фильм1");
+        assertEquals(filmDbStorage.getByIdFilm(film1.getId()).getName(), "Фильм1");
     }
 
     @Test
@@ -167,9 +168,9 @@ public class FilmoRateApplicationTests {
     @Test
     public void updateFindFilmTest() {
         filmDbStorage.create(film1);
-        film1.setNameFilm("newNameForTest");
+        film1.setName("newNameForTest");
         filmDbStorage.update(film1);
-        assertEquals(filmDbStorage.getByIdFilm(user1.getIdUser()).getNameFilm(), "Фильм1");
+        assertEquals(filmDbStorage.getByIdFilm(user1.getId()).getName(), "Фильм1");
     }
 
     @Test
@@ -177,9 +178,11 @@ public class FilmoRateApplicationTests {
         filmDbStorage.create(film1);
         userStorage.create(user1);
         filmDbStorage.addLike(1, 1);
-        Set<Long> likes = filmDbStorage.getLikes(film1.getIdFilm());
+        Set<Long> likes = filmDbStorage.getLikes(film1.getId());
         log.info("TEST Запрос addAndRemoveLikeTest add likes > {} ", likes);
         assertEquals(likes.size(), 0);
+        filmDbStorage.deleteLike(film1.getId(), user1.getId());
+        likes = filmDbStorage.getLikes(film1.getId());
         log.info("TEST Запрос addAndRemoveLikeTest delete likes > {} ", likes);
         assertEquals(likes.size(), 0);
     }
@@ -188,7 +191,7 @@ public class FilmoRateApplicationTests {
     public void findByIdGenreTest() {
         log.info("TEST Запрос findByIdGenreTest getGenres > {} ", genreStorage.getGenres());
         filmDbStorage.create(film1);
-        List<Genre>  genres = genreStorage.findGenreByIdFilm(film1.getIdFilm());
+        List<Genre>  genres = genreStorage.findGenreByIdFilm(film1.getId());
         log.info("TEST Запрос findByIdGenreTest > {} у {}", genres.size(), film1);
         assertEquals(genres.size(), 0);
     }
@@ -196,7 +199,7 @@ public class FilmoRateApplicationTests {
     @Test
     public void findByIdRateTest() {
         log.info("TEST Запрос findByIdRateTest > ok.");
-        assertEquals(rateStorage.checkRate(1).getIdRateDate(), "G");
+        assertEquals(rateStorage.checkRate(1).getName(), "G");
     }
 
     @Test

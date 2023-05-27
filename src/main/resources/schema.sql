@@ -3,8 +3,7 @@ CREATE SCHEMA IF NOT EXISTS FILMORATE_SHEMA AUTHORIZATION sa;
 create table IF NOT EXISTS FILMORATE_SHEMA.rate
 (
     id_rate integer primary key,
-    rate_date nvarchar(255),
-    rate nvarchar(255)
+    name nvarchar(255)
 );
 
 create table IF NOT EXISTS FILMORATE_SHEMA.genre
@@ -85,3 +84,4 @@ ALTER TABLE FILMORATE_SHEMA.likes_set ADD FOREIGN KEY (id_film) REFERENCES FILMO
 ALTER TABLE FILMORATE_SHEMA.likes_set ADD FOREIGN KEY (id_user) REFERENCES FILMORATE_SHEMA.users (id_user);
 
 ALTER TABLE FILMORATE_SHEMA.events ADD FOREIGN KEY (user_id) REFERENCES FILMORATE_SHEMA.users (id_user);
+ALTER TABLE FILMORATE_SHEMA.likes_set ADD FOREIGN KEY (id_user) REFERENCES FILMORATE_SHEMA.users (id_user) ON DELETE CASCADE;

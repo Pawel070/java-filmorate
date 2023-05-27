@@ -3,17 +3,20 @@ package ru.yandex.practicum.filmorate.storage.user;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
+import ru.yandex.practicum.filmorate.ErrorsIO.MethodArgumentNotException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.*;
 
 import java.util.Collection;
+import java.util.List;
 
 @Data
 @Slf4j
@@ -32,8 +35,8 @@ public class UserDbStorage implements UserStorage {
     protected User mapToUser(ResultSet rs, int rowNum) throws SQLException {
         log.info("Запрос mapToUser ResultSet > {}", rs);
         return User.builder()
-                .idUser(rs.getInt("ID_USER"))
-                .nameUser(rs.getString("NAME_USER"))
+                .id(rs.getInt("ID_USER"))
+                .name(rs.getString("NAME_USER"))
                 .birthday(rs.getDate("BIRTHDAY").toLocalDate())
                 .email(rs.getString("EMAIL"))
                 .login(rs.getString("LOGIN"))
@@ -51,34 +54,45 @@ public class UserDbStorage implements UserStorage {
     @Override
     public User create(User user) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        log.info("Запрос create > {}", sqlQueryCreateUser);
+        log.info("Запрос create > {} --> {}", user, sqlQueryCreateUser);
         jdbcTemplate.update(connection -> {
             PreparedStatement stmt = connection.prepareStatement(sqlQueryCreateUser, Statement.RETURN_GENERATED_KEYS);
-            stmt.setString(1, user.getNameUser());
+            stmt.setString(1, user.getName());
             stmt.setDate(2, Date.valueOf(user.getBirthday()));
             stmt.setString(3, user.getEmail());
             stmt.setString(4, user.getLogin());
             return stmt;
         }, keyHolder);
         int id = keyHolder.getKey().intValue();
-        user.setIdUser(id);
+        user.setId(id);
         return user;
     }
 
     @Override
     public User update(User user) {
+        if (getIdExist(user.getId())) {
         String sqlQuery = "UPDATE FILMORATE_SHEMA.USERS SET NAME_USER = ?, BIRTHDAY = CAST (? AS DATE), " +
                 "EMAIL = ?, LOGIN = ? ";
         log.info("Запрос update > {}", sqlQuery);
-        jdbcTemplate.update(sqlQuery, user.getNameUser(), user.getBirthday(), user.getEmail(), user.getLogin());
+        jdbcTemplate.update(sqlQuery, user.getName(), user.getBirthday(), user.getEmail(), user.getLogin());
+        } else {
+            log.info("Запрос update > нет такого пользователя {}", user);
+            throw new MethodArgumentNotException("Ну нет такого пользователя!");
+        }
         return user;
     }
 
     @Override
     public User getByIdUser(int idUser) {
+        User user;
         String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.USERS WHERE ID_USER = ?";
         log.info("Запрос getByIdUser > {}", sqlQuery);
-        return jdbcTemplate.queryForObject(sqlQuery, this::mapToUser, idUser);
+        try {
+            user = jdbcTemplate.queryForObject(sqlQuery, this::mapToUser, idUser);
+        } catch (DataAccessException e) {
+            throw new MethodArgumentNotException("Ну нет такого пользователя!");
+        }
+        return user;
     }
 
     @Override
@@ -92,7 +106,9 @@ public class UserDbStorage implements UserStorage {
     public Collection<User> getAllUser() {
         String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.USERS AS U";
         log.info("Запрос Collection > {}", sqlQuery);
-        return jdbcTemplate.query(sqlQuery, this::mapToUser);
+        Collection<User> listUser = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapToUser(rs, rowNum));
+        log.info("Collection > {}", listUser);
+        return listUser;
     }
 
 }

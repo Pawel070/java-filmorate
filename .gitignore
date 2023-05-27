@@ -20,3 +20,4 @@ out/
 *.meta
 /sonarlint/
 !./sonarlint/
+/emojicon/
