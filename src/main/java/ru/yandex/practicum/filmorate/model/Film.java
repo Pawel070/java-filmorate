@@ -34,5 +34,7 @@ public class Film {
 
     private Rating mpa; // рейтинг
 
+    private int idD;  // director
+
 }
 
