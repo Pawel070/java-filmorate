@@ -26,13 +26,13 @@ public class GenreController {
         this.service = service;
     }
 
-    @GetMapping("/genres")
+    @GetMapping("")
     public Collection<Genre> selectGetting() {
         log.info("Контроллер GET список жанров.");
         return service.findAll();
     }
 
-    @GetMapping("/genres/{id}")
+    @GetMapping("/{id}")
     protected List<Genre> findById(@PathVariable int id) {
         log.info("Контроллер GET список жанров фильма по Id {} ", id);
         return service.findById(id);

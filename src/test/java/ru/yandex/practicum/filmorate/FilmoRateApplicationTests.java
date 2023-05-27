@@ -41,11 +41,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @SpringBootTest
@@ -234,9 +230,18 @@ public class FilmoRateApplicationTests {
     @Test
     public void likeFilmAndGetLikedByOfFilmTest() {
         userStorage.create(user1);
+        userStorage.create(user2);
+        userStorage.create(user3);
         filmDbStorage.create(film1);
+        filmDbStorage.create(film2);
         filmDbStorage.addLike(film1.getId(), user1.getId());
-        assertEquals(filmDbStorage.getLikes(film1.getId()).size(), 1);
+        filmDbStorage.addLike(film1.getId(), user2.getId());
+        filmDbStorage.addLike(film2.getId(), user2.getId());
+        filmDbStorage.addLike(film2.getId(), user3.getId());
+        film1.setLikes(filmDbStorage.getLikes(film1.getId()));
+        film2.setLikes(filmDbStorage.getLikes(film2.getId()));
+        log.info("TEST Запрос likeFilmAndGetLikedByOfFilmTest > 1 - {} , 2 - {} , ok.", film1.getLikes(), film2.getLikes());
+        assertEquals(filmDbStorage.getLikes(film1.getId()).size(), 2);
     }
 
     @Test
@@ -256,6 +261,15 @@ public class FilmoRateApplicationTests {
         filmDbStorage.deleteLike(film1.getId(), user1.getId());
         assertEquals(filmDbStorage.getLikes(film1.getId()).size(), 0);
 
+    }
+
+    @Test
+    public void getCollectionFilmTest() {
+        filmDbStorage.create(film1);
+        filmDbStorage.create(film2);
+        Collection<Film> listFilm = filmDbStorage.getCollectionFilm();
+        log.info("TEST Запрос getCollectionFilmTest > {} ", listFilm);
+        assertEquals(listFilm.size(), 2);
     }
 
 }

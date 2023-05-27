@@ -11,9 +11,9 @@ MERGE INTO FILMORATE_SHEMA.rate(id_rate, name)
     VALUES
         (1, 'G'),
         (2, 'PG'),
-        (3, 'PG14'),
+        (3, 'PG-13'),
         (4, 'R'),
-        (5, 'NC17');
+        (5, 'NC-17');
 
 MERGE INTO FILMORATE_SHEMA.genre(id_genre, genre_date, genre_rus)
     VALUES

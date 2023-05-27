@@ -11,8 +11,6 @@ x
 Hsrc/main/java/ru/yandex/practicum/filmorate/controller/ErrorHandler.java,5\b\5bde14fec04ae3ec4c73f906da52a9a9c788f5fc
 y
 Isrc/main/java/ru/yandex/practicum/filmorate/storage/film/RateStorage.java,5\8\584b5cd9a0e8d170e25d7a09fef1c1d8f51a787a
-t
-Dsrc/main/java/ru/yandex/practicum/filmorate/Service/RateService.java,0\9\0969b033259ad990562a187474c8bf1f5141df2b
 M
 src/main/resources/.gitignore,e\4\e44181927ff215206de47b703781a99919f713aa
 B
@@ -26,8 +24,6 @@ Fsrc/main/java/ru/yandex/practicum/filmorate/Service/FriendService.java,f\a\faa
 Ksrc/main/java/ru/yandex/practicum/filmorate/storage/user/FriendStorage.java,c\0\c09bf85ae340f18059106a696c3152c173fcfd7c
 l
 <src/main/java/ru/yandex/practicum/filmorate/model/Genre.java,0\2\02592284dbda57d48a27e6f4730433d65543f4bb
-u
-Esrc/main/java/ru/yandex/practicum/filmorate/Service/GenreService.java,e\0\e0de57bb3872efbd71dc6c6e8a1fe8ba5c7263b5
 i
 9src/test/java/ru/yandex/practicum/filmorate/FilmTest.java,c\e\cefdc8fddc9add68ee0535673a6aeec962277310
 m
