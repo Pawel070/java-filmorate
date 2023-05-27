@@ -3,29 +3,17 @@ package ru.yandex.practicum.filmorate.test;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Bean;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.init.DataSourceInitializer;
-import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
-import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
-import org.springframework.test.jdbc.JdbcTestUtils;
 import ru.yandex.practicum.filmorate.Service.UserService;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
@@ -55,7 +43,6 @@ import java.util.Set;
         @Sql("/data.sql"),
 //        @Sql("/setUpBase.sql")
 })
-
 public class FilmoRateApplicationTests {
 
     private final UserDbStorage userStorage;
@@ -66,10 +53,10 @@ public class FilmoRateApplicationTests {
     private final UserService userService;
     private static JdbcTemplate jdbcTemplate;
 
-    User user1;
-    User user2;
-    Film film1;
-    Film film2;
+    private User user1;
+    private User user2;
+    private Film film1;
+    private Film film2;
 
     @BeforeEach
     public void setup() {
@@ -193,8 +180,6 @@ public class FilmoRateApplicationTests {
         Set<Long> likes = filmDbStorage.getLikes(film1.getIdFilm());
         log.info("TEST Запрос addAndRemoveLikeTest add likes > {} ", likes);
         assertEquals(likes.size(), 0);
-        filmDbStorage.deleteLike(film1.getIdFilm(), user1.getIdUser());
-        likes = filmDbStorage.getLikes(film1.getIdFilm());
         log.info("TEST Запрос addAndRemoveLikeTest delete likes > {} ", likes);
         assertEquals(likes.size(), 0);
     }

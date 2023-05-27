@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataSource name="filmorate">
-  <database-model serializer="dbm" dbms="H2" family-id="H2" format-version="4.45">
+  <database-model serializer="dbm" dbms="H2" family-id="H2" format-version="4.48">
     <root id="1">
       <ServerVersion>2.1.210</ServerVersion>
     </root>
@@ -174,48 +174,103 @@
     <user id="165" parent="2" name="SA">
       <Admin>1</Admin>
     </user>
-    <table id="166" parent="162" name="FILMS"/>
-    <table id="167" parent="162" name="FRIENDS"/>
-    <table id="168" parent="162" name="GENRE"/>
-    <table id="169" parent="162" name="GENRE_SET"/>
-    <table id="170" parent="162" name="LIKES_SET"/>
-    <table id="171" parent="162" name="RATE"/>
-    <table id="172" parent="162" name="TYPE_FRIENDS"/>
-    <table id="173" parent="162" name="USERS"/>
-    <column id="174" parent="166" name="ID_FILM">
+    <table id="166" parent="162" name="EVENTS"/>
+    <table id="167" parent="162" name="FILMS"/>
+    <table id="168" parent="162" name="FRIENDS"/>
+    <table id="169" parent="162" name="GENRE"/>
+    <table id="170" parent="162" name="GENRE_SET"/>
+    <table id="171" parent="162" name="LIKES_SET"/>
+    <table id="172" parent="162" name="RATE"/>
+    <table id="173" parent="162" name="TYPE_FRIENDS"/>
+    <table id="174" parent="162" name="USERS"/>
+    <column id="175" parent="166" name="EVENT_ID">
+      <DasType>INTEGER|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="176" parent="166" name="USER_ID">
+      <DasType>INTEGER|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <column id="177" parent="166" name="TIMESTAMP">
+      <DasType>BIGINT|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+    </column>
+    <column id="178" parent="166" name="ENTITY_ID">
+      <DasType>INTEGER|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>4</Position>
+    </column>
+    <column id="179" parent="166" name="EVENT_TYPE">
+      <DasType>CHARACTER VARYING|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>5</Position>
+    </column>
+    <column id="180" parent="166" name="OPERATION">
+      <DasType>CHARACTER VARYING|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>6</Position>
+    </column>
+    <foreign-key id="181" parent="166" name="CONSTRAINT_7A9">
+      <ColNames>USER_ID</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_4D</RefKeyName>
+      <RefTableName>USERS</RefTableName>
+    </foreign-key>
+    <index id="182" parent="166" name="PRIMARY_KEY_7">
+      <ColNames>EVENT_ID</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <Unique>1</Unique>
+    </index>
+    <index id="183" parent="166" name="CONSTRAINT_INDEX_7A">
+      <ColNames>USER_ID</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+    </index>
+    <key id="184" parent="166" name="CONSTRAINT_7A">
+      <ColNames>EVENT_ID</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+    </key>
+    <column id="185" parent="167" name="ID_FILM">
       <ColumnKind>generated-stored</ColumnKind>
       <DasType>INTEGER|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <SequenceInline>1</SequenceInline>
-      <SequenceSequenceIdentity>1(6)..2147483647</SequenceSequenceIdentity>
+      <SequenceDasType>INTEGER|0s</SequenceDasType>
+      <SequenceSequenceIdentity>1(6)</SequenceSequenceIdentity>
+      <SequenceStartValue>1</SequenceStartValue>
     </column>
-    <column id="175" parent="166" name="NAME_FILMS">
+    <column id="186" parent="167" name="NAME_FILMS">
       <DasType>CHARACTER VARYING(50)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="176" parent="166" name="DESCRIPTION">
+    <column id="187" parent="167" name="DESCRIPTION">
       <DasType>CHARACTER VARYING(200)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
-    <column id="177" parent="166" name="RELEASE_DATE">
+    <column id="188" parent="167" name="RELEASE_DATE">
       <DasType>DATE|0s</DasType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
-    <column id="178" parent="166" name="DURATION">
+    <column id="189" parent="167" name="DURATION">
       <DasType>BIGINT|0s</DasType>
       <NotNull>1</NotNull>
       <Position>5</Position>
     </column>
-    <column id="179" parent="166" name="ID_RATE">
+    <column id="190" parent="167" name="ID_RATE">
       <DasType>INTEGER|0s</DasType>
       <NotNull>1</NotNull>
       <Position>6</Position>
     </column>
-    <foreign-key id="180" parent="166" name="CONSTRAINT_3F">
+    <foreign-key id="191" parent="167" name="CONSTRAINT_3F">
       <ColNames>ID_RATE</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <OnDelete>restrict</OnDelete>
@@ -223,7 +278,7 @@
       <RefKeyName>CONSTRAINT_2</RefKeyName>
       <RefTableName>RATE</RefTableName>
     </foreign-key>
-    <foreign-key id="181" parent="166" name="CONSTRAINT_3FC">
+    <foreign-key id="192" parent="167" name="CONSTRAINT_3FC">
       <ColNames>ID_RATE</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <OnDelete>restrict</OnDelete>
@@ -231,7 +286,7 @@
       <RefKeyName>CONSTRAINT_2</RefKeyName>
       <RefTableName>RATE</RefTableName>
     </foreign-key>
-    <foreign-key id="182" parent="166" name="CONSTRAINT_3FCC">
+    <foreign-key id="193" parent="167" name="CONSTRAINT_3FCC">
       <ColNames>ID_RATE</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <OnDelete>restrict</OnDelete>
@@ -239,33 +294,81 @@
       <RefKeyName>CONSTRAINT_2</RefKeyName>
       <RefTableName>RATE</RefTableName>
     </foreign-key>
-    <index id="183" parent="166" name="PRIMARY_KEY_3">
+    <foreign-key id="194" parent="167" name="CONSTRAINT_3FCC3">
+      <ColNames>ID_RATE</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_2</RefKeyName>
+      <RefTableName>RATE</RefTableName>
+    </foreign-key>
+    <foreign-key id="195" parent="167" name="CONSTRAINT_3FCC34">
+      <ColNames>ID_RATE</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_2</RefKeyName>
+      <RefTableName>RATE</RefTableName>
+    </foreign-key>
+    <foreign-key id="196" parent="167" name="CONSTRAINT_3FCC34F">
+      <ColNames>ID_RATE</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_2</RefKeyName>
+      <RefTableName>RATE</RefTableName>
+    </foreign-key>
+    <foreign-key id="197" parent="167" name="CONSTRAINT_3FCC34F_0">
+      <ColNames>ID_RATE</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_2</RefKeyName>
+      <RefTableName>RATE</RefTableName>
+    </foreign-key>
+    <foreign-key id="198" parent="167" name="CONSTRAINT_3FCC34F_1">
+      <ColNames>ID_RATE</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_2</RefKeyName>
+      <RefTableName>RATE</RefTableName>
+    </foreign-key>
+    <foreign-key id="199" parent="167" name="CONSTRAINT_3FCC34F_2">
+      <ColNames>ID_RATE</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_2</RefKeyName>
+      <RefTableName>RATE</RefTableName>
+    </foreign-key>
+    <index id="200" parent="167" name="PRIMARY_KEY_3">
       <ColNames>ID_FILM</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Unique>1</Unique>
     </index>
-    <index id="184" parent="166" name="CONSTRAINT_INDEX_3">
+    <index id="201" parent="167" name="CONSTRAINT_INDEX_3">
       <ColNames>ID_RATE</ColNames>
       <NameSurrogate>1</NameSurrogate>
     </index>
-    <key id="185" parent="166" name="CONSTRAINT_3">
+    <key id="202" parent="167" name="CONSTRAINT_3">
       <ColNames>ID_FILM</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
     </key>
-    <column id="186" parent="167" name="ID_USER">
+    <column id="203" parent="168" name="ID_USER">
       <DasType>INTEGER|0s</DasType>
       <Position>1</Position>
     </column>
-    <column id="187" parent="167" name="ID_FRIEND">
+    <column id="204" parent="168" name="ID_FRIEND">
       <DasType>INTEGER|0s</DasType>
       <Position>2</Position>
     </column>
-    <column id="188" parent="167" name="ID_TYPE">
+    <column id="205" parent="168" name="ID_TYPE">
       <DasType>INTEGER|0s</DasType>
       <Position>3</Position>
     </column>
-    <foreign-key id="189" parent="167" name="CONSTRAINT_70">
+    <foreign-key id="206" parent="168" name="CONSTRAINT_70">
       <ColNames>ID_USER</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <OnDelete>restrict</OnDelete>
@@ -273,7 +376,7 @@
       <RefKeyName>CONSTRAINT_4D</RefKeyName>
       <RefTableName>USERS</RefTableName>
     </foreign-key>
-    <foreign-key id="190" parent="167" name="CONSTRAINT_706D">
+    <foreign-key id="207" parent="168" name="CONSTRAINT_706D">
       <ColNames>ID_USER</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <OnDelete>restrict</OnDelete>
@@ -281,7 +384,55 @@
       <RefKeyName>CONSTRAINT_4D</RefKeyName>
       <RefTableName>USERS</RefTableName>
     </foreign-key>
-    <foreign-key id="191" parent="167" name="CONSTRAINT_7">
+    <foreign-key id="208" parent="168" name="CONSTRAINT_706D57">
+      <ColNames>ID_USER</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_4D</RefKeyName>
+      <RefTableName>USERS</RefTableName>
+    </foreign-key>
+    <foreign-key id="209" parent="168" name="CONSTRAINT_706D575_0">
+      <ColNames>ID_USER</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_4D</RefKeyName>
+      <RefTableName>USERS</RefTableName>
+    </foreign-key>
+    <foreign-key id="210" parent="168" name="CONSTRAINT_706D575_2">
+      <ColNames>ID_USER</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_4D</RefKeyName>
+      <RefTableName>USERS</RefTableName>
+    </foreign-key>
+    <foreign-key id="211" parent="168" name="CONSTRAINT_706D575_4">
+      <ColNames>ID_USER</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_4D</RefKeyName>
+      <RefTableName>USERS</RefTableName>
+    </foreign-key>
+    <foreign-key id="212" parent="168" name="CONSTRAINT_706D575_6">
+      <ColNames>ID_USER</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_4D</RefKeyName>
+      <RefTableName>USERS</RefTableName>
+    </foreign-key>
+    <foreign-key id="213" parent="168" name="CONSTRAINT_706D575_8">
+      <ColNames>ID_USER</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_4D</RefKeyName>
+      <RefTableName>USERS</RefTableName>
+    </foreign-key>
+    <foreign-key id="214" parent="168" name="CONSTRAINT_7">
       <ColNames>ID_TYPE</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <OnDelete>restrict</OnDelete>
@@ -289,7 +440,7 @@
       <RefKeyName>CONSTRAINT_2A</RefKeyName>
       <RefTableName>TYPE_FRIENDS</RefTableName>
     </foreign-key>
-    <foreign-key id="192" parent="167" name="CONSTRAINT_706">
+    <foreign-key id="215" parent="168" name="CONSTRAINT_706">
       <ColNames>ID_TYPE</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <OnDelete>restrict</OnDelete>
@@ -297,53 +448,101 @@
       <RefKeyName>CONSTRAINT_2A</RefKeyName>
       <RefTableName>TYPE_FRIENDS</RefTableName>
     </foreign-key>
-    <index id="193" parent="167" name="FRIENDS_INDEX_0">
+    <foreign-key id="216" parent="168" name="CONSTRAINT_706D5">
+      <ColNames>ID_TYPE</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_2A</RefKeyName>
+      <RefTableName>TYPE_FRIENDS</RefTableName>
+    </foreign-key>
+    <foreign-key id="217" parent="168" name="CONSTRAINT_706D575">
+      <ColNames>ID_TYPE</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_2A</RefKeyName>
+      <RefTableName>TYPE_FRIENDS</RefTableName>
+    </foreign-key>
+    <foreign-key id="218" parent="168" name="CONSTRAINT_706D575_1">
+      <ColNames>ID_TYPE</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_2A</RefKeyName>
+      <RefTableName>TYPE_FRIENDS</RefTableName>
+    </foreign-key>
+    <foreign-key id="219" parent="168" name="CONSTRAINT_706D575_3">
+      <ColNames>ID_TYPE</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_2A</RefKeyName>
+      <RefTableName>TYPE_FRIENDS</RefTableName>
+    </foreign-key>
+    <foreign-key id="220" parent="168" name="CONSTRAINT_706D575_5">
+      <ColNames>ID_TYPE</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_2A</RefKeyName>
+      <RefTableName>TYPE_FRIENDS</RefTableName>
+    </foreign-key>
+    <foreign-key id="221" parent="168" name="CONSTRAINT_706D575_7">
+      <ColNames>ID_TYPE</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_2A</RefKeyName>
+      <RefTableName>TYPE_FRIENDS</RefTableName>
+    </foreign-key>
+    <index id="222" parent="168" name="FRIENDS_INDEX_0">
       <ColNames>ID_USER
 ID_FRIEND</ColNames>
       <Unique>1</Unique>
     </index>
-    <index id="194" parent="167" name="CONSTRAINT_INDEX_70">
+    <index id="223" parent="168" name="CONSTRAINT_INDEX_70">
       <ColNames>ID_USER</ColNames>
       <NameSurrogate>1</NameSurrogate>
     </index>
-    <index id="195" parent="167" name="CONSTRAINT_INDEX_7">
+    <index id="224" parent="168" name="CONSTRAINT_INDEX_7">
       <ColNames>ID_TYPE</ColNames>
       <NameSurrogate>1</NameSurrogate>
     </index>
-    <column id="196" parent="168" name="ID_GENRE">
+    <column id="225" parent="169" name="ID_GENRE">
       <DasType>INTEGER|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="197" parent="168" name="GENRE_DATE">
+    <column id="226" parent="169" name="GENRE_DATE">
       <DasType>CHARACTER VARYING(255)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="198" parent="168" name="GENRE_RUS">
+    <column id="227" parent="169" name="GENRE_RUS">
       <DasType>CHARACTER VARYING(255)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
-    <index id="199" parent="168" name="PRIMARY_KEY_4">
+    <index id="228" parent="169" name="PRIMARY_KEY_4">
       <ColNames>ID_GENRE</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Unique>1</Unique>
     </index>
-    <key id="200" parent="168" name="CONSTRAINT_4">
+    <key id="229" parent="169" name="CONSTRAINT_4">
       <ColNames>ID_GENRE</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
     </key>
-    <column id="201" parent="169" name="ID_FILM">
+    <column id="230" parent="170" name="ID_FILM">
       <DasType>INTEGER|0s</DasType>
       <Position>1</Position>
     </column>
-    <column id="202" parent="169" name="ID_GENRE">
+    <column id="231" parent="170" name="ID_GENRE">
       <DasType>INTEGER|0s</DasType>
       <Position>2</Position>
     </column>
-    <foreign-key id="203" parent="169" name="CONSTRAINT_CCB">
+    <foreign-key id="232" parent="170" name="CONSTRAINT_CCB">
       <ColNames>ID_FILM</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <OnDelete>restrict</OnDelete>
@@ -351,7 +550,7 @@ ID_FRIEND</ColNames>
       <RefKeyName>CONSTRAINT_3</RefKeyName>
       <RefTableName>FILMS</RefTableName>
     </foreign-key>
-    <foreign-key id="204" parent="169" name="CONSTRAINT_CCB81">
+    <foreign-key id="233" parent="170" name="CONSTRAINT_CCB81">
       <ColNames>ID_FILM</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <OnDelete>restrict</OnDelete>
@@ -359,7 +558,7 @@ ID_FRIEND</ColNames>
       <RefKeyName>CONSTRAINT_3</RefKeyName>
       <RefTableName>FILMS</RefTableName>
     </foreign-key>
-    <foreign-key id="205" parent="169" name="CONSTRAINT_CCB8176">
+    <foreign-key id="234" parent="170" name="CONSTRAINT_CCB8176">
       <ColNames>ID_FILM</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <OnDelete>restrict</OnDelete>
@@ -367,7 +566,55 @@ ID_FRIEND</ColNames>
       <RefKeyName>CONSTRAINT_3</RefKeyName>
       <RefTableName>FILMS</RefTableName>
     </foreign-key>
-    <foreign-key id="206" parent="169" name="CONSTRAINT_C">
+    <foreign-key id="235" parent="170" name="CONSTRAINT_CCB81766_0">
+      <ColNames>ID_FILM</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_3</RefKeyName>
+      <RefTableName>FILMS</RefTableName>
+    </foreign-key>
+    <foreign-key id="236" parent="170" name="CONSTRAINT_CCB81766_10">
+      <ColNames>ID_FILM</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_3</RefKeyName>
+      <RefTableName>FILMS</RefTableName>
+    </foreign-key>
+    <foreign-key id="237" parent="170" name="CONSTRAINT_CCB81766_2">
+      <ColNames>ID_FILM</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_3</RefKeyName>
+      <RefTableName>FILMS</RefTableName>
+    </foreign-key>
+    <foreign-key id="238" parent="170" name="CONSTRAINT_CCB81766_4">
+      <ColNames>ID_FILM</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_3</RefKeyName>
+      <RefTableName>FILMS</RefTableName>
+    </foreign-key>
+    <foreign-key id="239" parent="170" name="CONSTRAINT_CCB81766_6">
+      <ColNames>ID_FILM</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_3</RefKeyName>
+      <RefTableName>FILMS</RefTableName>
+    </foreign-key>
+    <foreign-key id="240" parent="170" name="CONSTRAINT_CCB81766_8">
+      <ColNames>ID_FILM</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_3</RefKeyName>
+      <RefTableName>FILMS</RefTableName>
+    </foreign-key>
+    <foreign-key id="241" parent="170" name="CONSTRAINT_C">
       <ColNames>ID_GENRE</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <OnDelete>restrict</OnDelete>
@@ -375,7 +622,7 @@ ID_FRIEND</ColNames>
       <RefKeyName>CONSTRAINT_4</RefKeyName>
       <RefTableName>GENRE</RefTableName>
     </foreign-key>
-    <foreign-key id="207" parent="169" name="CONSTRAINT_CC">
+    <foreign-key id="242" parent="170" name="CONSTRAINT_CC">
       <ColNames>ID_GENRE</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <OnDelete>restrict</OnDelete>
@@ -383,7 +630,7 @@ ID_FRIEND</ColNames>
       <RefKeyName>CONSTRAINT_4</RefKeyName>
       <RefTableName>GENRE</RefTableName>
     </foreign-key>
-    <foreign-key id="208" parent="169" name="CONSTRAINT_CCB8">
+    <foreign-key id="243" parent="170" name="CONSTRAINT_CCB8">
       <ColNames>ID_GENRE</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <OnDelete>restrict</OnDelete>
@@ -391,7 +638,7 @@ ID_FRIEND</ColNames>
       <RefKeyName>CONSTRAINT_4</RefKeyName>
       <RefTableName>GENRE</RefTableName>
     </foreign-key>
-    <foreign-key id="209" parent="169" name="CONSTRAINT_CCB817">
+    <foreign-key id="244" parent="170" name="CONSTRAINT_CCB817">
       <ColNames>ID_GENRE</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <OnDelete>restrict</OnDelete>
@@ -399,23 +646,71 @@ ID_FRIEND</ColNames>
       <RefKeyName>CONSTRAINT_4</RefKeyName>
       <RefTableName>GENRE</RefTableName>
     </foreign-key>
-    <index id="210" parent="169" name="CONSTRAINT_INDEX_CC">
+    <foreign-key id="245" parent="170" name="CONSTRAINT_CCB81766">
+      <ColNames>ID_GENRE</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_4</RefKeyName>
+      <RefTableName>GENRE</RefTableName>
+    </foreign-key>
+    <foreign-key id="246" parent="170" name="CONSTRAINT_CCB81766_1">
+      <ColNames>ID_GENRE</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_4</RefKeyName>
+      <RefTableName>GENRE</RefTableName>
+    </foreign-key>
+    <foreign-key id="247" parent="170" name="CONSTRAINT_CCB81766_3">
+      <ColNames>ID_GENRE</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_4</RefKeyName>
+      <RefTableName>GENRE</RefTableName>
+    </foreign-key>
+    <foreign-key id="248" parent="170" name="CONSTRAINT_CCB81766_5">
+      <ColNames>ID_GENRE</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_4</RefKeyName>
+      <RefTableName>GENRE</RefTableName>
+    </foreign-key>
+    <foreign-key id="249" parent="170" name="CONSTRAINT_CCB81766_7">
+      <ColNames>ID_GENRE</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_4</RefKeyName>
+      <RefTableName>GENRE</RefTableName>
+    </foreign-key>
+    <foreign-key id="250" parent="170" name="CONSTRAINT_CCB81766_9">
+      <ColNames>ID_GENRE</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_4</RefKeyName>
+      <RefTableName>GENRE</RefTableName>
+    </foreign-key>
+    <index id="251" parent="170" name="CONSTRAINT_INDEX_CC">
       <ColNames>ID_FILM</ColNames>
       <NameSurrogate>1</NameSurrogate>
     </index>
-    <index id="211" parent="169" name="CONSTRAINT_INDEX_C">
+    <index id="252" parent="170" name="CONSTRAINT_INDEX_C">
       <ColNames>ID_GENRE</ColNames>
       <NameSurrogate>1</NameSurrogate>
     </index>
-    <column id="212" parent="170" name="ID_FILM">
+    <column id="253" parent="171" name="ID_FILM">
       <DasType>INTEGER|0s</DasType>
       <Position>1</Position>
     </column>
-    <column id="213" parent="170" name="ID_USER">
+    <column id="254" parent="171" name="ID_USER">
       <DasType>INTEGER|0s</DasType>
       <Position>2</Position>
     </column>
-    <foreign-key id="214" parent="170" name="CONSTRAINT_9">
+    <foreign-key id="255" parent="171" name="CONSTRAINT_9">
       <ColNames>ID_FILM</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <OnDelete>restrict</OnDelete>
@@ -423,7 +718,7 @@ ID_FRIEND</ColNames>
       <RefKeyName>CONSTRAINT_3</RefKeyName>
       <RefTableName>FILMS</RefTableName>
     </foreign-key>
-    <foreign-key id="215" parent="170" name="CONSTRAINT_9D7">
+    <foreign-key id="256" parent="171" name="CONSTRAINT_9D7">
       <ColNames>ID_FILM</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <OnDelete>restrict</OnDelete>
@@ -431,7 +726,7 @@ ID_FRIEND</ColNames>
       <RefKeyName>CONSTRAINT_3</RefKeyName>
       <RefTableName>FILMS</RefTableName>
     </foreign-key>
-    <foreign-key id="216" parent="170" name="CONSTRAINT_9D768">
+    <foreign-key id="257" parent="171" name="CONSTRAINT_9D768">
       <ColNames>ID_FILM</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <OnDelete>restrict</OnDelete>
@@ -439,7 +734,55 @@ ID_FRIEND</ColNames>
       <RefKeyName>CONSTRAINT_3</RefKeyName>
       <RefTableName>FILMS</RefTableName>
     </foreign-key>
-    <foreign-key id="217" parent="170" name="CONSTRAINT_9D">
+    <foreign-key id="258" parent="171" name="CONSTRAINT_9D768D1">
+      <ColNames>ID_FILM</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_3</RefKeyName>
+      <RefTableName>FILMS</RefTableName>
+    </foreign-key>
+    <foreign-key id="259" parent="171" name="CONSTRAINT_9D768D1F_0">
+      <ColNames>ID_FILM</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_3</RefKeyName>
+      <RefTableName>FILMS</RefTableName>
+    </foreign-key>
+    <foreign-key id="260" parent="171" name="CONSTRAINT_9D768D1F_2">
+      <ColNames>ID_FILM</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_3</RefKeyName>
+      <RefTableName>FILMS</RefTableName>
+    </foreign-key>
+    <foreign-key id="261" parent="171" name="CONSTRAINT_9D768D1F_4">
+      <ColNames>ID_FILM</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_3</RefKeyName>
+      <RefTableName>FILMS</RefTableName>
+    </foreign-key>
+    <foreign-key id="262" parent="171" name="CONSTRAINT_9D768D1F_6">
+      <ColNames>ID_FILM</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_3</RefKeyName>
+      <RefTableName>FILMS</RefTableName>
+    </foreign-key>
+    <foreign-key id="263" parent="171" name="CONSTRAINT_9D768D1F_8">
+      <ColNames>ID_FILM</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_3</RefKeyName>
+      <RefTableName>FILMS</RefTableName>
+    </foreign-key>
+    <foreign-key id="264" parent="171" name="CONSTRAINT_9D">
       <ColNames>ID_USER</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <OnDelete>restrict</OnDelete>
@@ -447,7 +790,7 @@ ID_FRIEND</ColNames>
       <RefKeyName>CONSTRAINT_4D</RefKeyName>
       <RefTableName>USERS</RefTableName>
     </foreign-key>
-    <foreign-key id="218" parent="170" name="CONSTRAINT_9D76">
+    <foreign-key id="265" parent="171" name="CONSTRAINT_9D76">
       <ColNames>ID_USER</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <OnDelete>restrict</OnDelete>
@@ -455,7 +798,7 @@ ID_FRIEND</ColNames>
       <RefKeyName>CONSTRAINT_4D</RefKeyName>
       <RefTableName>USERS</RefTableName>
     </foreign-key>
-    <foreign-key id="219" parent="170" name="CONSTRAINT_9D768D">
+    <foreign-key id="266" parent="171" name="CONSTRAINT_9D768D">
       <ColNames>ID_USER</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <OnDelete>restrict</OnDelete>
@@ -463,90 +806,140 @@ ID_FRIEND</ColNames>
       <RefKeyName>CONSTRAINT_4D</RefKeyName>
       <RefTableName>USERS</RefTableName>
     </foreign-key>
-    <index id="220" parent="170" name="CONSTRAINT_INDEX_9">
+    <foreign-key id="267" parent="171" name="CONSTRAINT_9D768D1F">
+      <ColNames>ID_USER</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_4D</RefKeyName>
+      <RefTableName>USERS</RefTableName>
+    </foreign-key>
+    <foreign-key id="268" parent="171" name="CONSTRAINT_9D768D1F_1">
+      <ColNames>ID_USER</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_4D</RefKeyName>
+      <RefTableName>USERS</RefTableName>
+    </foreign-key>
+    <foreign-key id="269" parent="171" name="CONSTRAINT_9D768D1F_3">
+      <ColNames>ID_USER</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_4D</RefKeyName>
+      <RefTableName>USERS</RefTableName>
+    </foreign-key>
+    <foreign-key id="270" parent="171" name="CONSTRAINT_9D768D1F_5">
+      <ColNames>ID_USER</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_4D</RefKeyName>
+      <RefTableName>USERS</RefTableName>
+    </foreign-key>
+    <foreign-key id="271" parent="171" name="CONSTRAINT_9D768D1F_7">
+      <ColNames>ID_USER</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_4D</RefKeyName>
+      <RefTableName>USERS</RefTableName>
+    </foreign-key>
+    <foreign-key id="272" parent="171" name="CONSTRAINT_9D768D1F_9">
+      <ColNames>ID_USER</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <OnDelete>restrict</OnDelete>
+      <OnUpdate>restrict</OnUpdate>
+      <RefKeyName>CONSTRAINT_4D</RefKeyName>
+      <RefTableName>USERS</RefTableName>
+    </foreign-key>
+    <index id="273" parent="171" name="CONSTRAINT_INDEX_9">
       <ColNames>ID_FILM</ColNames>
       <NameSurrogate>1</NameSurrogate>
     </index>
-    <index id="221" parent="170" name="CONSTRAINT_INDEX_9D">
+    <index id="274" parent="171" name="CONSTRAINT_INDEX_9D">
       <ColNames>ID_USER</ColNames>
       <NameSurrogate>1</NameSurrogate>
     </index>
-    <column id="222" parent="171" name="ID_RATE">
+    <column id="275" parent="172" name="ID_RATE">
       <DasType>INTEGER|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="223" parent="171" name="RATE_DATE">
+    <column id="276" parent="172" name="RATE_DATE">
       <DasType>CHARACTER VARYING(255)|0s</DasType>
       <Position>2</Position>
     </column>
-    <column id="224" parent="171" name="RATE">
+    <column id="277" parent="172" name="RATE">
       <DasType>CHARACTER VARYING(255)|0s</DasType>
       <Position>3</Position>
     </column>
-    <index id="225" parent="171" name="PRIMARY_KEY_2">
+    <index id="278" parent="172" name="PRIMARY_KEY_2">
       <ColNames>ID_RATE</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Unique>1</Unique>
     </index>
-    <key id="226" parent="171" name="CONSTRAINT_2">
+    <key id="279" parent="172" name="CONSTRAINT_2">
       <ColNames>ID_RATE</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
     </key>
-    <column id="227" parent="172" name="ID_TYPE">
+    <column id="280" parent="173" name="ID_TYPE">
       <DasType>INTEGER|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="228" parent="172" name="FRI_TYPE">
+    <column id="281" parent="173" name="FRI_TYPE">
       <DasType>CHARACTER VARYING(255)|0s</DasType>
       <Position>2</Position>
     </column>
-    <index id="229" parent="172" name="PRIMARY_KEY_2A">
+    <index id="282" parent="173" name="PRIMARY_KEY_2A">
       <ColNames>ID_TYPE</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Unique>1</Unique>
     </index>
-    <key id="230" parent="172" name="CONSTRAINT_2A">
+    <key id="283" parent="173" name="CONSTRAINT_2A">
       <ColNames>ID_TYPE</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
     </key>
-    <column id="231" parent="173" name="ID_USER">
+    <column id="284" parent="174" name="ID_USER">
       <ColumnKind>generated-stored</ColumnKind>
       <DasType>INTEGER|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <SequenceInline>1</SequenceInline>
-      <SequenceSequenceIdentity>1(5)..2147483647</SequenceSequenceIdentity>
+      <SequenceDasType>INTEGER|0s</SequenceDasType>
+      <SequenceSequenceIdentity>1(5)</SequenceSequenceIdentity>
+      <SequenceStartValue>1</SequenceStartValue>
     </column>
-    <column id="232" parent="173" name="LOGIN">
+    <column id="285" parent="174" name="LOGIN">
       <DasType>CHARACTER VARYING(255)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="233" parent="173" name="EMAIL">
+    <column id="286" parent="174" name="EMAIL">
       <DasType>CHARACTER VARYING(255)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
-    <column id="234" parent="173" name="BIRTHDAY">
+    <column id="287" parent="174" name="BIRTHDAY">
       <DasType>DATE|0s</DasType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
-    <column id="235" parent="173" name="NAME_USER">
+    <column id="288" parent="174" name="NAME_USER">
       <DasType>CHARACTER VARYING(255)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>5</Position>
     </column>
-    <index id="236" parent="173" name="PRIMARY_KEY_4D">
+    <index id="289" parent="174" name="PRIMARY_KEY_4D">
       <ColNames>ID_USER</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Unique>1</Unique>
     </index>
-    <key id="237" parent="173" name="CONSTRAINT_4D">
+    <key id="290" parent="174" name="CONSTRAINT_4D">
       <ColNames>ID_USER</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>

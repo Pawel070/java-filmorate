@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.ErrorsIO.IncorrectParameterException;
 import ru.yandex.practicum.filmorate.ErrorsIO.MethodArgumentNotException;
 import ru.yandex.practicum.filmorate.ErrorsIO.ValidationException;
+import ru.yandex.practicum.filmorate.model.Event;
+import ru.yandex.practicum.filmorate.model.EventOperation;
+import ru.yandex.practicum.filmorate.model.EventType;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.FriendStorage;
@@ -27,6 +30,9 @@ public class UserService {
 
     @Autowired
     private FriendStorage friendStorage;
+
+    @Autowired
+    private EventService eventService;
 
     @Autowired
     private UserService(UserStorage userStorage) {
@@ -82,6 +88,7 @@ public class UserService {
             throw new MethodArgumentNotException("Запрос добавления в друзья по Id пользавателя невыполним - пользователя с таким Id нет.");
         } else {
             friendStorage.setRequestsFriends(userId, friendId);
+            eventService.createEvent(userId, EventType.FRIEND, EventOperation.ADD, friendId);
             log.info("Запрос в друзья отправлен.");
         }
     }
@@ -92,8 +99,16 @@ public class UserService {
             throw new MethodArgumentNotException("Запрос удаления из друзей по Id пользавателя невыполним - пользователя с таким Id нет.");
         } else {
             friendStorage.deleteFriend(userId, friendId);
+            eventService.createEvent(userId, EventType.FRIEND, EventOperation.REMOVE, friendId);
             log.info("Удаление из друзей выполнено.");
         }
     }
 
+    public List<Event> getEvent(int id) {
+        if (userStorage.getByIdUser(id) == null) {
+            log.info("Запрос пользователя по Id - пользавателя нет. {}", id);
+            throw new MethodArgumentNotException("Запрос пользователя по Id пользователя с таким Id нет.");
+        }
+        return eventService.getEvent(id);
+    }
 }

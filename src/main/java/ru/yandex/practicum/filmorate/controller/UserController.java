@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import java.util.Collection;
+import java.util.List;
 
 import jakarta.validation.Valid;
 
@@ -12,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import ru.yandex.practicum.filmorate.Service.UserService;
+import ru.yandex.practicum.filmorate.model.Event;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
@@ -64,4 +66,9 @@ public class UserController implements ControllerInterface<User> {
         return userService.findUserById(id);
     }
 
+    @GetMapping("/{id}/feed")
+    public List<Event> getEvent(@PathVariable int id) {
+        return userService.getEvent(id);
+    }
 }
+
