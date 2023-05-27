@@ -29,8 +29,6 @@ l
 u
 Esrc/main/java/ru/yandex/practicum/filmorate/Service/GenreService.java,e\0\e0de57bb3872efbd71dc6c6e8a1fe8ba5c7263b5
 i
-9src/test/java/ru/yandex/practicum/filmorate/UserTest.java,b\5\b51f3e43bc6672c2baa56cb29612bb6b068b96ef
-i
 9src/test/java/ru/yandex/practicum/filmorate/FilmTest.java,c\e\cefdc8fddc9add68ee0535673a6aeec962277310
 m
 =src/main/java/ru/yandex/practicum/filmorate/model/Friend.java,0\2\027499ec4498773297d172999c27992fee70254a

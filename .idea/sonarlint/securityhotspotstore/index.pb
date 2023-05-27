@@ -30,8 +30,6 @@ l
 <src/main/java/ru/yandex/practicum/filmorate/model/Genre.java,0\2\02592284dbda57d48a27e6f4730433d65543f4bb
 i
 9src/test/java/ru/yandex/practicum/filmorate/FilmTest.java,c\e\cefdc8fddc9add68ee0535673a6aeec962277310
-i
-9src/test/java/ru/yandex/practicum/filmorate/UserTest.java,b\5\b51f3e43bc6672c2baa56cb29612bb6b068b96ef
 m
 =src/main/java/ru/yandex/practicum/filmorate/model/Friend.java,0\2\027499ec4498773297d172999c27992fee70254a
 y

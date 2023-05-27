@@ -32,8 +32,9 @@ public class RateDbStorage implements RateStorage {
     public Rating checkRate(int idRate) {
         try {
             String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.RATE WHERE ID_RATE = ?";
-            log.info("Запрос checkRate > {}", sqlQuery);
-            return jdbcTemplate.queryForObject(sqlQuery, (rs, rowNum) -> mapToRate(rs), idRate);
+            Rating rating = jdbcTemplate.queryForObject(sqlQuery, (rs, rowNum) -> mapToRate(rs), idRate);
+            log.info("Запрос checkRate > {} - {} ", sqlQuery, rating);
+            return rating;
         } catch (Exception e) {
             log.info("Рейтинга с id {} нет", idRate);
             throw new ItemNotFoundException("Рейтинга с id " + idRate + " нет.");

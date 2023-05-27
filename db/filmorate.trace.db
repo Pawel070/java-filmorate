@@ -16621,3 +16621,7 @@ java.sql.SQLClientInfoException: Client info name 'ApplicationName' not supporte
 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
 	at java.base/java.lang.Thread.run(Thread.java:833)
+2023-05-26 20:01:44 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Значение слишком длинное для поля "DESCRIPTION CHARACTER VARYING(200)": "U&'\\041f\\044f\\0442\\0435\\0440\\043e \\0434\\0440\\0443\\0437\\0435\\0439 ( \\043a\\043e\\04... (243)"
+Value too long for column "DESCRIPTION CHARACTER VARYING(200)": "U&'\\041f\\044f\\0442\\0435\\0440\\043e \\0434\\0440\\0443\\0437\\0435\\0439 ( \\043a\\043e\\04... (243)"; SQL statement:
+INSERT INTO FILMORATE_SHEMA.FILMS (ID_RATE, DURATION, RELEASE_DATE, DESCRIPTION, NAME_FILMS) VALUES (?,?,CAST (? AS DATE),?,?) [22001-214]

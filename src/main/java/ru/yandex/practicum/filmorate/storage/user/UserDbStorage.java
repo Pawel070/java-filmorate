@@ -71,10 +71,9 @@ public class UserDbStorage implements UserStorage {
     @Override
     public User update(User user) {
         if (getIdExist(user.getId())) {
-        String sqlQuery = "UPDATE FILMORATE_SHEMA.USERS SET NAME_USER = ?, BIRTHDAY = CAST (? AS DATE), " +
-                "EMAIL = ?, LOGIN = ? ";
-        log.info("Запрос update > {}", sqlQuery);
-        jdbcTemplate.update(sqlQuery, user.getName(), user.getBirthday(), user.getEmail(), user.getLogin());
+        String sqlQuery = "UPDATE FILMORATE_SHEMA.USERS SET NAME_USER = ?, BIRTHDAY = ?, EMAIL = ?, LOGIN = ? WHERE ID_USER = ?";
+        jdbcTemplate.update(sqlQuery, user.getName(), user.getBirthday(), user.getEmail(), user.getLogin(), user.getId());
+        log.info("Запрос update > {} -- {} ", sqlQuery, getByIdUser(user.getId()));
         } else {
             log.info("Запрос update > нет такого пользователя {}", user);
             throw new MethodArgumentNotException("Ну нет такого пользователя!");
@@ -86,9 +85,10 @@ public class UserDbStorage implements UserStorage {
     public User getByIdUser(int idUser) {
         User user;
         String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.USERS WHERE ID_USER = ?";
-        log.info("Запрос getByIdUser > {}", sqlQuery);
+        log.info("Запрос getByIdUser > Id {} -- {}", idUser, sqlQuery);
         try {
             user = jdbcTemplate.queryForObject(sqlQuery, this::mapToUser, idUser);
+            log.info("Запрос getByIdUser > user:  {}", user);
         } catch (DataAccessException e) {
             throw new MethodArgumentNotException("Ну нет такого пользователя!");
         }
