@@ -149,7 +149,7 @@ public class ReviewIntegrationTest {
         reviewDbStorage.addReview(review1);
         reviewDbStorage.deleteReviewById(1L);
         List<Review> ans = reviewDbStorage.findAllReviews(1, 5);
-        assertEquals(ans.size(),0);
+        assertEquals(ans.size(), 0);
     }
 
     @Test
@@ -169,5 +169,35 @@ public class ReviewIntegrationTest {
         reviewDbStorage.addReview(review2);
         List<Review> ans = reviewDbStorage.findAllReviews(1, 1);
         assertEquals(ans.size(), 1);
+    }
+
+    @Test
+    public void likeReviewTest() {
+        reviewDbStorage.addReview(review1);
+        reviewDbStorage.likeReview(1, 1);
+        assertEquals(reviewDbStorage.findReviewById(1).getUseful(), 1);
+    }
+
+    @Test
+    public void dislikeReviewTest() {
+        reviewDbStorage.addReview(review1);
+        reviewDbStorage.dislikeReview(1, 1);
+        assertEquals(reviewDbStorage.findReviewById(1).getUseful(), -1);
+    }
+
+    @Test
+    public void deleteLikeReviewTest() {
+        reviewDbStorage.addReview(review1);
+        reviewDbStorage.likeReview(1, 1);
+        reviewDbStorage.deleteLikeReview(1, 1);
+        assertEquals(reviewDbStorage.findReviewById(1).getUseful(), 0);
+    }
+
+    @Test
+    public void deleteDislikeReviewTest() {
+        reviewDbStorage.addReview(review1);
+        reviewDbStorage.dislikeReview(1, 1);
+        reviewDbStorage.deleteDislikeReview(1, 1);
+        assertEquals(reviewDbStorage.findReviewById(1).getUseful(), 0);
     }
 }
