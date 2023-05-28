@@ -16,7 +16,6 @@ import ru.yandex.practicum.filmorate.storage.film.RateStorage;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Data
 @Slf4j
