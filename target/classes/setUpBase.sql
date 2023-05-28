@@ -1,12 +1,12 @@
 // загрузка базы тестовыми данными setUpBase.sql
-INSERT INTO FILMORATE_SHEMA.films(name_films, description, release_date, duration, id_rate)
-VALUES ('ИмФП1', 'Фильм1', '1901-01-01', 10, 1);
-INSERT INTO FILMORATE_SHEMA.films(name_films, description, release_date, duration, id_rate)
-VALUES ('ИмяФ2', 'Фильм2', '1902-02-02', 20, 2);
-INSERT INTO FILMORATE_SHEMA.films(name_films, description, release_date, duration, id_rate)
-VALUES ('ИмяФ3', 'Фильм3', '1903-03-03', 30, 3);
-INSERT INTO FILMORATE_SHEMA.films(name_films, description, release_date, duration, id_rate)
-VALUES ('ИмяФ4', 'Фильм4', '1904-04-04', 40, 4);
+INSERT INTO FILMORATE_SHEMA.films(name_films, description, release_date, duration, id_rate, id_director)
+VALUES ('ИмФП1', 'Фильм1', '1901-01-01', 10, 1, 1);
+INSERT INTO FILMORATE_SHEMA.films(name_films, description, release_date, duration, id_rate, id_director)
+VALUES ('ИмяФ2', 'Фильм2', '1902-02-02', 20, 2, 2);
+INSERT INTO FILMORATE_SHEMA.films(name_films, description, release_date, duration, id_rate, id_director)
+VALUES ('ИмяФ3', 'Фильм3', '1903-03-03', 30, 3, 3);
+INSERT INTO FILMORATE_SHEMA.films(name_films, description, release_date, duration, id_rate, id_director)
+VALUES ('ИмяФ4', 'Фильм4', '1904-04-04', 40, 4, 4);
 
 INSERT INTO FILMORATE_SHEMA.users(login, email, birthday, name_user)
 VALUES ('ИмяП1', 'user1@test.ru', '1971-01-01', 'Пользователь1');
@@ -40,4 +40,13 @@ INSERT INTO FILMORATE_SHEMA.friends(id_user, id_friend, id_type)
 VALUES (1, 3, 3);
 INSERT INTO FILMORATE_SHEMA.friends(id_user, id_friend, id_type)
 VALUES (2, 2, 1);
+
+INSERT INTO FILMORATE_SHEMA.director(id_director, name_director)
+VALUES (1, 'Иванов');
+INSERT INTO FILMORATE_SHEMA.director(id_director, name_director)
+VALUES (2, 'Петров');
+INSERT INTO FILMORATE_SHEMA.director(id_director, name_director)
+VALUES (3, 'Сидоров' );
+INSERT INTO FILMORATE_SHEMA.director(id_director, name_director)
+VALUES (4, 'Шнипперсон');
 

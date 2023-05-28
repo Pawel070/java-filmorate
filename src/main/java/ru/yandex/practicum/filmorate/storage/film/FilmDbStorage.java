@@ -40,9 +40,9 @@ public class FilmDbStorage implements FilmStorage {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    protected Film mapToFilm(ResultSet rs, int rowNum) throws SQLException {
+    public Film mapToFilm(ResultSet rs, int rowNum) throws SQLException {
         log.info("Запрос mapToFilm ResultSet > {}", rs);
-        Rating rating = new Rating(rs.getInt("ID_RATE"),"");
+        Rating rating = new Rating(rs.getInt("ID_RATE"), "");
         List<Genre> genres = genreDbStorage.findGenreByIdFilm(rs.getInt("ID_FILM"));
         Set<Long> likesF = getLikes(rs.getInt("ID_FILM"));
         return Film.builder()
@@ -116,7 +116,7 @@ public class FilmDbStorage implements FilmStorage {
                 "ORDER BY COUNT(LS.ID_USER) DESC, F.ID_RATE LIMIT = ?";
         log.info("Запрос getMaxPopular > {}", sqlQuery);
         Collection<Film> listFilm = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapToFilm(rs, rowNum), scoring);
-                // jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapToFilm(rs, rowNum));
+        // jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapToFilm(rs, rowNum));
         log.info("Collection > {}", listFilm);
         return listFilm;
     }
@@ -133,11 +133,11 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public Film update(Film film) {
         if (getIdExist(film.getId())) {
-        String sqlQuery = "UPDATE FILMORATE_SHEMA.FILMS SET ID_RATE = ?, DURATION = ?, RELEASE_DATE = CAST (? AS DATE)," +
-                "DESCRIPTION = ?, NAME_FILMS = ? WHERE ID_FILM = ?";
-        log.info("Запрос update > {} --> {} ", sqlQuery, film);
-        jdbcTemplate.update(sqlQuery, film.getMpa().getId(), film.getDuration(),
-                film.getReleaseDate(), film.getDescription(), film.getName(), film.getId());
+            String sqlQuery = "UPDATE FILMORATE_SHEMA.FILMS SET ID_RATE = ?, DURATION = ?, RELEASE_DATE = CAST (? AS DATE)," +
+                    "DESCRIPTION = ?, NAME_FILMS = ? WHERE ID_FILM = ?";
+            log.info("Запрос update > {} --> {} ", sqlQuery, film);
+            jdbcTemplate.update(sqlQuery, film.getMpa().getId(), film.getDuration(),
+                    film.getReleaseDate(), film.getDescription(), film.getName(), film.getId());
         } else {
             log.info("Запрос update > нет такого фильма {}", film);
             throw new MethodArgumentNotException("Ну нет такого фильма!");
@@ -178,6 +178,7 @@ public class FilmDbStorage implements FilmStorage {
         log.info("Запрос deleteLike > {}", sqlQuery);
         jdbcTemplate.update(sqlQuery, idFilm, idUser);
     }
+
     @Override
     public boolean getLikeExist(int idFilm, int idUser) {
         String sqlQuery = "SELECT ID_USER = ? FROM FILMORATE_SHEMA.LIKES_SET WHERE ID_FILM = ?";
@@ -185,4 +186,5 @@ public class FilmDbStorage implements FilmStorage {
         SqlRowSet idRows = jdbcTemplate.queryForRowSet(sqlQuery, idUser, idFilm);
         return idRows.next();
     }
+
 }
