@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.ErrorsIO.IncorrectParameterException;
+import ru.yandex.practicum.filmorate.ErrorsIO.MethodArgumentNotException;
 import ru.yandex.practicum.filmorate.Service.ReviewService;
 import ru.yandex.practicum.filmorate.model.Review;
 
@@ -24,14 +26,25 @@ public class ReviewController {
     }
 
     @PostMapping
-    public Review addReview(@RequestBody @Valid Review review) {
+    public Review addReview(@Valid @RequestBody Review review) {
+        boolean ans = review.getIsPositive();
+
+        if (review.getUserId() < 0 || review.getFilmId() < 0) {
+            throw new MethodArgumentNotException(String.valueOf(review.getUserId()));
+        }
+
+        if (review.getUserId() == 0 || review.getFilmId() == 0 ||
+                review.getContent() == null || review.getIsPositive() == null) {
+            throw new IncorrectParameterException("Не все поля заполнены");
+        }
+
         Review request = reviewService.addReview(review);
         log.debug("Добавление пользователем id = {} отзыва к фильму id = {}", review.getUserId(), review.getFilmId());
         return request;
     }
 
     @PutMapping
-    public Review updateReview(@RequestBody @Valid Review review) {
+    public Review updateReview(@Valid @RequestBody Review review) {
         Review request = reviewService.updateReview(review);
         log.debug("Правка пользователем id = {} отзыва id = {} к фильму id ={}", review.getUserId(),
                 review.getReviewId(), review.getFilmId());

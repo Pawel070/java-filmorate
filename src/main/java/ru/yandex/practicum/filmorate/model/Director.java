@@ -13,10 +13,8 @@ public class Director {   // 😉
     @Size(message = "Имя режисера не менее трех символов", min = 3)
     private String name;
 
-
     public Director(int id, String name) {
         this.id = id;
         this.name = name;
     }
-
 }

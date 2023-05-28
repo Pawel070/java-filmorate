@@ -114,5 +114,4 @@ public class FilmController implements ControllerInterface<Film> {
         List<Film> films = directorStorage.getFilmsByDirector(directorId, sorting);
         return films;
     }
-
 }

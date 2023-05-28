@@ -33,29 +33,29 @@ public class ReviewDbStorage implements ReviewStorage {
         final String sql = "INSERT INTO FILMORATE_SHEMA.REVIEWS (ID_FILM, ID_USER, CONTENT, IS_POSITIVE, USEFULL)" +
                 "Values (?, ?, ?, ?, 0)";
 
-//        if (review.getUserId() <= 0 || review.getFilmId() <= 0) {
-//            throw new MethodArgumentNotException(String.valueOf(review.getUserId()));
-//        }
-
-            KeyHolder keyHolder = new GeneratedKeyHolder();
-
-            jdbcTemplate.update(connection -> {
-                PreparedStatement stmt = connection.prepareStatement(sql, new String[]{"ID_REVIEW"});
-                stmt.setInt(1, review.getFilmId());
-                stmt.setInt(2, review.getUserId());
-                stmt.setString(3, review.getContent());
-                stmt.setBoolean(4, review.getIsPositive());
-                return stmt;
-            }, keyHolder);
-            int id = keyHolder.getKey().intValue();
-            review.setReviewId(id);
-            review.setUseful(0L);
-            return review;
+        if (review.getUserId() <= 0 || review.getFilmId() <= 0) {
+            throw new MethodArgumentNotException(String.valueOf(review.getUserId()));
         }
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement stmt = connection.prepareStatement(sql, new String[]{"ID_REVIEW"});
+            stmt.setInt(1, review.getFilmId());
+            stmt.setInt(2, review.getUserId());
+            stmt.setString(3, review.getContent());
+            stmt.setBoolean(4, review.getIsPositive());
+            return stmt;
+        }, keyHolder);
+        int id = keyHolder.getKey().intValue();
+        review.setReviewId(id);
+        review.setUseful(0L);
+        return review;
+    }
 
     @Override
     public Review updateReview(Review review) {
-        //findReviewById(review.getReviewId());
+        findReviewById(review.getReviewId());
         String sql = "UPDATE FILMORATE_SHEMA.REVIEWS SET CONTENT = ?," +
                 "IS_POSITIVE = ? WHERE ID_REVIEW = ?";
         jdbcTemplate.update(sql, review.getContent(), review.getIsPositive(), review.getReviewId());
