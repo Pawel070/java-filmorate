@@ -37,7 +37,7 @@ public class FilmService {
     }
 
     public Collection<Film> returnAllFilms() {
-        log.info("returnAllFilms Ok.");
+        log.info("returnAllFilms...");
         return filmStorage.getCollectionFilm();
     }
 

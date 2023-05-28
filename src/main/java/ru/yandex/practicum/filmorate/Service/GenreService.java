@@ -31,7 +31,7 @@ public class GenreService {
     }
 
     public Genre getGenreById(int id) {
-        log.info("Возврат списка жанров фильма с id {} ", id);
+        log.info("Возврат жанра фильма с id {} ", id);
         return storage.checkGenre(id);
     }
 

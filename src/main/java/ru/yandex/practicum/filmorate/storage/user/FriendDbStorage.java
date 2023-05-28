@@ -56,9 +56,9 @@ public class FriendDbStorage implements FriendStorage {
 
     @Override
     public void updateNoFriends(int idUser, int idFriend) {
-        String sqlQuery = "INSERT INTO FILMORATE_SHEMA.FRIENDS (ID_USER, ID_FRIEND, ID_TYPE) VALUES (?,?,2)";
+        String sqlQuery = "INSERT INTO FILMORATE_SHEMA.FRIENDS (ID_USER, ID_FRIEND, ID_TYPE) VALUES (?,?,?)";
         log.info("Запрос updateNoFriends > {}", sqlQuery);
-        jdbcTemplate.update(sqlQuery, idUser, idFriend);
+        jdbcTemplate.update(sqlQuery, idUser, idFriend, '2');
     }
 
     @Override
@@ -70,9 +70,9 @@ public class FriendDbStorage implements FriendStorage {
 
     @Override
     public void setRequestsFriends(int idUser, int idFriend) {
-        String sqlQuery = "INSERT INTO FILMORATE_SHEMA.FRIENDS (ID_USER, ID_FRIEND, ID_TYPE) VALUES (?,?,3)";
-        log.info("Запрос setRequestsFriends > {}", sqlQuery);
-        jdbcTemplate.update(sqlQuery, idUser, idFriend);
+        String sqlQuery = "INSERT INTO FILMORATE_SHEMA.FRIENDS (ID_USER, ID_FRIEND, ID_TYPE) VALUES (?,?,?)";
+        log.info("Запрос setRequestsFriends > {} + {} == {}",idUser, idFriend, sqlQuery);
+        jdbcTemplate.update(sqlQuery, idUser, idFriend, '3');
     }
 
     @Override

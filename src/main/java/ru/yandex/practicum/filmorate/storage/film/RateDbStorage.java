@@ -8,6 +8,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import ru.yandex.practicum.filmorate.ErrorsIO.ItemNotFoundException;
+import ru.yandex.practicum.filmorate.ErrorsIO.MethodArgumentNotException;
 import ru.yandex.practicum.filmorate.model.Rating;
 
 import java.sql.ResultSet;
@@ -32,11 +33,12 @@ public class RateDbStorage implements RateStorage {
     public Rating checkRate(int idRate) {
         try {
             String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.RATE WHERE ID_RATE = ?";
-            log.info("Запрос checkRate > {}", sqlQuery);
-            return jdbcTemplate.queryForObject(sqlQuery, (rs, rowNum) -> mapToRate(rs), idRate);
+            Rating rating = jdbcTemplate.queryForObject(sqlQuery, (rs, rowNum) -> mapToRate(rs), idRate);
+            log.info("Запрос checkRate > {} - {} ", sqlQuery, rating);
+            return rating;
         } catch (Exception e) {
             log.info("Рейтинга с id {} нет", idRate);
-            throw new ItemNotFoundException("Рейтинга с id " + idRate + " нет.");
+            throw new MethodArgumentNotException("Рейтинга с id " + idRate + " нет.");
         }
     }
 
