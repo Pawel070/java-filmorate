@@ -24,14 +24,14 @@ public class ReviewController {
     }
 
     @PostMapping
-    public Review addReview(@Valid @RequestBody Review review) {
+    public Review addReview(@RequestBody @Valid Review review) {
         Review request = reviewService.addReview(review);
         log.debug("Добавление пользователем id = {} отзыва к фильму id = {}", review.getUserId(), review.getFilmId());
         return request;
     }
 
     @PutMapping
-    public Review updateReview(@Valid @RequestBody Review review) {
+    public Review updateReview(@RequestBody @Valid Review review) {
         Review request = reviewService.updateReview(review);
         log.debug("Правка пользователем id = {} отзыва id = {} к фильму id ={}", review.getUserId(),
                 review.getReviewId(), review.getFilmId());
