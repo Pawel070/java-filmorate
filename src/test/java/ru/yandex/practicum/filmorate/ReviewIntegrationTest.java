@@ -1,11 +1,13 @@
 package ru.yandex.practicum.filmorate;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.storage.film.FilmDbStorage;
 import ru.yandex.practicum.filmorate.storage.film.ReviewDbStorage;
@@ -27,6 +29,7 @@ public class ReviewIntegrationTest {
     private final ReviewDbStorage reviewDbStorage;
     private final FilmDbStorage filmDbStorage;
     private final UserDbStorage userDbStorage;
+    private final JdbcTemplate jdbcTemplate;
 
     public Film film1;
     public Film film2;
@@ -36,6 +39,8 @@ public class ReviewIntegrationTest {
     public User user2;
 
     public Review review1;
+
+    public Review review2;
 
     public Review updateReview;
 
@@ -89,8 +94,15 @@ public class ReviewIntegrationTest {
                 .isPositive(true)
                 .build();
 
+        review2 = Review.builder()
+                .userId(1)
+                .filmId(1)
+                .content("Bad")
+                .isPositive(false)
+                .build();
+
         updateReview = Review.builder()
-//                .reviewId(1L)
+                .reviewId(1L)
                 .userId(2)
                 .filmId(1)
                 .content("Bad")
@@ -99,6 +111,19 @@ public class ReviewIntegrationTest {
         filmDbStorage.create(film1);
         userDbStorage.create(user1);
         userDbStorage.create(user2);
+    }
+
+    @AfterEach
+    void resetAll() {
+        jdbcTemplate.update("ALTER TABLE FILMORATE_SHEMA.REVIEWS " +
+                "ALTER COLUMN ID_REVIEW RESTART WITH 1");
+        jdbcTemplate.update("DELETE FROM FILMORATE_SHEMA.REVIEWS");
+        jdbcTemplate.update("ALTER TABLE FILMORATE_SHEMA.FILMS " +
+                "ALTER COLUMN ID_FILM RESTART WITH 1");
+        jdbcTemplate.update("DELETE FROM FILMORATE_SHEMA.FILMS");
+        jdbcTemplate.update("ALTER TABLE FILMORATE_SHEMA.USERS " +
+                "ALTER COLUMN ID_USER RESTART WITH 1");
+        jdbcTemplate.update("DELETE FROM FILMORATE_SHEMA.USERS");
     }
 
     @Test
@@ -113,6 +138,7 @@ public class ReviewIntegrationTest {
 
     @Test
     public void updateReviewTest() {
+        reviewDbStorage.addReview(review1);
         Review ans = reviewDbStorage.updateReview(updateReview);
         assertEquals(ans.getContent(), "Bad");
         assertEquals(ans.getIsPositive(), false);
@@ -120,27 +146,28 @@ public class ReviewIntegrationTest {
 
     @Test
     public void deleteReviewTest() {
+        reviewDbStorage.addReview(review1);
         reviewDbStorage.deleteReviewById(1L);
         List<Review> ans = reviewDbStorage.findAllReviews(1, 5);
-        assertEquals(ans.size(),0); //!!!!! wrong test
+        assertEquals(ans.size(),0);
     }
 
     @Test
     public void findReviewByIdTest() {
+        reviewDbStorage.addReview(review1);
         Review ans = reviewDbStorage.findReviewById(1L);
         assertEquals(ans.getReviewId(), 1L);
         assertEquals(ans.getUserId(), 1);
         assertEquals(ans.getFilmId(), 1);
-        assertEquals(ans.getContent(), "Bad");
-        assertEquals(ans.getIsPositive(), false);
+        assertEquals(ans.getContent(), "Good");
+        assertEquals(ans.getIsPositive(), true);
     }
 
     @Test
     public void findAllReviewsTest() {
         reviewDbStorage.addReview(review1);
-        reviewDbStorage.addReview(updateReview);
-        List<Review> ans = reviewDbStorage.findAllReviews(0, 1);
+        reviewDbStorage.addReview(review2);
+        List<Review> ans = reviewDbStorage.findAllReviews(1, 1);
         assertEquals(ans.size(), 1);
     }
-
 }
