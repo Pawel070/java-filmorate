@@ -18,6 +18,7 @@ import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import java.time.LocalDate;
 import java.util.*;
 
+
 @Data
 @Slf4j
 @Service
@@ -89,7 +90,7 @@ public class UserService {
             throw new MethodArgumentNotException("Запрос добавления в друзья по Id пользавателя невыполним - пользователя с таким Id нет.");
         } else {
             friendStorage.setRequestsFriends(userId, friendId);
-            eventService.createEvent(userId, EventType.FRIEND, EventOperation.ADD, friendId);
+            eventService.createEvent(userId, friendId, EventType.FRIEND, EventOperation.ADD);
             log.info("Запрос в друзья отправлен.");
         }
     }
@@ -100,18 +101,20 @@ public class UserService {
             throw new MethodArgumentNotException("Запрос удаления из друзей по Id пользавателя невыполним - пользователя с таким Id нет.");
         } else {
             friendStorage.deleteFriend(userId, friendId);
-            eventService.createEvent(userId, EventType.FRIEND, EventOperation.REMOVE, friendId);
+            eventService.createEvent(userId, friendId, EventType.FRIEND, EventOperation.REMOVE);
             log.info("Удаление из друзей выполнено.");
         }
     }
 
     public List<Event> getEvent(int id) {
-        if (userStorage.getByIdUser(id) == null) {
-            log.info("Запрос пользователя по Id - пользавателя нет. {}", id);
-            throw new MethodArgumentNotException("Запрос пользователя по Id пользователя с таким Id нет.");
-        }
+        findUserById(id);
+     //   if (userStorage.getByIdUser(id) == null) {
+    //        log.info("Запрос пользователя по Id - пользавателя нет. {}", id);
+    //    throw new MethodArgumentNotException("Запрос пользователя по Id пользователя с таким Id нет.");
+    //    }
         return eventService.getEvent(id);
     }
+
     public void validateU(User user) {
         if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {
             log.info("ValidationException: {}", "Некорректный email");

@@ -1,10 +1,14 @@
 CREATE SCHEMA IF NOT EXISTS FILMORATE_SHEMA AUTHORIZATION sa;
 
+--DROP TABLE IF EXISTS FILMORATE_SHEMA.RATE;
+
 create table IF NOT EXISTS FILMORATE_SHEMA.rate
 (
     id_rate integer primary key,
     name nvarchar(255)
 );
+
+--DROP TABLE IF EXISTS FILMORATE_SHEMA.GENRE;
 
 create table IF NOT EXISTS FILMORATE_SHEMA.genre
 (
@@ -12,6 +16,8 @@ create table IF NOT EXISTS FILMORATE_SHEMA.genre
     genre_Date nvarchar(255) not null,
     genre_rus  nvarchar(255) not null
 );
+
+--DROP TABLE IF EXISTS FILMORATE_SHEMA.FILMS;
 
 create table IF NOT EXISTS FILMORATE_SHEMA.films
 (
@@ -23,6 +29,8 @@ create table IF NOT EXISTS FILMORATE_SHEMA.films
     id_rate integer not null
 );
 
+--DROP TABLE IF EXISTS FILMORATE_SHEMA.USERS;
+
 create table IF NOT EXISTS FILMORATE_SHEMA.users
 (
     id_user integer auto_increment primary key,
@@ -32,17 +40,23 @@ create table IF NOT EXISTS FILMORATE_SHEMA.users
     name_user nvarchar(255) not null
 );
 
+--DROP TABLE IF EXISTS FILMORATE_SHEMA.GENRE_SET;
+
 create table IF NOT EXISTS FILMORATE_SHEMA.genre_set
 (
     id_film integer,
     id_genre integer
 );
 
+--DROP TABLE IF EXISTS FILMORATE_SHEMA.LIKES_SET;
+
 create table IF NOT EXISTS FILMORATE_SHEMA.likes_set
 (
     id_film integer,
     id_user integer
 );
+
+--DROP TABLE IF EXISTS FILMORATE_SHEMA.FRIENDS;
 
 create table IF NOT EXISTS FILMORATE_SHEMA.friends
 (
@@ -51,11 +65,15 @@ create table IF NOT EXISTS FILMORATE_SHEMA.friends
     id_type integer
 );
 
+--DROP TABLE IF EXISTS FILMORATE_SHEMA.TYPE_FRIENDS;
+
 create table IF NOT EXISTS FILMORATE_SHEMA.type_friends
 (
     id_type integer primary key,
     fri_type nvarchar(255)
 );
+
+--DROP TABLE IF EXISTS FILMORATE_SHEMA.REVIEWS;
 
 create table IF NOT EXISTS FILMORATE_SHEMA.reviews
 (
@@ -67,9 +85,11 @@ create table IF NOT EXISTS FILMORATE_SHEMA.reviews
     usefull integer
 );
 
+--DROP TABLE IF EXISTS FILMORATE_SHEMA.EVENTS;
+
 create table IF NOT EXISTS FILMORATE_SHEMA.events
 (
-    event_id integer primary key not null,
+    event_id integer AUTO_INCREMENT primary key,
     user_id integer not null,
     timestamp bigint not null,
     entity_id integer not null,
@@ -79,12 +99,11 @@ create table IF NOT EXISTS FILMORATE_SHEMA.events
 
 CREATE UNIQUE INDEX IF NOT EXISTS FILMORATE_SHEMA.friends_index_0 ON FILMORATE_SHEMA.friends (id_user, id_friend);
 
-ALTER TABLE FILMORATE_SHEMA.reviews ADD FOREIGN KEY (id_film) REFERENCES FILMORATE_SHEMA.films (id_film);
+ALTER TABLE FILMORATE_SHEMA.reviews ADD FOREIGN KEY (id_film) REFERENCES FILMORATE_SHEMA.films (id_film)  ON DELETE CASCADE;
 
-ALTER TABLE FILMORATE_SHEMA.reviews ADD FOREIGN KEY (id_user) REFERENCES FILMORATE_SHEMA.users (id_user);
+ALTER TABLE FILMORATE_SHEMA.reviews ADD FOREIGN KEY (id_user) REFERENCES FILMORATE_SHEMA.users (id_user)  ON DELETE CASCADE;
 
 ALTER TABLE FILMORATE_SHEMA.genre_set ADD FOREIGN KEY (id_genre) REFERENCES FILMORATE_SHEMA.genre (id_genre) ON DELETE CASCADE;
-ALTER TABLE FILMORATE_SHEMA.genre_set ADD FOREIGN KEY (id_genre) REFERENCES FILMORATE_SHEMA.genre (id_genre);
 
 ALTER TABLE FILMORATE_SHEMA.films ADD FOREIGN KEY (id_rate) REFERENCES FILMORATE_SHEMA.rate (id_rate) ON DELETE CASCADE;
 
@@ -96,7 +115,7 @@ ALTER TABLE FILMORATE_SHEMA.friends ADD FOREIGN KEY (id_user) REFERENCES FILMORA
 
 ALTER TABLE FILMORATE_SHEMA.likes_set ADD FOREIGN KEY (id_film) REFERENCES FILMORATE_SHEMA.films (id_film) ON DELETE CASCADE;
 
-ALTER TABLE FILMORATE_SHEMA.likes_set ADD FOREIGN KEY (id_user) REFERENCES FILMORATE_SHEMA.users (id_user);
-
-ALTER TABLE FILMORATE_SHEMA.events ADD FOREIGN KEY (user_id) REFERENCES FILMORATE_SHEMA.users (id_user);
 ALTER TABLE FILMORATE_SHEMA.likes_set ADD FOREIGN KEY (id_user) REFERENCES FILMORATE_SHEMA.users (id_user) ON DELETE CASCADE;
+
+ALTER TABLE FILMORATE_SHEMA.EVENTS ADD FOREIGN KEY (user_id) REFERENCES FILMORATE_SHEMA.USERS (id_user) ON DELETE CASCADE;
+// ALTER TABLE FILMORATE_SHEMA.director ADD FOREIGN KEY (id_director) REFERENCES FILMORATE_SHEMA.films (id_director) ON DELETE CASCADE;

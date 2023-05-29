@@ -74,6 +74,7 @@ public class UserController implements ControllerInterface<User> {
 
     @GetMapping("/{id}/feed")
     public List<Event> getEvent(@PathVariable int id) {
+        log.info("Контроллер GET Feed User по Id> {}", id);
         return userService.getEvent(id);
     }
 }

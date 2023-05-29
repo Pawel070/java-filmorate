@@ -18,7 +18,6 @@ import ru.yandex.practicum.filmorate.storage.film.RateStorage;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Data
 @Slf4j
@@ -69,7 +68,7 @@ public class FilmService {
             throw new MethodArgumentNotException("Запрос добавления лайка по Id фильма невыполним - фильма с таким Id нет.");
         }
         filmStorage.addLike(filmId, userId);
-        eventService.createEvent(userId, EventType.LIKE, EventOperation.ADD, filmId);
+        eventService.createEvent(userId, filmId, EventType.LIKE, EventOperation.ADD);
         log.info("Запрос добавления лайка по Id фильма Ok.");
     }
 
@@ -80,7 +79,7 @@ public class FilmService {
             throw new MethodArgumentNotException("Запрос добавления лайка по Id фильма невыполним - фильма с таким Id нет.");
         }
         filmStorage.deleteLike(filmId, userId);
-        eventService.createEvent(userId, EventType.LIKE, EventOperation.REMOVE, filmId);
+        eventService.createEvent(userId, filmId, EventType.LIKE, EventOperation.REMOVE);
         log.info("Удаление лайка по Id фильма Ok.");
     }
 

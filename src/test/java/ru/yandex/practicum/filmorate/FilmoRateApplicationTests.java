@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.test;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,14 +16,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 import ru.yandex.practicum.filmorate.Service.UserService;
-import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.storage.film.FilmDbStorage;
 import ru.yandex.practicum.filmorate.storage.film.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.film.RateStorage;
 import ru.yandex.practicum.filmorate.storage.user.FriendStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
+
+import javax.lang.model.element.ElementVisitor;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -88,7 +89,7 @@ public class FilmoRateApplicationTests {
                 .duration(50)
                 .likes(like)
                 .genre(genres)
-                .idRate(1)
+                .mpa(rating)
                 .build();
 
         film2 = Film.builder()
@@ -231,7 +232,5 @@ public class FilmoRateApplicationTests {
         assertEquals(filmDbStorage.getLikes(1).size(), 1);
         filmDbStorage.deleteLike(1, 1);
         assertEquals(filmDbStorage.getLikes(1).size(), 0);
-
     }
-
 }
