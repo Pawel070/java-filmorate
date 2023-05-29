@@ -3,37 +3,45 @@ package ru.yandex.practicum.filmorate.test;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.init.DataSourceInitializer;
+import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
+import org.springframework.test.jdbc.JdbcTestUtils;
 import ru.yandex.practicum.filmorate.Service.UserService;
-import ru.yandex.practicum.filmorate.model.*;
+import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Rating;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.film.FilmDbStorage;
 import ru.yandex.practicum.filmorate.storage.film.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.film.RateStorage;
 import ru.yandex.practicum.filmorate.storage.user.FriendStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
 
-import javax.lang.model.element.ElementVisitor;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @SpringBootTest
@@ -80,7 +88,17 @@ public class FilmoRateApplicationTests {
                 .email("test@qq2.ru")
                 .login("Логин2")
                 .build();
+
+         user3 = User.builder()
+                .id(3)
+                .name("Имя3")
+                .birthday(LocalDate.of(2003, 12, 28))
+                .email("test@qq3.ru")
+                .login("Логин3")
+                .build();
+
         Rating rating = new Rating(1, "");
+
         film1 = Film.builder()
                 .id(1)
                 .name("Фильм1")
@@ -107,14 +125,14 @@ public class FilmoRateApplicationTests {
     @Test
     public void createAndFindUserTest() {
         userStorage.create(user1);
-        assertEquals(userService.findUserById(1).getName(), "newName");
+        assertEquals(userService.findUserById(user1.getId()).getName(), "Имя1");
     }
 
     @Test
     public void FindAllUsersTest() {
         userStorage.create(user1);
         userStorage.create(user2);
-        assertEquals(userStorage.getAllUser().size(), 9);
+        assertEquals(userStorage.getAllUser().size(), 2);
     }
 
     @Test
@@ -122,7 +140,7 @@ public class FilmoRateApplicationTests {
         userStorage.create(user1);
         user1.setName("newName");
         userStorage.update(user1);
-        assertEquals(userStorage.getByIdUser(1).getName(), "newName");
+        assertEquals(userStorage.getByIdUser(user1.getId()).getName(), "newName");
     }
 
     @Test
@@ -147,10 +165,10 @@ public class FilmoRateApplicationTests {
     public void findCommonFriendsTest() {
         userStorage.create(user1);
         userStorage.create(user2);
-        userStorage.create(user2);
-        friendStorage.setRequestsFriends(2, 1);
-        friendStorage.setRequestsFriends(3, 1);
-        assertEquals(friendStorage.getCommonFriends(2, 3).get(0), userStorage.getByIdUser(1));
+        userStorage.create(user3);
+        friendStorage.setRequestsFriends(user2.getId(), user1.getId());
+        friendStorage.setRequestsFriends(user3.getId(), user1.getId());
+        assertEquals(friendStorage.getCommonFriends(user2.getId(), user3.getId()).get(0), userStorage.getByIdUser(user1.getId()));
     }
 
     @Test
@@ -163,7 +181,7 @@ public class FilmoRateApplicationTests {
     public void findAllFilmsTest() {
         filmDbStorage.create(film1);
         filmDbStorage.create(film2);
-        assertEquals(filmDbStorage.getCollectionFilm().size(), 6);
+        assertEquals(filmDbStorage.getCollectionFilm().size(), 2);
     }
 
     @Test
@@ -171,17 +189,17 @@ public class FilmoRateApplicationTests {
         filmDbStorage.create(film1);
         film1.setName("newNameForTest");
         filmDbStorage.update(film1);
-        assertEquals(filmDbStorage.getByIdFilm(user1.getId()).getName(), "Фильм1");
+        assertEquals(filmDbStorage.getByIdFilm(film1.getId()).getName(), "newNameForTest");
     }
 
     @Test
     public void addAndRemoveLikeTest() {
         filmDbStorage.create(film1);
         userStorage.create(user1);
-        filmDbStorage.addLike(1, 1);
+        filmDbStorage.addLike(film1.getId(), user1.getId());
         Set<Long> likes = filmDbStorage.getLikes(film1.getId());
         log.info("TEST Запрос addAndRemoveLikeTest add likes > {} ", likes);
-        assertEquals(likes.size(), 0);
+        assertEquals(likes.size(), 1);
         filmDbStorage.deleteLike(film1.getId(), user1.getId());
         likes = filmDbStorage.getLikes(film1.getId());
         log.info("TEST Запрос addAndRemoveLikeTest delete likes > {} ", likes);
@@ -211,9 +229,18 @@ public class FilmoRateApplicationTests {
     @Test
     public void likeFilmAndGetLikedByOfFilmTest() {
         userStorage.create(user1);
+        userStorage.create(user2);
+        userStorage.create(user3);
         filmDbStorage.create(film1);
-        filmDbStorage.addLike(1, 1);
-        assertEquals(filmDbStorage.getLikes(1).size(), 1);
+        filmDbStorage.create(film2);
+        filmDbStorage.addLike(film1.getId(), user1.getId());
+        filmDbStorage.addLike(film1.getId(), user2.getId());
+        filmDbStorage.addLike(film2.getId(), user2.getId());
+        filmDbStorage.addLike(film2.getId(), user3.getId());
+        film1.setLikes(filmDbStorage.getLikes(film1.getId()));
+        film2.setLikes(filmDbStorage.getLikes(film2.getId()));
+        log.info("TEST Запрос likeFilmAndGetLikedByOfFilmTest > 1 - {} , 2 - {} , ok.", film1.getLikes(), film2.getLikes());
+        assertEquals(filmDbStorage.getLikes(film1.getId()).size(), 2);
     }
 
     @Test
@@ -228,9 +255,20 @@ public class FilmoRateApplicationTests {
     public void removeLikeLikedByTest() {
         userStorage.create(user1);
         filmDbStorage.create(film1);
-        filmDbStorage.addLike(1, 1);
-        assertEquals(filmDbStorage.getLikes(1).size(), 1);
-        filmDbStorage.deleteLike(1, 1);
-        assertEquals(filmDbStorage.getLikes(1).size(), 0);
+        filmDbStorage.addLike(film1.getId(), user1.getId());
+        assertEquals(filmDbStorage.getLikes(film1.getId()).size(), 1);
+        filmDbStorage.deleteLike(film1.getId(), user1.getId());
+        assertEquals(filmDbStorage.getLikes(film1.getId()).size(), 0);
+
     }
+
+    @Test
+    public void getCollectionFilmTest() {
+        filmDbStorage.create(film1);
+        filmDbStorage.create(film2);
+        Collection<Film> listFilm = filmDbStorage.getCollectionFilm();
+        log.info("TEST Запрос getCollectionFilmTest > {} ", listFilm);
+        assertEquals(listFilm.size(), 2);
+    }
+
 }

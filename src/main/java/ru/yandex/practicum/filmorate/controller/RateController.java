@@ -18,7 +18,7 @@ import ru.yandex.practicum.filmorate.model.Rating;
 
 @Slf4j
 @RestController
-@RequestMapping("/ratings")
+@RequestMapping("/mpa")
 public class RateController {
 
     private final RateService service;
@@ -29,14 +29,14 @@ public class RateController {
     }
 
 
-    @GetMapping("/ratings")
+    @GetMapping("")
     public Collection<Rating> selectGetting() {
         log.info("Контроллер GET список рейтингов.");
         return service.findAll();
     }
 
 
-    @GetMapping("/ratings/{id}")
+    @GetMapping("/{id}")
     public Rating getById(@PathVariable int id) {
         log.info("Контроллер GET рейтинг по Id {} ", id);
         return service.findById(id);

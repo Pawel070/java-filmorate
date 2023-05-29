@@ -10,6 +10,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.ErrorsIO.ItemNotFoundException;
+import ru.yandex.practicum.filmorate.ErrorsIO.MethodArgumentNotException;
 import ru.yandex.practicum.filmorate.model.Review;
 
 import java.sql.PreparedStatement;
@@ -32,6 +33,10 @@ public class ReviewDbStorage implements ReviewStorage {
         final String sql = "INSERT INTO FILMORATE_SHEMA.REVIEWS (ID_FILM, ID_USER, CONTENT, IS_POSITIVE, USEFULL)" +
                 "Values (?, ?, ?, ?, 0)";
 
+        if (review.getUserId() <= 0 || review.getFilmId() <= 0) {
+            throw new MethodArgumentNotException(String.valueOf(review.getUserId()));
+        }
+
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -50,6 +55,7 @@ public class ReviewDbStorage implements ReviewStorage {
 
     @Override
     public Review updateReview(Review review) {
+        findReviewById(review.getReviewId());
         String sql = "UPDATE FILMORATE_SHEMA.REVIEWS SET CONTENT = ?," +
                 "IS_POSITIVE = ? WHERE ID_REVIEW = ?";
         jdbcTemplate.update(sql, review.getContent(), review.getIsPositive(), review.getReviewId());
@@ -69,9 +75,9 @@ public class ReviewDbStorage implements ReviewStorage {
         String sql = "SELECT * FROM FILMORATE_SHEMA.REVIEWS WHERE ID_REVIEW = ?";
         try {
             return jdbcTemplate.queryForObject(sql, this::mapRowToReview, id);
-        } catch (EmptyResultDataAccessException e) {
+        } catch (RuntimeException e) {
             log.info("Отзыв с индификатором {} не найден.", id);
-            throw new ItemNotFoundException("Отзыв не найден");
+            throw new MethodArgumentNotException(String.valueOf(id));
         }
     }
 
