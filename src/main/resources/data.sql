@@ -8,6 +8,7 @@ delete from FILMORATE_SHEMA.FILMS where FILMS.ID_FILM > 0;
 delete from FILMORATE_SHEMA.USERS where USERS.ID_USER > 0;
 delete from FILMORATE_SHEMA.REVIEWS where REVIEWS.ID_REVIEW > 0;
 delete from FILMORATE_SHEMA.DIRECTOR where DIRECTOR.ID_DIRECTOR > 0;
+delete from FILMORATE_SHEMA.DIRECTOR_LIST where DIRECTOR_LIST.ID_DIRECTOR > 0;
 
 MERGE INTO FILMORATE_SHEMA.rate(id_rate, name)
     VALUES
@@ -32,3 +33,11 @@ MERGE INTO FILMORATE_SHEMA.type_friends(id_type, fri_type)
         (1, 'FRIEND'),
         (2, 'NO_FRIEND'),
         (3, 'FRIEND_REQUEST');
+
+MERGE INTO FILMORATE_SHEMA.director_list(id_director, name_director)
+    VALUES
+        (1, 'Иванов'),
+        (2, 'Петров'),
+        (3, 'Сидоров' ),
+        (4, 'Шнипперсон');
+

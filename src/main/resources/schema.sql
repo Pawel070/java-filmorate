@@ -1,8 +1,8 @@
 CREATE SCHEMA IF NOT EXISTS FILMORATE_SHEMA AUTHORIZATION sa;
 
-create table IF NOT EXISTS FILMORATE_SHEMA.director
+create table IF NOT EXISTS FILMORATE_SHEMA.director_list
 (
-    id_director integer auto_increment primary key,
+    id_director integer primary key,
     name_director nvarchar(255)
 );
 
@@ -42,6 +42,12 @@ create table IF NOT EXISTS FILMORATE_SHEMA.genre_set
 (
     id_film integer,
     id_genre integer
+);
+
+create table IF NOT EXISTS FILMORATE_SHEMA.director
+(
+    id_film integer primary key,
+    id_director integer
 );
 
 create table IF NOT EXISTS FILMORATE_SHEMA.likes_set
@@ -93,4 +99,6 @@ ALTER TABLE FILMORATE_SHEMA.likes_set ADD FOREIGN KEY (id_film) REFERENCES FILMO
 
 ALTER TABLE FILMORATE_SHEMA.likes_set ADD FOREIGN KEY (id_user) REFERENCES FILMORATE_SHEMA.users (id_user) ON DELETE CASCADE;
 
-// ALTER TABLE FILMORATE_SHEMA.director ADD FOREIGN KEY (id_director) REFERENCES FILMORATE_SHEMA.films (id_director) ON DELETE CASCADE;
+ALTER TABLE FILMORATE_SHEMA.director ADD FOREIGN KEY (id_film) REFERENCES FILMORATE_SHEMA.films (id_film) ON DELETE CASCADE;
+
+ALTER TABLE FILMORATE_SHEMA.director ADD FOREIGN KEY (id_director) REFERENCES FILMORATE_SHEMA.director_list (id_director) ON DELETE CASCADE;
