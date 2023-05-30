@@ -22,13 +22,9 @@ Isrc/main/java/ru/yandex/practicum/filmorate/storage/user/UserStorage.java,4\6\
 :
 
 .gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302
-v
-Fsrc/main/java/ru/yandex/practicum/filmorate/Service/FriendService.java,f\a\faabfea77d12d225f5f634cd6cf160d67ee96823
 {
 Ksrc/main/java/ru/yandex/practicum/filmorate/storage/user/FriendStorage.java,c\0\c09bf85ae340f18059106a696c3152c173fcfd7c
 i
 9src/test/java/ru/yandex/practicum/filmorate/UserTest.java,b\5\b51f3e43bc6672c2baa56cb29612bb6b068b96ef
-|
-Lsrc/main/java/ru/yandex/practicum/filmorate/controller/FriendController.java,c\5\c532e5a2d4811e774229ff8cdf1b90c6c44d6ba3
 z
 Jsrc/main/java/ru/yandex/practicum/filmorate/controller/RateController.java,8\9\893381c6935a51b2ed9a940ebf162b0f2b86ea7a
