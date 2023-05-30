@@ -71,7 +71,7 @@ public class ReviewIntegrationTest {
                 .releaseDate(LocalDate.of(1995, 12, 28))
                 .duration(50)
                 .likes(like)
-                .genre(genres)
+                .genres(genres)
                 .mpa(rating)
                 .build();
 
@@ -82,7 +82,7 @@ public class ReviewIntegrationTest {
                 .releaseDate(LocalDate.of(2000, 12, 28))
                 .duration(100)
                 .likes(like)
-                .genre(genres)
+                .genres(genres)
                 .mpa(rating)
                 .build();
 

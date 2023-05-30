@@ -7,14 +7,12 @@ import lombok.Data;
 @Builder
 public class Genre {
 
-    private int idGenre;
-    private String idGenreDate;
-    private String genreRus;
+    private int id;
+    private String name;
 
-    public Genre(int idGenre, String idGenreDate, String genreRus) {
-        this.idGenre = idGenre;
-        this.idGenreDate = idGenreDate;
-        this.genreRus = genreRus;
+    public Genre(int id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
 }

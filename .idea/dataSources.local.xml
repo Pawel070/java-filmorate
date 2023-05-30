@@ -12,8 +12,8 @@
         <introspection-scope>
           <node kind="database" qname="FILMORATE">
             <node kind="schema">
-              <name qname="PUBLIC" />
               <name qname="FILMORATE_SHEMA" />
+              <name qname="PUBLIC" />
             </node>
           </node>
         </introspection-scope>

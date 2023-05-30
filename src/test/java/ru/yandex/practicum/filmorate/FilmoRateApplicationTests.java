@@ -3,29 +3,17 @@ package ru.yandex.practicum.filmorate.test;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Bean;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.init.DataSourceInitializer;
-import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
-import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
-import org.springframework.test.jdbc.JdbcTestUtils;
 import ru.yandex.practicum.filmorate.Service.UserService;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
@@ -107,7 +95,7 @@ public class FilmoRateApplicationTests {
                 .releaseDate(LocalDate.of(1995, 12, 28))
                 .duration(50)
                 .likes(like)
-                .genre(genres)
+                .genres(genres)
                 .mpa(rating)
                 .build();
 
@@ -118,7 +106,7 @@ public class FilmoRateApplicationTests {
                 .releaseDate(LocalDate.of(2000, 12, 28))
                 .duration(100)
                 .likes(like)
-                .genre(genres)
+                .genres(genres)
                 .mpa(rating)
                 .build();
     }
@@ -211,7 +199,7 @@ public class FilmoRateApplicationTests {
     public void findByIdGenreTest() {
         log.info("TEST Запрос findByIdGenreTest getGenres > {} ", genreStorage.getGenres());
         filmDbStorage.create(film1);
-        List<Genre>  genres = genreStorage.findGenreByIdFilm(film1.getId());
+        List<Genre> genres = genreStorage.findGenreByIdFilm(film1.getId());
         log.info("TEST Запрос findByIdGenreTest > {} у {}", genres.size(), film1);
         assertEquals(genres.size(), 0);
     }

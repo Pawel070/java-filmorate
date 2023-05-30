@@ -13,9 +13,8 @@ create table IF NOT EXISTS FILMORATE_SHEMA.rate
 );
 create table IF NOT EXISTS FILMORATE_SHEMA.genre
 (
-    id_genre integer primary key not null,
-    genre_Date nvarchar(255) not null,
-    genre_rus  nvarchar(255) not null
+    id integer primary key not null,
+    name nvarchar(255) not null
 );
 
 create table IF NOT EXISTS FILMORATE_SHEMA.films
@@ -41,7 +40,7 @@ create table IF NOT EXISTS FILMORATE_SHEMA.users
 create table IF NOT EXISTS FILMORATE_SHEMA.genre_set
 (
     id_film integer,
-    id_genre integer
+    id integer
 );
 
 create table IF NOT EXISTS FILMORATE_SHEMA.director
@@ -85,7 +84,7 @@ ALTER TABLE FILMORATE_SHEMA.reviews ADD FOREIGN KEY (id_film) REFERENCES FILMORA
 
 ALTER TABLE FILMORATE_SHEMA.reviews ADD FOREIGN KEY (id_user) REFERENCES FILMORATE_SHEMA.users (id_user);
 
-ALTER TABLE FILMORATE_SHEMA.genre_set ADD FOREIGN KEY (id_genre) REFERENCES FILMORATE_SHEMA.genre (id_genre) ON DELETE CASCADE;
+ALTER TABLE FILMORATE_SHEMA.genre_set ADD FOREIGN KEY (id) REFERENCES FILMORATE_SHEMA.genre (id) ON DELETE CASCADE;
 
 ALTER TABLE FILMORATE_SHEMA.films ADD FOREIGN KEY (id_rate) REFERENCES FILMORATE_SHEMA.rate (id_rate) ON DELETE CASCADE;
 

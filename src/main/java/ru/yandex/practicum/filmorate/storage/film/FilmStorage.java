@@ -33,6 +33,4 @@ public interface FilmStorage {
 
     boolean getLikeExist(int idFilm, int idUser);
 
-    boolean getIdExist(int idUser);
-
 }

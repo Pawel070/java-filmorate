@@ -33,9 +33,9 @@ public class GenreController {
     }
 
     @GetMapping("/{id}")
-    protected List<Genre> findById(@PathVariable int id) {
-        log.info("Контроллер GET список жанров фильма по Id {} ", id);
-        return service.findById(id);
+    protected Genre getGenreById(@PathVariable int id) {
+        log.info("Контроллер GET жанр по Id {} ", id);
+        return service.getGenreById(id);
     }
 
  }

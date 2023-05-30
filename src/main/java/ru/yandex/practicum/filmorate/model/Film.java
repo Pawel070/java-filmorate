@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -29,7 +30,7 @@ public class Film {
 
     private Set<Long> likes; //  список id лайкающих
 
-    private List<Genre> genre; //  vмассив жанров
+    private List<Genre> genres; //  vмассив жанров
 
     private Rating mpa; // рейтинг
 

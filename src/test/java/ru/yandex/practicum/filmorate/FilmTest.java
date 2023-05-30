@@ -26,7 +26,7 @@ public class FilmTest {
                 .releaseDate(LocalDate.of(1995, 12, 28))
                 .duration(50)
                 .likes(like)
-                .genre(genres)
+                .genres(genres)
                 .mpa(rating)
                 .build();
     }

@@ -53,7 +53,7 @@ public class FilmDbStorage implements FilmStorage {
                 .duration(rs.getLong("DURATION"))
                 .name(rs.getString("NAME_FILMS"))
                 .likes(likesF)
-                .genre(genres)
+                .genres(genres)
                 .build();
     }
 
@@ -116,7 +116,6 @@ public class FilmDbStorage implements FilmStorage {
                 "ORDER BY COUNT(LS.ID_USER) DESC, F.ID_RATE LIMIT = ?";
         log.info("Запрос getMaxPopular > {}", sqlQuery);
         Collection<Film> listFilm = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapToFilm(rs, rowNum), scoring);
-        // jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapToFilm(rs, rowNum));
         log.info("Collection > {}", listFilm);
         return listFilm;
     }
@@ -132,25 +131,18 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Film update(Film film) {
-        if (getIdExist(film.getId())) {
-            String sqlQuery = "UPDATE FILMORATE_SHEMA.FILMS SET ID_RATE = ?, DURATION = ?, RELEASE_DATE = CAST (? AS DATE)," +
-                    "DESCRIPTION = ?, NAME_FILMS = ? WHERE ID_FILM = ?";
+        String sqlQuery;
+        try {
+            sqlQuery = "UPDATE FILMORATE_SHEMA.FILMS SET ID_RATE = ?, DURATION = ?, RELEASE_DATE = CAST (? AS DATE)," +
+                    "DESCRIPTION = ?, NAME_FILMS = ? , Id_DIRECTOR = ? WHERE ID_FILM = ?";
             log.info("Запрос update > {} --> {} ", sqlQuery, film);
             jdbcTemplate.update(sqlQuery, film.getMpa().getId(), film.getDuration(),
-                    film.getReleaseDate(), film.getDescription(), film.getName(), film.getId());
-        } else {
+                    film.getReleaseDate(), film.getDescription(), film.getName(), film.getIdD(), film.getId());
+        } catch (Exception e) {
             log.info("Запрос update > нет такого фильма {}", film);
             throw new MethodArgumentNotException("Ну нет такого фильма!");
         }
         return film;
-    }
-
-    @Override
-    public boolean getIdExist(int idFilm) {
-        String sqlQuery = "SELECT ID_FILM FROM FILMORATE_SHEMA.FILMS WHERE ID_FILM = ?";
-        log.info("Запрос getIdExist Film > {}", sqlQuery);
-        SqlRowSet idRows = jdbcTemplate.queryForRowSet(sqlQuery, idFilm);
-        return idRows.next();
     }
 
     @Override
