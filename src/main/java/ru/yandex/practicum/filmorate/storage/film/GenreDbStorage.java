@@ -31,9 +31,9 @@ public class GenreDbStorage implements GenreStorage {
 
     @Override
     public List<Genre> findGenreByIdFilm(int idFilm) {
-        String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.GENRE AS G JOIN FILMORATE_SHEMA.GENRE_SET AS GS ON GS.ID=G.ID WHERE GS.ID_FILM = ?";
+        String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.GENRE AS G JOIN FILMORATE_SHEMA.GENRE_SET AS GS ON G.ID=GS.ID WHERE GS.ID_FILM = ?";
         List<Genre> result = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapToGenre(rs), idFilm).stream().toList();
-        log.info("Запрос findByIdFilm > {} -- {} ", sqlQuery, result);
+        log.info("Запрос findGenreByIdFilm > {} -- {} ", sqlQuery, result);
         return result;
     }
 

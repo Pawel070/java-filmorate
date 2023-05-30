@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -94,7 +95,9 @@ public class FilmDbStorage implements FilmStorage {
     public Collection<Film> getCollectionFilm() {
         String sqlQuery = "SELECT * FROM " +
                 "(FILMORATE_SHEMA.FILMS AS F LEFT JOIN FILMORATE_SHEMA.RATE AS R ON F.ID_RATE = R.ID_RATE) " +
-                "LEFT JOIN FILMORATE_SHEMA.LIKES_SET AS LS ON F.ID_FILM = LS.ID_FILM";
+                "LEFT JOIN FILMORATE_SHEMA.LIKES_SET AS LS ON F.ID_FILM = LS.ID_FILM " +
+                "LEFT JOIN FILMORATE_SHEMA.GENRE_SET AS GS ON F.ID_FILM = GS.ID_FILM " +
+                "LEFT JOIN FILMORATE_SHEMA.GENRE AS G ON GS.ID = G.ID ";
         log.info("Запрос getCollectionFilm > {}", sqlQuery);
         Collection<Film> listFilm = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapToFilm(rs, rowNum));
         log.info("Collection > {}", listFilm);
@@ -122,10 +125,19 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Film getByIdFilm(int idFilm) {
-        log.info("Запрос getByIdFilm.");
-        String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.FILMS WHERE ID_FILM = ?";
-        Film film = jdbcTemplate.queryForObject(sqlQuery, this::mapToFilm, idFilm);
-        log.info("Запрос getByIdFilm > {} --> {} ", sqlQuery, film);
+        String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.FILMS AS F " +
+                "LEFT JOIN FILMORATE_SHEMA.RATE AS R ON F.ID_RATE = R.ID_RATE " +
+                "LEFT JOIN FILMORATE_SHEMA.GENRE_SET AS GS ON F.ID_FILM = GS.ID_FILM "+
+                "LEFT JOIN FILMORATE_SHEMA.GENRE AS G ON GS.ID = G.ID " +
+                "WHERE F.ID_FILM = ?";
+        Film film;
+        log.info("Запрос getByIdFilm {} -- {} ", sqlQuery, idFilm);
+        try {
+            film = jdbcTemplate.queryForObject(sqlQuery, (rs, rowNum) -> mapToFilm(rs, rowNum), idFilm);
+        } catch (Exception e) {
+            throw new MethodArgumentNotException("Ну нет такого фильма!");
+        }
+        log.info("Результат: {} ", film);
         return film;
     }
 
@@ -135,9 +147,9 @@ public class FilmDbStorage implements FilmStorage {
         try {
             sqlQuery = "UPDATE FILMORATE_SHEMA.FILMS SET ID_RATE = ?, DURATION = ?, RELEASE_DATE = CAST (? AS DATE)," +
                     "DESCRIPTION = ?, NAME_FILMS = ? , Id_DIRECTOR = ? WHERE ID_FILM = ?";
-            log.info("Запрос update > {} --> {} ", sqlQuery, film);
             jdbcTemplate.update(sqlQuery, film.getMpa().getId(), film.getDuration(),
                     film.getReleaseDate(), film.getDescription(), film.getName(), film.getIdD(), film.getId());
+            log.info("Запрос update > {} --> {} ", sqlQuery, getByIdFilm(film.getId()));
         } catch (Exception e) {
             log.info("Запрос update > нет такого фильма {}", film);
             throw new MethodArgumentNotException("Ну нет такого фильма!");
