@@ -101,10 +101,11 @@ public class FilmController implements ControllerInterface<Film> {
     public List<Film> findFilmsByDirector(@PathVariable int directorId,
                                           @RequestParam(defaultValue = "likes", required = false) String sorting) {
         log.info("Контроллер GET  список фильмов режисёра {} с сортировкой", directorId);
-        if (!("year".equals(sorting) || "likes".equals(sorting))) {
+        if (!(sorting.equals("year") || sorting.equals("likes"))) {
             throw new IncorrectParameterException("Сортировка пока по годам или количеству лайков, а не по " + sorting);
         }
-        return directorStorage.getFilmsByDirector(directorId, sorting);
+        List<Film> films = filmStorage.getFilmsByDirector(directorId, sorting);
+        return films;
     }
 
     @GetMapping("/common")

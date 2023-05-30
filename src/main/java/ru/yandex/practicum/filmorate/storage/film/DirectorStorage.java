@@ -20,8 +20,6 @@ public interface DirectorStorage {
 
     Director update(Director director);
 
-    boolean getIdExist(int idD);
-
-    List<Film> getFilmsByDirector(int directorId, String sorting);
+    List<Director> findDirectorsByIdFilm(int idFilm);
 
 }

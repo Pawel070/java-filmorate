@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-
 public interface FilmStorage {
 
     Film create(Film film);
@@ -35,6 +34,7 @@ public interface FilmStorage {
     boolean getLikeExist(int idFilm, int idUser);
 
     List<Film> findMostPopular(int count, int genreId, int year);
+
     Optional<List<Film>> searchByAll(String query);
 
     Optional<List<Film>> searchByName(String query);
@@ -42,5 +42,7 @@ public interface FilmStorage {
     Optional<List<Film>> searchByDirector(String query);
 
     List<Film> getCommonFilms(int userId);
+
+    List<Film> getFilmsByDirector(int directorId, String sorting);
 
 }

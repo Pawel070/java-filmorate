@@ -44,14 +44,6 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public boolean getIdExist(int idUser) {
-        String sqlQuery = "SELECT ID_USER FROM FILMORATE_SHEMA.USERS WHERE ID_USER = ?";
-        log.info("Запрос getIdExist User > {}", sqlQuery);
-        SqlRowSet idRows = jdbcTemplate.queryForRowSet(sqlQuery, idUser);
-        return idRows.next();
-    }
-
-    @Override
     public User create(User user) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         log.info("Запрос create > {} --> {}", user, sqlQueryCreateUser);
@@ -70,11 +62,12 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User update(User user) {
-        if (getIdExist(user.getId())) {
-        String sqlQuery = "UPDATE FILMORATE_SHEMA.USERS SET NAME_USER = ?, BIRTHDAY = ?, EMAIL = ?, LOGIN = ? WHERE ID_USER = ?";
+        String sqlQuery;
+        try {
+        sqlQuery = "UPDATE FILMORATE_SHEMA.USERS SET NAME_USER = ?, BIRTHDAY = ?, EMAIL = ?, LOGIN = ? WHERE ID_USER = ?";
         jdbcTemplate.update(sqlQuery, user.getName(), user.getBirthday(), user.getEmail(), user.getLogin(), user.getId());
         log.info("Запрос update > {} -- {} ", sqlQuery, getByIdUser(user.getId()));
-        } else {
+        } catch (Exception e) {
             log.info("Запрос update > нет такого пользователя {}", user);
             throw new MethodArgumentNotException("Ну нет такого пользователя!");
         }

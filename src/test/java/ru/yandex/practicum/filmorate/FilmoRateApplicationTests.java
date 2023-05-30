@@ -133,13 +133,6 @@ public class FilmoRateApplicationTests {
     }
 
     @Test
-    public void isIdExistUserTest() {
-        userStorage.create(user1);
-        assertTrue(userStorage.getIdExist(user1.getId()));
-        assertFalse(userStorage.getIdExist(9999));
-    }
-
-    @Test
     public void addAndRemoveFriendTest() {
         userStorage.create(user1);
         userStorage.create(user2);

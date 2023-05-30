@@ -13,6 +13,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import ru.yandex.practicum.filmorate.ErrorsIO.MethodArgumentNotException;
+import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Rating;
@@ -31,20 +32,26 @@ public class FilmDbStorage implements FilmStorage {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     static final String sqlQueryCreate = "INSERT INTO FILMORATE_SHEMA.FILMS (ID_RATE, DURATION, RELEASE_DATE, DESCRIPTION, NAME_FILMS) VALUES (?,?,CAST (? AS DATE),?,?)";
+    private final GenreDbStorage genreDbStorage;
 
     @Autowired
-    private GenreDbStorage genreDbStorage;
+    private final DirectorStorage directorStorage;
+
+    static final String sqlQueryCreate = "INSERT INTO FILMORATE_SHEMA.FILMS (ID_RATE, DURATION, RELEASE_DATE, DESCRIPTION, NAME_FILMS) VALUES (?,?,CAST (? AS DATE),?,?)";
 
     @Autowired
-    private FilmDbStorage(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    private FilmDbStorage(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate, GenreDbStorage genreDbStorage, DirectorStorage directorStorage) {
         this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.genreDbStorage = genreDbStorage;
+        this.directorStorage = directorStorage;
     }
 
     public Film mapToFilm(ResultSet rs, int rowNum) throws SQLException {
         log.info("Запрос mapToFilm ResultSet > {}", rs);
         Rating rating = new Rating(rs.getInt("ID_RATE"), "");
         List<Genre> genres = genreDbStorage.findGenreByIdFilm(rs.getInt("ID_FILM"));
+        List<Director> directors = directorStorage.findDirectorsByIdFilm(rs.getInt("ID_FILM"));
         Set<Long> likesF = getLikes(rs.getInt("ID_FILM"));
         return Film.builder()
                 .id(rs.getInt("ID_FILM"))
@@ -55,6 +62,7 @@ public class FilmDbStorage implements FilmStorage {
                 .name(rs.getString("NAME_FILMS"))
                 .likes(likesF)
                 .genres(genres)
+                .directors(directors)
                 .build();
     }
 
@@ -97,7 +105,8 @@ public class FilmDbStorage implements FilmStorage {
                 "(FILMORATE_SHEMA.FILMS AS F LEFT JOIN FILMORATE_SHEMA.RATE AS R ON F.ID_RATE = R.ID_RATE) " +
                 "LEFT JOIN FILMORATE_SHEMA.LIKES_SET AS LS ON F.ID_FILM = LS.ID_FILM " +
                 "LEFT JOIN FILMORATE_SHEMA.GENRE_SET AS GS ON F.ID_FILM = GS.ID_FILM " +
-                "LEFT JOIN FILMORATE_SHEMA.GENRE AS G ON GS.ID = G.ID ";
+                "LEFT JOIN FILMORATE_SHEMA.GENRE AS G ON GS.ID = G.ID  " +
+                "LEFT JOIN FILMORATE_SHEMA.DIRECTOR AS D ON F.ID_FILM = D.ID_FILM ";
         log.info("Запрос getCollectionFilm > {}", sqlQuery);
         Collection<Film> listFilm = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapToFilm(rs, rowNum));
         log.info("Collection > {}", listFilm);
@@ -110,7 +119,7 @@ public class FilmDbStorage implements FilmStorage {
         log.info("Запрос deleteByIdFilm > {}", sqlQuery);
         jdbcTemplate.update(sqlQuery, idFilm);
     }
-/*
+
     @Override
     public Collection<Film> getMaxPopular(int scoring) {
         String sqlQuery = "SELECT * " +
@@ -122,13 +131,14 @@ public class FilmDbStorage implements FilmStorage {
         log.info("Collection > {}", listFilm);
         return listFilm;
     }
-*/
+
     @Override
     public Film getByIdFilm(int idFilm) {
         String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.FILMS AS F " +
                 "LEFT JOIN FILMORATE_SHEMA.RATE AS R ON F.ID_RATE = R.ID_RATE " +
-                "LEFT JOIN FILMORATE_SHEMA.GENRE_SET AS GS ON F.ID_FILM = GS.ID_FILM " +
-                "LEFT JOIN FILMORATE_SHEMA.GENRE AS G ON GS.ID = G.ID " +
+                "LEFT JOIN FILMORATE_SHEMA.GENRE_SET AS GS ON F.ID_FILM = GS.ID_FILM "+
+                "LEFT JOIN FILMORATE_SHEMA.GENRE AS G ON GS.ID = G.ID  " +
+                "LEFT JOIN FILMORATE_SHEMA.DIRECTOR AS D ON F.ID_FILM = D.ID_FILM " +
                 "WHERE F.ID_FILM = ?";
         Film film;
         log.info("Запрос getByIdFilm {} -- {} ", sqlQuery, idFilm);
@@ -155,6 +165,23 @@ public class FilmDbStorage implements FilmStorage {
             throw new MethodArgumentNotException("Ну нет такого фильма!");
         }
         return film;
+    }
+
+    @Override
+    public List<Film> getFilmsByDirector(int directorId, String sorting) {
+       Director director = directorStorage.getByIdDirector(directorId);
+       List<Film> films;
+        if (sorting.equals("year")) {
+            String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.FILMS AS F " +
+                              "WHERE F.ID_DIRECTOR  = ? ORDER BY F.RELEASE_DATA";
+            films = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapToFilm(rs, rowNum), directorId);
+        } else {
+            String sqlQuery = "SELECT COUNT(LS.ID_USER) FROM FILMORATE_SHEMA.LIKES_SET AS LS " +
+                    "WHERE (SELECT F.ID_FILM FROM FILMORATE_SHEMA.FILMS AS F " +
+                    "WHERE F.ID_DIRECTOR  = ?) GROUP BY LS.ID_USER ORDER BY LS.ID_USER DESC";
+            films = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapToFilm(rs, rowNum), directorId);
+        }
+        return films;
     }
 
     @Override
@@ -217,7 +244,7 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public Optional<List<Film>> searchByName(String nameQuery) {
         final String sqlQuery = "SELECT F.NAME_FILMS FROM FILMORATE_SHEMA.FILMS AS F " +
-                //   "(SELECT NAME_FILMS FROM FILMORATE_SHEMA.FILMS WHERE NAME_FILMS LIKE '%?%') " +
+             //   "(SELECT NAME_FILMS FROM FILMORATE_SHEMA.FILMS WHERE NAME_FILMS LIKE '%?%') " +
                 "LEFT JOIN FILMORATE_SHEMA.RATE AS R ON F.ID_RATE = R.ID_FILM " +
                 "WHERE F.NAME_FILMS LIKE '%?%' " +
                 "ORDER BY R.RATE";

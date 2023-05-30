@@ -17,8 +17,6 @@ M
 src/main/resources/.gitignore,e\4\e44181927ff215206de47b703781a99919f713aa
 B
 db/filmorate.mv.db,8\e\8e7377b2b6c44d87cf9bea9cd0e5a070176461b2
-y
-Isrc/main/java/ru/yandex/practicum/filmorate/storage/user/UserStorage.java,4\6\465593163daa466c06562b30e8fd5bf49874b608
 :
 
 .gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302
@@ -28,3 +26,27 @@ z
 Jsrc/main/java/ru/yandex/practicum/filmorate/controller/RateController.java,8\9\893381c6935a51b2ed9a940ebf162b0f2b86ea7a
 i
 9src/test/java/ru/yandex/practicum/filmorate/UserTest.java,b\5\b51f3e43bc6672c2baa56cb29612bb6b068b96ef
+…
+Usrc/main/java/ru/yandex/practicum/filmorate/ErrorsIO/IncorrectParameterException.java,f\e\fee8653f460c64fb8d0c622d99c27b3af13326db
+
+Osrc/main/java/ru/yandex/practicum/filmorate/ErrorsIO/ItemNotFoundException.java,2\d\2dbbb6de2c32c756df020db48bf15990c90c9049
+‰
+Ysrc/main/java/ru/yandex/practicum/filmorate/ErrorsIO/MethodArgumentNotValidException.java,a\7\a79639e0f221fe310cc05a1740a17046a5036065
+}
+Msrc/main/java/ru/yandex/practicum/filmorate/ErrorsIO/ValidationException.java,6\e\6ec5547e5cb11a03a472a2b257bb3e4d7188f694
+m
+=src/main/java/ru/yandex/practicum/filmorate/model/Friend.java,0\2\027499ec4498773297d172999c27992fee70254a
+}
+Msrc/main/java/ru/yandex/practicum/filmorate/storage/film/ReviewDbStorage.java,7\0\7022fe0a710c7b4c4e873f7dbed7e5cd35ead420
+m
+=src/main/java/ru/yandex/practicum/filmorate/model/Review.java,0\9\09f6198b30c13e806d4df12f89e0768e33b64197
+v
+Fsrc/test/java/ru/yandex/practicum/filmorate/ReviewIntegrationTest.java,a\e\aeebc15f6515a38d33ef7fcbd8bb517fd5655765
+i
+9src/test/java/ru/yandex/practicum/filmorate/FilmTest.java,c\e\cefdc8fddc9add68ee0535673a6aeec962277310
+m
+=src/main/java/ru/yandex/practicum/filmorate/model/Rating.java,7\e\7ea5e3cf0dfc9e1ea398b900a398a927d4213ac3
+k
+;src/main/java/ru/yandex/practicum/filmorate/model/User.java,a\6\a67a0ad7b203b3dde185a44550c24555f5335d9f
+l
+<src/main/java/ru/yandex/practicum/filmorate/model/Genre.java,0\2\02592284dbda57d48a27e6f4730433d65543f4bb
