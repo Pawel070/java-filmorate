@@ -127,7 +127,7 @@ public class FilmDbStorage implements FilmStorage {
     public Film getByIdFilm(int idFilm) {
         String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.FILMS AS F " +
                 "LEFT JOIN FILMORATE_SHEMA.RATE AS R ON F.ID_RATE = R.ID_RATE " +
-                "LEFT JOIN FILMORATE_SHEMA.GENRE_SET AS GS ON F.ID_FILM = GS.ID_FILM "+
+                "LEFT JOIN FILMORATE_SHEMA.GENRE_SET AS GS ON F.ID_FILM = GS.ID_FILM " +
                 "LEFT JOIN FILMORATE_SHEMA.GENRE AS G ON GS.ID = G.ID " +
                 "WHERE F.ID_FILM = ?";
         Film film;
@@ -191,4 +191,33 @@ public class FilmDbStorage implements FilmStorage {
         return idRows.next();
     }
 
+    @Override
+    public Optional<List<Film>> searchByAll(String query) {
+        final String sqlQuery = "SELECT N.* FROM FILMORATE_SHEMA.FILMS AS N " +
+                "LEFT JOIN FILMORATE_SHEMA.DIRECTOR AS D ON N.ID_DIRECTOR = D.ID_DIRECTOR " +
+                "LEFT JOIN FILMORATE_SHEMA.RATE AS R ON N.ID_RATE = R.ID_RATE " +
+                "WHERE D.NAME_DIRECTOR LIKE '%?%' OR N.NAME_FILMS LIKE '%?%' " +
+                "ORDER BY R.RATE";
+        return Optional.ofNullable(jdbcTemplate.query(sqlQuery, this::mapToFilm, query));
+    }
+
+    @Override
+    public Optional<List<Film>> searchByName(String nameQuery) {
+        final String sqlQuery = "SELECT F.NAME_FILMS FROM FILMORATE_SHEMA.FILMS AS F " +
+             //   "(SELECT NAME_FILMS FROM FILMORATE_SHEMA.FILMS WHERE NAME_FILMS LIKE '%?%') " +
+                "LEFT JOIN FILMORATE_SHEMA.RATE AS R ON F.ID_RATE = R.ID_FILM " +
+                "WHERE F.NAME_FILMS LIKE '%?%' " +
+                "ORDER BY R.RATE";
+        return Optional.ofNullable(jdbcTemplate.query(sqlQuery, this::mapToFilm, nameQuery));
+    }
+
+    @Override
+    public Optional<List<Film>> searchByDirector(String directorQuery) {
+        final String sqlQuery = "SELECT N.* FROM FILMORATE_SHEMA.FILMS AS N " +
+                "LEFT JOIN FILMORATE_SHEMA.DIRECTOR AS D ON N.ID_DIRECTOR = D.ID_DIRECTOR " +
+                "LEFT JOIN FILMORATE_SHEMA.RATE AS R ON N.ID_RATE = R.ID_RATE " +
+                "WHERE D.NAME_DIRECTOR LIKE '%?%' " +
+                "ORDER BY R.RATE";
+        return Optional.ofNullable(jdbcTemplate.query(sqlQuery, this::mapToFilm));
+    }
 }

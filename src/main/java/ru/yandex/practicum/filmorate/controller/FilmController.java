@@ -104,6 +104,12 @@ public class FilmController implements ControllerInterface<Film> {
         return filmService.maxLikeFilm(number);
     }
 
+    @GetMapping("/search")
+    public List<Film> addSearch(@RequestParam String query, @RequestParam String by) {
+        log.info("Контроллер GET  функциональность \"Поиск\"> {}", query);
+        return filmService.search(query, by);
+    }
+
     @GetMapping("/director/{directorId}")     // 😉
     public List<Film> findFilmsByDirector(@PathVariable int directorId,
                                           @RequestParam(defaultValue = "likes", required = false) String sorting) {
