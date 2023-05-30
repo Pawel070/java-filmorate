@@ -10,7 +10,6 @@ public class Rating {
     private int id;
     private String name;
 
-
     public Rating(int idRate, String name) {
         this.id = idRate;
         this.name = name;

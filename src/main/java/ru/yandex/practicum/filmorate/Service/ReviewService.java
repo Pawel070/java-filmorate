@@ -4,6 +4,9 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.ErrorsIO.MethodArgumentNotException;
+import ru.yandex.practicum.filmorate.model.EventOperation;
+import ru.yandex.practicum.filmorate.model.EventType;
 import ru.yandex.practicum.filmorate.model.Review;
 import ru.yandex.practicum.filmorate.storage.film.ReviewStorage;
 
@@ -15,21 +18,38 @@ import java.util.List;
 public class ReviewService {
 
     private ReviewStorage reviewStorage;
+    private EventService eventService;
 
     @Autowired
-    public ReviewService(ReviewStorage reviewStorage) {
+    public ReviewService(ReviewStorage reviewStorage, EventService eventService) {
         this.reviewStorage = reviewStorage;
+        this.eventService = eventService;
     }
 
     public Review addReview(Review review) {
-        return reviewStorage.addReview(review);
+       Review reviewNew = reviewStorage.addReview(review);
+       eventService.createEvent(reviewNew.getUserId(),
+               Math.toIntExact(reviewNew.getReviewId()),
+               EventType.REVIEW,
+               EventOperation.ADD);
+        return reviewNew;
     }
 
     public Review updateReview(Review review) {
-        return reviewStorage.updateReview(review);
+        Review reviewUpdated = reviewStorage.updateReview(review);
+        eventService.createEvent(reviewUpdated.getUserId(),
+                Math.toIntExact(reviewUpdated.getReviewId()),
+                EventType.REVIEW,
+                EventOperation.UPDATE);
+        return reviewUpdated;
     }
 
     public long deleteReviewById(Long id) {
+        Review review = findReviewById(id);
+        if (review.getUserId() <= 0) {
+            throw new MethodArgumentNotException("Id пользователя не может быть равен 0 или быть отрицательным");
+        }
+        eventService.createEvent(review.getUserId(), Math.toIntExact(id), EventType.REVIEW, EventOperation.REMOVE);
         return reviewStorage.deleteReviewById(id);
     }
 
