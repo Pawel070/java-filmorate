@@ -1,21 +1,20 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
-
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
 import ru.yandex.practicum.filmorate.ErrorsIO.IncorrectParameterException;
 import ru.yandex.practicum.filmorate.Service.FilmService;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.DirectorStorage;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -92,18 +91,6 @@ public class FilmController implements ControllerInterface<Film> {
         filmStorage.deleteLike(id, userId);
     }
 
-    @GetMapping("/popular")
-    public Collection<Film> getPopular(@RequestParam Optional<Integer> count) {
-        int number;
-        log.info("Контроллер GET  список из первых  по количеству лайков> {}", count);
-        if (count.isPresent()) {
-            number = count.get();
-        } else {
-            number = 10;
-        }
-        return filmService.maxLikeFilm(number);
-    }
-
     @GetMapping("/search")
     public List<Film> addSearch(@RequestParam String query, @RequestParam String by) {
         log.info("Контроллер GET  функциональность \"Поиск\"> {}", query);
@@ -124,5 +111,12 @@ public class FilmController implements ControllerInterface<Film> {
     public List<Film> getCommonFilms(@RequestParam int userId, @RequestParam int friendId) {
         log.info(String.format("Получен запрос 'GET /films/common?userId=%d&friendId=%d'", userId, friendId));
         return filmService.getCommonFilms(userId, friendId);
+    }
+
+    @GetMapping("/popular")
+    public List<Film> findMostPopulars(@RequestParam(defaultValue = "10") int count,
+                                       @RequestParam(defaultValue = "0") int genreId,
+                                       @RequestParam(defaultValue = "0") int year) {
+        return filmService.findMostPopular(count, genreId, year);
     }
 }
