@@ -220,4 +220,12 @@ public class FilmDbStorage implements FilmStorage {
                 "ORDER BY R.RATE";
         return Optional.ofNullable(jdbcTemplate.query(sqlQuery, this::mapToFilm));
     }
+    @Override
+    public List<Film> getCommonFilms(int idUser) {
+        String sql = "SELECT ID_FILM, NAME_FILMS, DESCRIPTION, RELEASE_DATE, DURATION, rating, ID_RATE, likesF" +
+                "FROM FILM " +
+                "LEFT JOIN likesF ON ID_FILM " +
+                "WHERE ID_FILM = ? ";
+        return jdbcTemplate.query(sql, this::mapToFilm, idUser);
+    }
 }

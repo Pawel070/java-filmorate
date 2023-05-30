@@ -39,4 +39,7 @@ public interface FilmStorage {
     Optional<List<Film>> searchByName(String query);
 
     Optional<List<Film>> searchByDirector(String query);
+
+    List<Film> getCommonFilms(int userId);
+
 }
