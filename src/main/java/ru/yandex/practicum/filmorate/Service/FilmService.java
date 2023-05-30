@@ -2,10 +2,8 @@ package ru.yandex.practicum.filmorate.Service;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import org.springframework.util.StringUtils;
 import ru.yandex.practicum.filmorate.ErrorsIO.IncorrectParameterException;
 import ru.yandex.practicum.filmorate.ErrorsIO.MethodArgumentNotException;
@@ -16,7 +14,9 @@ import ru.yandex.practicum.filmorate.storage.film.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.film.RateStorage;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
@@ -78,11 +78,6 @@ public class FilmService {
         log.info("Удаление лайка по Id фильма Ok.");
     }
 
-//    public Collection<Film> maxLikeFilm(int like) {
-//        log.info("Запрос самых лайковых фильмов в количестве {} шт. Ok.", like);
-//        return filmStorage.getMaxPopular(like);
-//    }
-
     public void validateF(Film film) throws ValidationException {
         if (film.getName().isBlank()) {
             log.info("ValidationException: {}", "Название не может быть пустым");
@@ -116,10 +111,6 @@ public class FilmService {
         }
         throw new IncorrectParameterException("incorrectly specified field by or query");
     }
-    public List<Film>findMostPopular(int count, int genreId, int year) {
-        return filmStorage.findMostPopular(count, genreId, year);
-    }
-}
 
     private List<String> validateSearch(String query, String by) {
         if (!StringUtils.hasText(query) && !StringUtils.hasText(by)) {
@@ -128,5 +119,9 @@ public class FilmService {
         return Arrays.stream(by.split(","))
                 .filter(e -> "title".equals(e) || "director".equals(e))
                 .collect(Collectors.toList());
+    }
+
+    public List<Film> findMostPopular(int count, int genreId, int year) {
+        return filmStorage.findMostPopular(count, genreId, year);
     }
 }

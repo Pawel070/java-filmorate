@@ -111,7 +111,18 @@ public class MostPopularIntegrationTest {
     @Test
     public void findMostPopularsByGenreTest() {
         filmDbStorage.addLike(2, 1);
-        System.out.println(filmDbStorage.findMostPopular(10, 1, 0));
         assertEquals(filmDbStorage.findMostPopular(10, 1, 0), List.of(film2, film1));
+    }
+
+    @Test
+    public void findMostPopularsByYearTest() {
+        filmDbStorage.addLike(2, 1);
+        assertEquals(filmDbStorage.findMostPopular(10, 0, 2000), List.of(film2));
+    }
+
+    @Test
+    public void findMostPopularsAllTest() {
+        filmDbStorage.addLike(2, 1);
+        assertEquals(filmDbStorage.findMostPopular(10, 0, 0), List.of(film2, film1));
     }
 }

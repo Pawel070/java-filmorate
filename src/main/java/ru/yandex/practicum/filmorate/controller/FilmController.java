@@ -91,18 +91,6 @@ public class FilmController implements ControllerInterface<Film> {
         filmStorage.deleteLike(id, userId);
     }
 
-//    @GetMapping("/popular")
-//    public Collection<Film> getPopular(@RequestParam Optional<Integer> count) {
-//        int number;
-//        log.info("Контроллер GET  список из первых  по количеству лайков> {}", count);
-//        if (count.isPresent()) {
-//            number = count.get();
-//        } else {
-//            number = 10;
-//        }
-//        return filmService.maxLikeFilm(number);
-//    }
-
     @GetMapping("/search")
     public List<Film> addSearch(@RequestParam String query, @RequestParam String by) {
         log.info("Контроллер GET  функциональность \"Поиск\"> {}", query);
@@ -124,7 +112,6 @@ public class FilmController implements ControllerInterface<Film> {
     public List<Film> findMostPopulars(@RequestParam(defaultValue = "10") int count,
                                        @RequestParam(defaultValue = "0") int genreId,
                                        @RequestParam(defaultValue = "0") int year) {
-        List<Film> mostPopularFilms = filmService.findMostPopular(count, genreId, year);
-        return mostPopularFilms;
+        return filmService.findMostPopular(count, genreId, year);
     }
 }

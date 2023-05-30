@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -14,10 +15,8 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Rating;
 
-
-import java.sql.*;
-
 import java.sql.Date;
+import java.sql.*;
 import java.util.*;
 
 
@@ -28,14 +27,16 @@ import java.util.*;
 public class FilmDbStorage implements FilmStorage {
 
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     static final String sqlQueryCreate = "INSERT INTO FILMORATE_SHEMA.FILMS (ID_RATE, DURATION, RELEASE_DATE, DESCRIPTION, NAME_FILMS) VALUES (?,?,CAST (? AS DATE),?,?)";
 
     @Autowired
     private GenreDbStorage genreDbStorage;
 
     @Autowired
-    private FilmDbStorage(JdbcTemplate jdbcTemplate) {
+    private FilmDbStorage(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
     public Film mapToFilm(ResultSet rs, int rowNum) throws SQLException {
@@ -107,18 +108,6 @@ public class FilmDbStorage implements FilmStorage {
         log.info("Запрос deleteByIdFilm > {}", sqlQuery);
         jdbcTemplate.update(sqlQuery, idFilm);
     }
-
-//    @Override
-//    public Collection<Film> getMaxPopular(int scoring) {
-//        String sqlQuery = "SELECT * " +
-//                "FROM (FILMORATE_SHEMA.FILMS AS F LEFT JOIN FILMORATE_SHEMA.RATE AS R ON F.ID_RATE = R.ID_RATE GROUP BY F.ID_FILM) " +
-//                "LEFT JOIN FILMORATE_SHEMA.LIKES_SET AS LS ON F.ID_FILM = LS.ID_FILM " +
-//                "ORDER BY COUNT(LS.ID_USER) DESC, F.ID_RATE LIMIT = ?";
-//        log.info("Запрос getMaxPopular > {}", sqlQuery);
-//        Collection<Film> listFilm = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapToFilm(rs, rowNum), scoring);
-//        log.info("Collection > {}", listFilm);
-//        return listFilm;
-//    }
 
     @Override
     public Film getByIdFilm(int idFilm) {
@@ -201,63 +190,6 @@ public class FilmDbStorage implements FilmStorage {
         }
     }
 
-    private List<Film> findMostPopularByYear(int count, int year) {
-        String sqlQuery = "SELECT * " +
-                "FROM (FILMORATE_SHEMA.FILMS AS F LEFT JOIN FILMORATE_SHEMA.RATE AS R " +
-                "ON F.ID_RATE = R.ID_RATE GROUP BY F.ID_FILM) " +
-                "LEFT JOIN FILMORATE_SHEMA.LIKES_SET AS LS ON F.ID_FILM = LS.ID_FILM " +
-                "WHERE YEAR(RELEASE_DATE) " +
-                "LIKE ? ORDER BY COUNT(LS.ID_USER) DESC, F.ID_RATE LIMIT = ?";
-        log.info("Запрос getMaxPopular > {}", sqlQuery);
-        List<Film> listFilm = jdbcTemplate.query(sqlQuery, this::mapToFilm, year, count);
-        log.info("Collection > {}", listFilm);
-        return listFilm;
-    }
-
-    private List<Film> findMostPopularByGenre(int count, int genreId) {
-        String sqlQuery =
-                "SELECT f.ID_FILM FROM FILMORATE_SHEMA.FILMS AS f " +
-        "LEFT JOIN FILMORATE_SHEMA.GENRE_SET AS fg ON f.ID_FILM = fg.ID_FILM " +
-                "LEFT JOIN FILMORATE_SHEMA.LIKES_SET AS fl ON f.ID_FILM = fl.ID_FILM " +
-                "WHERE (fg.ID = ?) " +
-                "GROUP BY f.ID_FILM " +
-                "ORDER BY COUNT(fl.ID_USER) DESC " +
-                "LIMIT ?";
-//                "SELECT * FROM FILMORATE_SHEMA.FILMS AS f " +
-//                "JOIN FILMORATE_SHEMA.LIKES_SET AS ls ON f.ID_FILM = ls.ID_FILM " +
-//        "WHERE f.ID_FILM IN (SELECT ID_FILM FROM FILMORATE_SHEMA.GENRE_SET " +
-//                "WHERE ID = ?) " +
-//                "GROUP BY f.ID_FILM " +
-//                "ORDER BY COUNT(ls.ID_USER) desc LIMIT ?";
-        log.info("Запрос getMaxPopular > {}", sqlQuery);
-        List<Film> listFilm = jdbcTemplate.query(sqlQuery, this::mapToFilm, genreId, count);
-        log.info("Collection > {}", listFilm);
-        return listFilm;
-    }
-
-    private List<Film> findMostPopularByGenreAndYear(int count, int genreId, int year) {
-        String sqlQuery = "SELECT * " +
-                "FROM (FILMORATE_SHEMA.FILMS AS F LEFT JOIN FILMORATE_SHEMA.RATE AS R " +
-                "ON F.ID_RATE = R.ID_RATE GROUP BY F.ID_FILM) " +
-                "LEFT JOIN FILMORATE_SHEMA.LIKES_SET AS LS ON F.ID_FILM = LS.ID_FILM " +
-                "WHERE ID_RATE = ? AND " +
-                "YEAR(RELEASE_DATE) LIKE ? ORDER BY COUNT(LS.ID_USER) DESC, F.ID_RATE LIMIT = ?";
-        log.info("Запрос getMaxPopular > {}", sqlQuery);
-        List<Film> listFilm = jdbcTemplate.query(sqlQuery, this::mapToFilm, genreId, year, count);
-        log.info("Collection > {}", listFilm);
-        return listFilm;
-    }
-
-    private List<Film> findMostPopularAll(int count) {
-        String sqlQuery = "SELECT * " +
-                "FROM (FILMORATE_SHEMA.FILMS AS F LEFT JOIN FILMORATE_SHEMA.RATE AS R ON F.ID_RATE = R.ID_RATE GROUP BY F.ID_FILM) " +
-                "LEFT JOIN FILMORATE_SHEMA.LIKES_SET AS LS ON F.ID_FILM = LS.ID_FILM " +
-                "ORDER BY COUNT(LS.ID_USER) DESC, F.ID_RATE LIMIT = ?";
-        log.info("Запрос getMaxPopular > {}", sqlQuery);
-        List<Film> listFilm = jdbcTemplate.query(sqlQuery, this::mapToFilm, count);
-        log.info("Collection > {}", listFilm);
-        return listFilm;
-    }
     @Override
     public Optional<List<Film>> searchByAll(String query) {
         final String sqlQuery = "SELECT N.* FROM FILMORATE_SHEMA.FILMS AS N " +
@@ -271,7 +203,7 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public Optional<List<Film>> searchByName(String nameQuery) {
         final String sqlQuery = "SELECT F.NAME_FILMS FROM FILMORATE_SHEMA.FILMS AS F " +
-             //   "(SELECT NAME_FILMS FROM FILMORATE_SHEMA.FILMS WHERE NAME_FILMS LIKE '%?%') " +
+                //   "(SELECT NAME_FILMS FROM FILMORATE_SHEMA.FILMS WHERE NAME_FILMS LIKE '%?%') " +
                 "LEFT JOIN FILMORATE_SHEMA.RATE AS R ON F.ID_RATE = R.ID_FILM " +
                 "WHERE F.NAME_FILMS LIKE '%?%' " +
                 "ORDER BY R.RATE";
@@ -286,5 +218,61 @@ public class FilmDbStorage implements FilmStorage {
                 "WHERE D.NAME_DIRECTOR LIKE '%?%' " +
                 "ORDER BY R.RATE";
         return Optional.ofNullable(jdbcTemplate.query(sqlQuery, this::mapToFilm));
+    }
+
+    private List<Film> findMostPopularByYear(int count, int year) {
+        String sqlQuery =
+                "SELECT * FROM FILMORATE_SHEMA.FILMS AS f " +
+                        "JOIN FILMORATE_SHEMA.LIKES_SET AS ls ON f.ID_FILM = ls.ID_FILM " +
+                        "WHERE f.ID_FILM IN (SELECT ID_FILM FROM FILMORATE_SHEMA.FILMS " +
+                        "WHERE YEAR(f.RELEASE_DATE) LIKE ?) " +
+                        "GROUP BY f.ID_FILM " +
+                        "ORDER BY COUNT(ls.ID_USER) desc LIMIT ?";
+        log.info("Запрос getMaxPopularByYear > {}", sqlQuery);
+        List<Film> listFilm = jdbcTemplate.query(sqlQuery, this::mapToFilm, year, count);
+        log.info("Collection > {}", listFilm);
+        return listFilm;
+    }
+
+    private List<Film> findMostPopularByGenre(int count, int genreId) {
+        String sqlQuery =
+                "SELECT * FROM FILMORATE_SHEMA.FILMS AS f " +
+                        "JOIN FILMORATE_SHEMA.LIKES_SET AS ls ON f.ID_FILM = ls.ID_FILM " +
+                        "WHERE f.ID_FILM IN (SELECT ID_FILM FROM FILMORATE_SHEMA.GENRE_SET " +
+                        "WHERE ID = ?) " +
+                        "GROUP BY f.ID_FILM " +
+                        "ORDER BY COUNT(ls.ID_USER) desc LIMIT ?";
+        log.info("Запрос getMaxPopularByGenre > {}", sqlQuery);
+        List<Film> listFilm = jdbcTemplate.query(sqlQuery, this::mapToFilm, genreId, count);
+        log.info("Collection > {}", listFilm);
+        return listFilm;
+    }
+
+    private List<Film> findMostPopularByGenreAndYear(int count, int genreId, int year) {
+        String sqlQuery =
+                "SELECT * FROM FILMORATE_SHEMA.FILMS AS f " +
+                        "JOIN FILMORATE_SHEMA.LIKES_SET AS ls ON f.ID_FILM = ls.ID_FILM " +
+                        "WHERE f.ID_FILM IN (SELECT ID_FILM FROM FILMORATE_SHEMA.FILMS " +
+                        "WHERE YEAR(f.RELEASE_DATE) LIKE ? AND " +
+                        "(SELECT ID_FILM FROM FILMORATE_SHEMA.GENRE_SET " +
+                        "WHERE ID = ?)) " +
+                        "GROUP BY f.ID_FILM " +
+                        "ORDER BY COUNT(ls.ID_USER) desc LIMIT ?";
+        log.info("Запрос getMaxPopularByGenreAndYear > {}", sqlQuery);
+        List<Film> listFilm = jdbcTemplate.query(sqlQuery, this::mapToFilm, year, genreId, count);
+        log.info("Collection > {}", listFilm);
+        return listFilm;
+    }
+
+    private List<Film> findMostPopularAll(int count) {
+        String sqlQuery =
+                "SELECT * FROM FILMORATE_SHEMA.FILMS AS f " +
+                        "LEFT JOIN FILMORATE_SHEMA.LIKES_SET AS ls ON f.ID_FILM = ls.ID_FILM " +
+                        "GROUP BY f.ID_FILM " +
+                        "ORDER BY COUNT(ls.ID_USER) desc LIMIT ?";
+        log.info("Запрос getMaxPopular > {}", sqlQuery);
+        List<Film> listFilm = jdbcTemplate.query(sqlQuery, this::mapToFilm, count);
+        log.info("Collection > {}", listFilm);
+        return listFilm;
     }
 }
