@@ -18,7 +18,6 @@ import org.springframework.stereotype.Component;
 
 import ru.yandex.practicum.filmorate.ErrorsIO.MethodArgumentNotException;
 import ru.yandex.practicum.filmorate.model.Director;
-import ru.yandex.practicum.filmorate.model.Film;
 
 @Data
 @Slf4j
@@ -27,16 +26,22 @@ import ru.yandex.practicum.filmorate.model.Film;
 public class DirectorDBStorage implements DirectorStorage {
 
     private final JdbcTemplate jdbcTemplate;
+    private DirectorDBStorage directorDBStorage;
 
     static final String sqlQueryCreateDirector = "INSERT INTO FILMORATE_SHEMA.DIRECTOR (NAME_DIRECTOR) VALUES (?)";
 
     @Autowired
-    private FilmDbStorage filmDbStorage;
-
-    @Autowired
-    private DirectorDBStorage(JdbcTemplate jdbcTemplate, FilmDbStorage filmDbStorage) {
+    private DirectorDBStorage(JdbcTemplate jdbcTemplate, DirectorDBStorage directorDBStorage) {
         this.jdbcTemplate = jdbcTemplate;
-        this.filmDbStorage = filmDbStorage;
+        this.directorDBStorage = directorDBStorage;
+    }
+
+    @Override
+    public List<Director> findDirectorsByIdFilm(int idFilm) {
+        String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.DIRECTOR_LIST AS DL JOIN FILMORATE_SHEMA.DIRECTOR AS D ON DL.ID_DIRECTOR = D.ID_DIRECTOR WHERE D.ID_FILM = ?";
+        List<Director> result = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapToDirector(rs), idFilm).stream().toList();
+        log.info("Запрос findGenreByIdFilm > {} -- {} ", sqlQuery, result);
+        return result;
     }
 
     protected Director mapToDirector(ResultSet rs) throws SQLException {
@@ -80,7 +85,7 @@ public class DirectorDBStorage implements DirectorStorage {
     @Override
     public Collection<Director> getCollectionDirector() {
         String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.DIRECTOR";
-        log.info("Запрос getCollectionFilm > {}", sqlQuery);
+        log.info("Запрос getCollectionDirector > {}", sqlQuery);
         Collection<Director> listDirector = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapToDirector(rs));
         log.info("Collection > {}", listDirector);
         return listDirector;
@@ -89,10 +94,10 @@ public class DirectorDBStorage implements DirectorStorage {
     @Override
     public Director getByIdDirector(int idD) {
         Director director;
-        log.info("Запрос getByIdFilm.");
+        log.info("Запрос getByIdDirector.");
         String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.DIRECTOR WHERE ID_DIRECTOR = ?";
         director = jdbcTemplate.query(sqlQuery, this::mapToDirector, idD);
-        log.info("Запрос getByIdFilm > {} --> {} ", sqlQuery, director);
+        log.info("Запрос getByIdDirector > {} --> {} ", sqlQuery, director);
         return director;
     }
 
@@ -103,27 +108,10 @@ public class DirectorDBStorage implements DirectorStorage {
             log.info("Запрос update > {} --> {} ", sqlQuery, director);
             jdbcTemplate.update(sqlQuery, director.getName());
         } else {
-            log.info("Запрос update > нет такого фильма {}", director);
-            throw new MethodArgumentNotException("Ну нет такого фильма!");
+            log.info("Запрос update > нет такого режисёра {}", director);
+            throw new MethodArgumentNotException("Ну нет такого режисёра!");
         }
         return director;
-    }
-
-    @Override
-    public List<Film> getFilmsByDirector(int directorId, String sorting) {
-       Director director = getByIdDirector(directorId);
-       List<Film> films;
-        if (sorting.equals("year")) {
-            String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.FILMS AS F " +
-                              "WHERE F.ID_DIRECTOR  = ? ORDER BY F.RELEASE_DATA";
-            films = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> filmDbStorage.mapToFilm(rs, rowNum), directorId);
-        } else {
-            String sqlQuery = "SELECT COUNT(LS.ID_USER) FROM FILMORATE_SHEMA.LIKES_SET AS LS " +
-                    "WHERE (SELECT F.ID_FILM FROM FILMORATE_SHEMA.FILMS AS F " +
-                    "WHERE F.ID_DIRECTOR  = ?) GROUP BY LS.ID_USER ORDER BY LS.ID_USER DESC";
-            films = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> filmDbStorage.mapToFilm(rs, rowNum), directorId);
-        }
-        return films;
     }
 
    @Override

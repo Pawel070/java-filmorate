@@ -8,27 +8,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.ErrorsIO.ValidationException;
 import ru.yandex.practicum.filmorate.model.Director;
-import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.film.GenreStorage;
-import ru.yandex.practicum.filmorate.storage.film.RateStorage;
-
+import ru.yandex.practicum.filmorate.storage.film.DirectorStorage;
 
 @Data
 @Slf4j
 @Service
 public class DirectorService {
 
-    @Autowired
-    private FilmStorage filmStorage;
+    private DirectorStorage directorStorage;
 
     @Autowired
-    private DirectorService(FilmStorage filmStorage) {
-        this.filmStorage = filmStorage;
+    private DirectorService(DirectorStorage directorStorage) {
+        this.directorStorage = directorStorage;
     }
 
-    public Collection<Director> returnAllDirector() {         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    public Collection<Director> returnAllDirector() {
         log.info("returnAllDirector Ok.");
-        return  null;
+        return  directorStorage.getCollectionDirector();
     }
 
     public void validateD(Director director) throws ValidationException {

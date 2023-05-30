@@ -33,4 +33,6 @@ public interface FilmStorage {
 
     boolean getLikeExist(int idFilm, int idUser);
 
+    List<Film> getFilmsByDirector(int directorId, String sorting);
+
 }

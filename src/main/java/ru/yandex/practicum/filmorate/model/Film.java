@@ -32,6 +32,8 @@ public class Film {
 
     private List<Genre> genres; //  vмассив жанров
 
+    private List<Director> directors; //  vмассив режисеров
+
     private Rating mpa; // рейтинг
 
     private int idD;  // director
