@@ -1,21 +1,20 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
-
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
 import ru.yandex.practicum.filmorate.ErrorsIO.IncorrectParameterException;
 import ru.yandex.practicum.filmorate.Service.FilmService;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.DirectorStorage;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -92,17 +91,17 @@ public class FilmController implements ControllerInterface<Film> {
         filmStorage.deleteLike(id, userId);
     }
 
-    @GetMapping("/popular")
-    public Collection<Film> getPopular(@RequestParam Optional<Integer> count) {
-        int number;
-        log.info("Контроллер GET  список из первых  по количеству лайков> {}", count);
-        if (count.isPresent()) {
-            number = count.get();
-        } else {
-            number = 10;
-        }
-        return filmService.maxLikeFilm(number);
-    }
+//    @GetMapping("/popular")
+//    public Collection<Film> getPopular(@RequestParam Optional<Integer> count) {
+//        int number;
+//        log.info("Контроллер GET  список из первых  по количеству лайков> {}", count);
+//        if (count.isPresent()) {
+//            number = count.get();
+//        } else {
+//            number = 10;
+//        }
+//        return filmService.maxLikeFilm(number);
+//    }
 
     @GetMapping("/director/{directorId}")     // 😉
     public List<Film> findFilmsByDirector(@PathVariable int directorId,
@@ -113,5 +112,13 @@ public class FilmController implements ControllerInterface<Film> {
         }
         List<Film> films = directorStorage.getFilmsByDirector(directorId, sorting);
         return films;
+    }
+
+    @GetMapping("/popular")
+    public List<Film> findMostPopulars(@RequestParam(defaultValue = "10") int count,
+                                       @RequestParam(defaultValue = "0") int genreId,
+                                       @RequestParam(defaultValue = "0") int year) {
+        List<Film> mostPopularFilms = filmService.findMostPopular(count, genreId, year);
+        return mostPopularFilms;
     }
 }

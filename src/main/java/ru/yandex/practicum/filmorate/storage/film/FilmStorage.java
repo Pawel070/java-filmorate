@@ -1,10 +1,10 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
+import ru.yandex.practicum.filmorate.model.Film;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-
-import ru.yandex.practicum.filmorate.model.Film;
 
 
 public interface FilmStorage {
@@ -19,7 +19,7 @@ public interface FilmStorage {
 
     void deleteByIdFilm(int idFilm);
 
-    Collection<Film> getMaxPopular(int scoring);
+//    Collection<Film> getMaxPopular(int scoring);
 
     Film getByIdFilm(int idFilm);
 
@@ -33,4 +33,5 @@ public interface FilmStorage {
 
     boolean getLikeExist(int idFilm, int idUser);
 
+    List<Film> findMostPopular(int count, int genreId, int year);
 }

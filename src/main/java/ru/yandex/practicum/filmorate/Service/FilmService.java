@@ -76,10 +76,10 @@ public class FilmService {
         log.info("Удаление лайка по Id фильма Ok.");
     }
 
-    public Collection<Film> maxLikeFilm(int like) {
-        log.info("Запрос самых лайковых фильмов в количестве {} шт. Ok.", like);
-        return filmStorage.getMaxPopular(like);
-    }
+//    public Collection<Film> maxLikeFilm(int like) {
+//        log.info("Запрос самых лайковых фильмов в количестве {} шт. Ok.", like);
+//        return filmStorage.getMaxPopular(like);
+//    }
 
     public void validateF(Film film) throws ValidationException {
         if (film.getName().isBlank()) {
@@ -100,4 +100,7 @@ public class FilmService {
         }
     }
 
+    public List<Film>findMostPopular(int count, int genreId, int year) {
+        return filmStorage.findMostPopular(count, genreId, year);
+    }
 }
