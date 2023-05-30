@@ -69,10 +69,10 @@ public class FilmController implements ControllerInterface<Film> {
     }
 
     @Override
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable int id) {
-        log.info("Удаление фильма из базы по id {}", id);
-        filmStorage.deleteByIdFilm(id);
+    @DeleteMapping("/{filmId}")
+    public void delete(@PathVariable int filmId) {
+        log.info("Удаление фильма из базы по id {}", filmId);
+        filmStorage.deleteByIdFilm(filmId);
     }
 
     @Override
