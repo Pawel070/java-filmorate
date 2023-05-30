@@ -1,6 +1,6 @@
 #FileLock
-#Tue May 30 12:59:00 UTC 2023
-hostName=DESKTOP-692SH1N.lan
-id=1886cbd7f83a194947e053bcac09ee47af5392ab131
+#Tue May 30 21:47:14 MSK 2023
+hostName=192.168.1.6
+id=1886dfc4fe2915802c8b83e0dbd5dd4184c72729e33
 method=file
-server=192.168.1.202\:52935
+server=192.168.1.6\:62734
