@@ -252,14 +252,12 @@ public class FilmDbStorage implements FilmStorage {
         String sqlQuery =
                 "SELECT * FROM FILMORATE_SHEMA.FILMS AS f " +
                         "JOIN FILMORATE_SHEMA.LIKES_SET AS ls ON f.ID_FILM = ls.ID_FILM " +
-                        "WHERE f.ID_FILM IN (SELECT ID_FILM FROM FILMORATE_SHEMA.FILMS " +
-                        "WHERE YEAR(f.RELEASE_DATE) LIKE ? AND " +
-                        "(SELECT ID_FILM FROM FILMORATE_SHEMA.GENRE_SET " +
-                        "WHERE ID = ?)) " +
+                        "WHERE f.ID_FILM IN ( SELECT ID_FILM FROM FILMORATE_SHEMA.GENRE_SET " +
+                        "WHERE ID = ?) AND YEAR(f.RELEASE_DATE) LIKE ? " +
                         "GROUP BY f.ID_FILM " +
                         "ORDER BY COUNT(ls.ID_USER) desc LIMIT ?";
         log.info("Запрос getMaxPopularByGenreAndYear > {}", sqlQuery);
-        List<Film> listFilm = jdbcTemplate.query(sqlQuery, this::mapToFilm, year, genreId, count);
+        List<Film> listFilm = jdbcTemplate.query(sqlQuery, this::mapToFilm, genreId, year, count);
         log.info("Collection > {}", listFilm);
         return listFilm;
     }
