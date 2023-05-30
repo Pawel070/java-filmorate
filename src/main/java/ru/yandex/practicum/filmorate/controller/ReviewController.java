@@ -52,7 +52,7 @@ public class ReviewController {
     }
 
     @DeleteMapping("/{id}")
-    long deleteReviewById(@PathVariable long id) {
+    public long deleteReviewById(@PathVariable long id) {
         long request = reviewService.deleteReviewById(id);
         log.debug("Удаление отзыва id = {}", id);
         return request;

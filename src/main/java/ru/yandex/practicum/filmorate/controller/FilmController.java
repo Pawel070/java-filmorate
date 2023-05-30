@@ -69,10 +69,10 @@ public class FilmController implements ControllerInterface<Film> {
     }
 
     @Override
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable int id) {
-        log.info("Удаление фильма из базы по id {}", id);
-        filmStorage.deleteByIdFilm(id);
+    @DeleteMapping("/{filmId}")
+    public void delete(@PathVariable int filmId) {
+        log.info("Удаление фильма из базы по id {}", filmId);
+        filmStorage.deleteByIdFilm(filmId);
     }
 
     @Override
@@ -102,6 +102,12 @@ public class FilmController implements ControllerInterface<Film> {
             number = 10;
         }
         return filmService.maxLikeFilm(number);
+    }
+
+    @GetMapping("/search")
+    public List<Film> addSearch(@RequestParam String query, @RequestParam String by) {
+        log.info("Контроллер GET  функциональность \"Поиск\"> {}", query);
+        return filmService.search(query, by);
     }
 
     @GetMapping("/director/{directorId}")     // 😉

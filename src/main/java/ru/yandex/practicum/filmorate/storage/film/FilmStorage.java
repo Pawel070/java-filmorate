@@ -2,11 +2,10 @@ package ru.yandex.practicum.filmorate.storage.film;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
-import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
-
 
 public interface FilmStorage {
 
@@ -34,8 +33,12 @@ public interface FilmStorage {
 
     boolean getLikeExist(int idFilm, int idUser);
 
-    List<Film> getFilmsByDirector(int directorId, String sorting);
+    Optional<List<Film>> searchByAll(String query);
 
-   // List<Director> findDirectorsByIdFilm(int idFilm);
+    Optional<List<Film>> searchByName(String query);
+
+    Optional<List<Film>> searchByDirector(String query);
+
+    List<Film> getFilmsByDirector(int directorId, String sorting);
 
 }
