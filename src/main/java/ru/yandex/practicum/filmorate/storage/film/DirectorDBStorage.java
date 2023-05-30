@@ -26,14 +26,12 @@ import ru.yandex.practicum.filmorate.model.Director;
 public class DirectorDBStorage implements DirectorStorage {
 
     private final JdbcTemplate jdbcTemplate;
-    private DirectorDBStorage directorDBStorage;
 
     static final String sqlQueryCreateDirector = "INSERT INTO FILMORATE_SHEMA.DIRECTOR (NAME_DIRECTOR) VALUES (?)";
 
     @Autowired
-    private DirectorDBStorage(JdbcTemplate jdbcTemplate, DirectorDBStorage directorDBStorage) {
+    private DirectorDBStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.directorDBStorage = directorDBStorage;
     }
 
     @Override

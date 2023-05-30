@@ -17,8 +17,6 @@ M
 src/main/resources/.gitignore,e\4\e44181927ff215206de47b703781a99919f713aa
 B
 db/filmorate.mv.db,8\e\8e7377b2b6c44d87cf9bea9cd0e5a070176461b2
-y
-Isrc/main/java/ru/yandex/practicum/filmorate/storage/user/UserStorage.java,4\6\465593163daa466c06562b30e8fd5bf49874b608
 :
 
 .gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302

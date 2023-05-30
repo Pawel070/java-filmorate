@@ -18,6 +18,4 @@ public interface UserStorage {
 
     User getByIdUser(int idUser);
 
-    boolean getIdExist(int idUser);
-
 }
