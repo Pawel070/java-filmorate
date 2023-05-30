@@ -15,6 +15,7 @@ import ru.yandex.practicum.filmorate.storage.film.DirectorStorage;
 @Service
 public class DirectorService {
 
+    @Autowired
     private DirectorStorage directorStorage;
 
     @Autowired

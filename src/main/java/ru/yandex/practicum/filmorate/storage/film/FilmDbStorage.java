@@ -50,7 +50,7 @@ public class FilmDbStorage implements FilmStorage {
         log.info("Запрос mapToFilm ResultSet > {}", rs);
         Rating rating = new Rating(rs.getInt("ID_RATE"), "");
         List<Genre> genres = genreDbStorage.findGenreByIdFilm(rs.getInt("ID_FILM"));
-        List<Director> directors = directorStorage.getFilmsByDirector(rs.getInt("ID_FILM"));
+        List<Director> directors = directorStorage.findDirectorsByIdFilm(rs.getInt("ID_FILM"));
         Set<Long> likesF = getLikes(rs.getInt("ID_FILM"));
         return Film.builder()
                 .id(rs.getInt("ID_FILM"))

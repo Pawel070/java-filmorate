@@ -32,8 +32,6 @@ Jsrc/main/java/ru/yandex/practicum/filmorate/controller/RateController.java,8\9
 Ksrc/main/java/ru/yandex/practicum/filmorate/controller/GenreController.java,1\1\111e97dff9b110f42c728dcf943c3428011c7a68
 u
 Esrc/main/java/ru/yandex/practicum/filmorate/FilmorateApplication.java,4\7\47bce922f4c4649cbfbb4a9e3e08ba326c480a30
-
-Osrc/main/java/ru/yandex/practicum/filmorate/controller/ControllerInterface.java,e\c\ec28ebee032f796feb7f768b013cf630016e120a
 …
 Usrc/main/java/ru/yandex/practicum/filmorate/ErrorsIO/IncorrectParameterException.java,f\e\fee8653f460c64fb8d0c622d99c27b3af13326db
 

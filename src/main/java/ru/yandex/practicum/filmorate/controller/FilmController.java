@@ -111,7 +111,7 @@ public class FilmController implements ControllerInterface<Film> {
         if (!(sorting.equals("year") || sorting.equals("likes"))) {
             throw new IncorrectParameterException("Сортировка пока по годам или количеству лайков, а не по " + sorting);
         }
-        List<Film> films = directorStorage.getFilmsByDirector(directorId, sorting);
+        List<Film> films = filmStorage.getFilmsByDirector(directorId, sorting);
         return films;
     }
 }

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 
 
@@ -34,5 +35,7 @@ public interface FilmStorage {
     boolean getLikeExist(int idFilm, int idUser);
 
     List<Film> getFilmsByDirector(int directorId, String sorting);
+
+   // List<Director> findDirectorsByIdFilm(int idFilm);
 
 }

@@ -22,6 +22,6 @@ public interface DirectorStorage {
 
     boolean getIdExist(int idD);
 
-    List<Film> getFilmsByDirector(int directorId, String sorting);
+    List<Director> findDirectorsByIdFilm(int idFilm);
 
 }
