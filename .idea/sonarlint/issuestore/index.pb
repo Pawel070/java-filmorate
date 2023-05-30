@@ -26,8 +26,6 @@ z
 Jsrc/main/java/ru/yandex/practicum/filmorate/controller/RateController.java,8\9\893381c6935a51b2ed9a940ebf162b0f2b86ea7a
 i
 9src/test/java/ru/yandex/practicum/filmorate/UserTest.java,b\5\b51f3e43bc6672c2baa56cb29612bb6b068b96ef
-{
-Ksrc/main/java/ru/yandex/practicum/filmorate/controller/GenreController.java,1\1\111e97dff9b110f42c728dcf943c3428011c7a68
 u
 Esrc/main/java/ru/yandex/practicum/filmorate/FilmorateApplication.java,4\7\47bce922f4c4649cbfbb4a9e3e08ba326c480a30
 …
@@ -38,8 +36,6 @@ Osrc/main/java/ru/yandex/practicum/filmorate/ErrorsIO/ItemNotFoundException.java
 Ysrc/main/java/ru/yandex/practicum/filmorate/ErrorsIO/MethodArgumentNotValidException.java,a\7\a79639e0f221fe310cc05a1740a17046a5036065
 }
 Msrc/main/java/ru/yandex/practicum/filmorate/ErrorsIO/ValidationException.java,6\e\6ec5547e5cb11a03a472a2b257bb3e4d7188f694
-z
-Jsrc/test/java/ru/yandex/practicum/filmorate/FilmoRateApplicationTests.java,8\8\886f29131b45a9a2242ba75fae4e4c15be39555f
 m
 =src/main/java/ru/yandex/practicum/filmorate/model/Friend.java,0\2\027499ec4498773297d172999c27992fee70254a
 }
@@ -52,8 +48,6 @@ i
 9src/test/java/ru/yandex/practicum/filmorate/FilmTest.java,c\e\cefdc8fddc9add68ee0535673a6aeec962277310
 m
 =src/main/java/ru/yandex/practicum/filmorate/model/Rating.java,7\e\7ea5e3cf0dfc9e1ea398b900a398a927d4213ac3
-{
-Ksrc/main/java/ru/yandex/practicum/filmorate/storage/film/RateDbStorage.java,f\5\f5d765130bcea800aa6136c6ecb53af190e40273
 k
 ;src/main/java/ru/yandex/practicum/filmorate/model/User.java,a\6\a67a0ad7b203b3dde185a44550c24555f5335d9f
 l

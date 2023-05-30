@@ -1,0 +1,6 @@
+#FileLock
+#Tue May 30 23:27:49 MSK 2023
+hostName=192.168.1.6
+id=1886e586fae8c914e2b2ff030fc835c55bc40de6e1c
+method=file
+server=192.168.1.6\:52624

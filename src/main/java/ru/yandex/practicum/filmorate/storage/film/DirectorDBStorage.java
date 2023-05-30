@@ -27,7 +27,7 @@ public class DirectorDBStorage implements DirectorStorage {
 
     private final JdbcTemplate jdbcTemplate;
 
-    static final String sqlQueryCreateDirector = "INSERT INTO FILMORATE_SHEMA.DIRECTOR (NAME_DIRECTOR) VALUES (?)";
+    static final String sqlQueryCreateDirector = "INSERT INTO FILMORATE_SHEMA.DIRECTOR_LIST (NAME_DIRECTOR) VALUES ('?')";
 
     @Autowired
     private DirectorDBStorage(JdbcTemplate jdbcTemplate) {
@@ -56,8 +56,7 @@ public class DirectorDBStorage implements DirectorStorage {
         log.info("Запрос create > {} --> {}", director, sqlQueryCreateDirector);
         jdbcTemplate.update(connection -> {
             PreparedStatement stmt = connection.prepareStatement(sqlQueryCreateDirector, Statement.RETURN_GENERATED_KEYS);
-            stmt.setInt(1, director.getId());
-            stmt.setString(2, director.getName());
+            stmt.setString(1, director.getName());
             return stmt;
         }, keyHolder);
         int id = keyHolder.getKey().intValue();
@@ -93,8 +92,13 @@ public class DirectorDBStorage implements DirectorStorage {
     public Director getByIdDirector(int idD) {
         Director director;
         log.info("Запрос getByIdDirector.");
-        String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.DIRECTOR WHERE ID_DIRECTOR = ?";
-        director = jdbcTemplate.query(sqlQuery, this::mapToDirector, idD);
+        String sqlQuery;
+        try {
+            sqlQuery = "SELECT * FROM FILMORATE_SHEMA.DIRECTOR WHERE ID_DIRECTOR = ?";
+            director = jdbcTemplate.query(sqlQuery, this::mapToDirector, idD);
+        } catch (Exception e) {
+            throw new MethodArgumentNotException("Ну нет такого режисёра !");
+        }
         log.info("Запрос getByIdDirector > {} --> {} ", sqlQuery, director);
         return director;
     }
