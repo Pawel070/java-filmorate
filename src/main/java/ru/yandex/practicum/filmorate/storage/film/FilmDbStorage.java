@@ -14,11 +14,11 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Rating;
 
+
 import java.sql.*;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+
+import java.sql.Date;
+import java.util.*;
 
 
 @Data
@@ -257,5 +257,34 @@ public class FilmDbStorage implements FilmStorage {
         List<Film> listFilm = jdbcTemplate.query(sqlQuery, this::mapToFilm, count);
         log.info("Collection > {}", listFilm);
         return listFilm;
+    }
+    @Override
+    public Optional<List<Film>> searchByAll(String query) {
+        final String sqlQuery = "SELECT N.* FROM FILMORATE_SHEMA.FILMS AS N " +
+                "LEFT JOIN FILMORATE_SHEMA.DIRECTOR AS D ON N.ID_DIRECTOR = D.ID_DIRECTOR " +
+                "LEFT JOIN FILMORATE_SHEMA.RATE AS R ON N.ID_RATE = R.ID_RATE " +
+                "WHERE D.NAME_DIRECTOR LIKE '%?%' OR N.NAME_FILMS LIKE '%?%' " +
+                "ORDER BY R.RATE";
+        return Optional.ofNullable(jdbcTemplate.query(sqlQuery, this::mapToFilm, query));
+    }
+
+    @Override
+    public Optional<List<Film>> searchByName(String nameQuery) {
+        final String sqlQuery = "SELECT F.NAME_FILMS FROM FILMORATE_SHEMA.FILMS AS F " +
+             //   "(SELECT NAME_FILMS FROM FILMORATE_SHEMA.FILMS WHERE NAME_FILMS LIKE '%?%') " +
+                "LEFT JOIN FILMORATE_SHEMA.RATE AS R ON F.ID_RATE = R.ID_FILM " +
+                "WHERE F.NAME_FILMS LIKE '%?%' " +
+                "ORDER BY R.RATE";
+        return Optional.ofNullable(jdbcTemplate.query(sqlQuery, this::mapToFilm, nameQuery));
+    }
+
+    @Override
+    public Optional<List<Film>> searchByDirector(String directorQuery) {
+        final String sqlQuery = "SELECT N.* FROM FILMORATE_SHEMA.FILMS AS N " +
+                "LEFT JOIN FILMORATE_SHEMA.DIRECTOR AS D ON N.ID_DIRECTOR = D.ID_DIRECTOR " +
+                "LEFT JOIN FILMORATE_SHEMA.RATE AS R ON N.ID_RATE = R.ID_RATE " +
+                "WHERE D.NAME_DIRECTOR LIKE '%?%' " +
+                "ORDER BY R.RATE";
+        return Optional.ofNullable(jdbcTemplate.query(sqlQuery, this::mapToFilm));
     }
 }

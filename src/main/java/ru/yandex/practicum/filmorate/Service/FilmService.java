@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import org.springframework.util.StringUtils;
 import ru.yandex.practicum.filmorate.ErrorsIO.IncorrectParameterException;
 import ru.yandex.practicum.filmorate.ErrorsIO.MethodArgumentNotException;
 import ru.yandex.practicum.filmorate.ErrorsIO.ValidationException;
@@ -16,6 +17,7 @@ import ru.yandex.practicum.filmorate.storage.film.RateStorage;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Data
 @Slf4j
@@ -100,7 +102,31 @@ public class FilmService {
         }
     }
 
+    public List<Film> search(String query, String by) { // аргументы убрать optional и проверить нал ненал
+        List<String> resultValidate = validateSearch(query, by);
+        if (resultValidate.size() == 1) {
+            switch (resultValidate.get(0)) {
+                case ("title"):
+                    return filmStorage.searchByName(query).orElseThrow(() -> new MethodArgumentNotException("Movie not found"));
+                case ("director"):
+                    return filmStorage.searchByDirector(query).orElseThrow(() -> new MethodArgumentNotException("Movie not found"));
+            }
+        } else {
+            filmStorage.searchByAll(query).orElseThrow(() -> new MethodArgumentNotException("Movie not found"));
+        }
+        throw new IncorrectParameterException("incorrectly specified field by or query");
+    }
     public List<Film>findMostPopular(int count, int genreId, int year) {
         return filmStorage.findMostPopular(count, genreId, year);
+    }
+}
+
+    private List<String> validateSearch(String query, String by) {
+        if (!StringUtils.hasText(query) && !StringUtils.hasText(by)) {
+            throw new IncorrectParameterException("incorrectly specified field by or query");
+        }
+        return Arrays.stream(by.split(","))
+                .filter(e -> "title".equals(e) || "director".equals(e))
+                .collect(Collectors.toList());
     }
 }

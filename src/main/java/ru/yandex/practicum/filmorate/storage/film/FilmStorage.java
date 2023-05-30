@@ -4,7 +4,10 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+
+import ru.yandex.practicum.filmorate.model.Film;
 
 
 public interface FilmStorage {
@@ -34,4 +37,9 @@ public interface FilmStorage {
     boolean getLikeExist(int idFilm, int idUser);
 
     List<Film> findMostPopular(int count, int genreId, int year);
+    Optional<List<Film>> searchByAll(String query);
+
+    Optional<List<Film>> searchByName(String query);
+
+    Optional<List<Film>> searchByDirector(String query);
 }
