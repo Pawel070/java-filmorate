@@ -58,7 +58,7 @@ public class EventIntegrationTest {
         userStorage.create(user);
 
         Event event = Event.builder()
-                .userId(1)
+                .userId(2)
                 .entityId(1)
                 .timestamp(Instant.now().toEpochMilli())
                 .eventType(EventType.FRIEND)
@@ -67,9 +67,9 @@ public class EventIntegrationTest {
 
         eventDbStorage.createEvent(
                 event.getUserId(),
+                event.getEntityId(),
                 event.getEventType(),
                 event.getOperation(),
-                event.getEntityId(),
                 event.getTimestamp()
         );
 

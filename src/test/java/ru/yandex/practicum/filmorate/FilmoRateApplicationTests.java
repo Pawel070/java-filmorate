@@ -65,6 +65,7 @@ public class FilmoRateApplicationTests {
 
     User user1;
     User user2;
+    User user3;
     Film film1;
     Film film2;
 

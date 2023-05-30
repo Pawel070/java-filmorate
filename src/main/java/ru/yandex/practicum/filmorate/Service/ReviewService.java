@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.ErrorsIO.MethodArgumentNotException;
 import ru.yandex.practicum.filmorate.model.EventOperation;
 import ru.yandex.practicum.filmorate.model.EventType;
 import ru.yandex.practicum.filmorate.model.Review;
@@ -26,23 +27,30 @@ public class ReviewService {
     }
 
     public Review addReview(Review review) {
-        Review reviewNew = reviewStorage.addReview(review);
-        eventService.createEvent(reviewNew.getUserId(),Math.toIntExact(reviewNew.getReviewId()), EventType.REVIEW,
-                EventOperation.ADD);
+       Review reviewNew = reviewStorage.addReview(review);
+       eventService.createEvent(reviewNew.getUserId(),
+               Math.toIntExact(reviewNew.getReviewId()),
+               EventType.REVIEW,
+               EventOperation.ADD);
         return reviewNew;
     }
 
     public Review updateReview(Review review) {
-        Review review1 = reviewStorage.updateReview(review);
-        eventService.createEvent(review1.getUserId(), Math.toIntExact(review1.getReviewId()),EventType.REVIEW,
+        Review reviewUpdated = reviewStorage.updateReview(review);
+        eventService.createEvent(reviewUpdated.getUserId(),
+                Math.toIntExact(reviewUpdated.getReviewId()),
+                EventType.REVIEW,
                 EventOperation.UPDATE);
-        return review1;
+        return reviewUpdated;
     }
-//findReviewById(review.getReviewId()).getUserId()
+
     public long deleteReviewById(Long id) {
-       int userId = findReviewById(id).getUserId();
-       eventService.createEvent(userId, Math.toIntExact(id), EventType.REVIEW, EventOperation.REMOVE);
-       return reviewStorage.deleteReviewById(id);
+        Review review = findReviewById(id);
+        if (review.getUserId() <= 0) {
+            throw new MethodArgumentNotException("Id пользователя не может быть равен 0 или быть отрицательным");
+        }
+        eventService.createEvent(review.getUserId(), Math.toIntExact(id), EventType.REVIEW, EventOperation.REMOVE);
+        return reviewStorage.deleteReviewById(id);
     }
 
     public Review findReviewById(Long id) {

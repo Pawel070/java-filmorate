@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.ErrorsIO.IncorrectParameterException;
 import ru.yandex.practicum.filmorate.ErrorsIO.MethodArgumentNotException;
 import ru.yandex.practicum.filmorate.ErrorsIO.ValidationException;
-import ru.yandex.practicum.filmorate.model.EventOperation;
-import ru.yandex.practicum.filmorate.model.EventType;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.film.GenreStorage;
@@ -32,9 +30,6 @@ public class FilmService {
 
     @Autowired
     private RateStorage rateStorage;
-
-    @Autowired
-    private EventService eventService;
 
     @Autowired
     private FilmService(FilmStorage filmStorage) {
@@ -68,7 +63,6 @@ public class FilmService {
             throw new MethodArgumentNotException("Запрос добавления лайка по Id фильма невыполним - фильма с таким Id нет.");
         }
         filmStorage.addLike(filmId, userId);
-        eventService.createEvent(userId, filmId, EventType.LIKE, EventOperation.ADD);
         log.info("Запрос добавления лайка по Id фильма Ok.");
     }
 
@@ -79,7 +73,6 @@ public class FilmService {
             throw new MethodArgumentNotException("Запрос добавления лайка по Id фильма невыполним - фильма с таким Id нет.");
         }
         filmStorage.deleteLike(filmId, userId);
-        eventService.createEvent(userId, filmId, EventType.LIKE, EventOperation.REMOVE);
         log.info("Удаление лайка по Id фильма Ok.");
     }
 

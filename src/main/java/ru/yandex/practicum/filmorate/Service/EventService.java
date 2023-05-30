@@ -27,6 +27,6 @@ public class EventService {
     public void createEvent(int userId, int entityId, EventType eventType, EventOperation operation) {
         log.info("Добавление в ленту операции {} типа {} от пользователя с id {}", operation, eventType, userId);
         long timestamp = Instant.now().toEpochMilli();
-        eventStorage.createEvent(userId, eventType, operation, entityId, timestamp);
+        eventStorage.createEvent(userId, entityId, eventType, operation, timestamp);
     }
 }

@@ -10,7 +10,6 @@ import ru.yandex.practicum.filmorate.model.EventType;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import java.time.Instant;
 import java.util.List;
 
 //@Primary
@@ -28,14 +27,12 @@ public class EventDbStorage implements EventStorage {
     }
 
     @Override
-    public void createEvent(int userId, EventType eventType, EventOperation operation, int entityId, long timestamp) {
+    public void createEvent(int userId, int entityId, EventType eventType, EventOperation operation, long timestamp) {
 
-        String sqlNewEvent = "INSERT INTO FILMORATE_SHEMA.EVENTS(USER_ID, EVENT_TYPE, OPERATION, ENTITY_ID, TIMESTAMP) " +
+        String sqlNewEvent = "INSERT INTO FILMORATE_SHEMA.EVENTS(USER_ID, ENTITY_ID, EVENT_TYPE, OPERATION, TIMESTAMP) " +
                 "VALUES (?, ?, ?, ?, ?)";
 
-        jdbcTemplate.update(sqlNewEvent, userId, eventType.toString(), operation.toString(), entityId, timestamp);
-       // jdbcTemplate.update(sqlNewEvent, event.getUserId(), event.getEventType().name(),event.getOperation().name(),
-         //       event.getEntityId(), event.getTimestamp());
+        jdbcTemplate.update(sqlNewEvent, userId, entityId, eventType.toString(), operation.toString(), timestamp);
     }
 
 
@@ -49,9 +46,9 @@ public class EventDbStorage implements EventStorage {
         return Event.builder()
                 .eventId(rs.getInt("EVENT_ID"))
                 .userId(rs.getInt("USER_ID"))
+                .entityId(rs.getInt("ENTITY_ID"))
                 .operation(EventOperation.valueOf(rs.getString("OPERATION")))
                 .eventType(EventType.valueOf(rs.getString("EVENT_TYPE")))
-                .entityId(rs.getInt("ENTITY_ID"))
                 .timestamp(rs.getLong("timestamp"))
                 .build();
     }

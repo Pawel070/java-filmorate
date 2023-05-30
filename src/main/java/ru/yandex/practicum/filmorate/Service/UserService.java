@@ -108,10 +108,6 @@ public class UserService {
 
     public List<Event> getEvent(int id) {
         findUserById(id);
-     //   if (userStorage.getByIdUser(id) == null) {
-    //        log.info("Запрос пользователя по Id - пользавателя нет. {}", id);
-    //    throw new MethodArgumentNotException("Запрос пользователя по Id пользователя с таким Id нет.");
-    //    }
         return eventService.getEvent(id);
     }
 

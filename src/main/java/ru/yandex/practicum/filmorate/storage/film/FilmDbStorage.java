@@ -12,9 +12,8 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import ru.yandex.practicum.filmorate.ErrorsIO.MethodArgumentNotException;
-import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.Rating;
+import ru.yandex.practicum.filmorate.Service.EventService;
+import ru.yandex.practicum.filmorate.model.*;
 
 
 import java.sql.*;
@@ -34,6 +33,9 @@ public class FilmDbStorage implements FilmStorage {
 
     @Autowired
     private GenreDbStorage genreDbStorage;
+
+    @Autowired
+    private EventService eventService;
 
     @Autowired
     private FilmDbStorage(JdbcTemplate jdbcTemplate) {
@@ -170,6 +172,7 @@ public class FilmDbStorage implements FilmStorage {
         String sqlQuery = "INSERT INTO FILMORATE_SHEMA.LIKES_SET (ID_FILM, ID_USER) VALUES (?, ?)";
         log.info("Запрос addLike > {}", sqlQuery);
         jdbcTemplate.update(sqlQuery, idFilm, idUser);
+        eventService.createEvent(idUser, idFilm, EventType.LIKE, EventOperation.ADD);
     }
 
     @Override
@@ -177,6 +180,7 @@ public class FilmDbStorage implements FilmStorage {
         String sqlQuery = "DELETE FROM FILMORATE_SHEMA.LIKES_SET WHERE ID_FILM = ? AND ID_USER = ?";
         log.info("Запрос deleteLike > {}", sqlQuery);
         jdbcTemplate.update(sqlQuery, idFilm, idUser);
+        eventService.createEvent(idUser, idFilm, EventType.LIKE, EventOperation.REMOVE);
     }
 
     @Override
@@ -186,5 +190,4 @@ public class FilmDbStorage implements FilmStorage {
         SqlRowSet idRows = jdbcTemplate.queryForRowSet(sqlQuery, idUser, idFilm);
         return idRows.next();
     }
-
 }
