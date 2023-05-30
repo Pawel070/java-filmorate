@@ -35,4 +35,6 @@ public interface FilmStorage {
 
     boolean getIdExist(int idUser);
 
+    List<Film> getCommonFilms(int userId);
+
 }

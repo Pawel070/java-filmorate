@@ -7,7 +7,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
 import java.util.Objects;

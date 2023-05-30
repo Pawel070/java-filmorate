@@ -108,11 +108,16 @@ public class FilmController implements ControllerInterface<Film> {
     public List<Film> findFilmsByDirector(@PathVariable int directorId,
                                           @RequestParam(defaultValue = "likes", required = false) String sorting) {
         log.info("Контроллер GET  список фильмов режисёра {} с сортировкой", directorId);
-        if (!(sorting.equals("year") || sorting.equals("likes"))) {
+        if (!("year".equals(sorting) || "likes".equals(sorting))) {
             throw new IncorrectParameterException("Сортировка пока по годам или количеству лайков, а не по " + sorting);
         }
-        List<Film> films = directorStorage.getFilmsByDirector(directorId, sorting);
-        return films;
+        return directorStorage.getFilmsByDirector(directorId, sorting);
+    }
+
+    @GetMapping("/common")
+    public List<Film> getCommonFilms(@RequestParam int userId, @RequestParam int friendId) {
+        log.info(String.format("Получен запрос 'GET /films/common?userId=%d&friendId=%d'", userId, friendId));
+        return filmService.getCommonFilms(userId, friendId);
     }
 
 }

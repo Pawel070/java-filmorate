@@ -96,7 +96,7 @@ public class FilmDbStorage implements FilmStorage {
                 "(FILMORATE_SHEMA.FILMS AS F LEFT JOIN FILMORATE_SHEMA.RATE AS R ON F.ID_RATE = R.ID_RATE) " +
                 "LEFT JOIN FILMORATE_SHEMA.LIKES_SET AS LS ON F.ID_FILM = LS.ID_FILM";
         log.info("Запрос getCollectionFilm > {}", sqlQuery);
-        Collection<Film> listFilm = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapToFilm(rs, rowNum));
+        Collection<Film> listFilm = jdbcTemplate.query(sqlQuery, this::mapToFilm);
         log.info("Collection > {}", listFilm);
         return listFilm;
     }
@@ -115,7 +115,7 @@ public class FilmDbStorage implements FilmStorage {
                 "LEFT JOIN FILMORATE_SHEMA.LIKES_SET AS LS ON F.ID_FILM = LS.ID_FILM " +
                 "ORDER BY COUNT(LS.ID_USER) DESC, F.ID_RATE LIMIT = ?";
         log.info("Запрос getMaxPopular > {}", sqlQuery);
-        Collection<Film> listFilm = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapToFilm(rs, rowNum), scoring);
+        Collection<Film> listFilm = jdbcTemplate.query(sqlQuery, this::mapToFilm, scoring);
         // jdbcTemplate.query(sqlQuery, (rs, rowNum) -> mapToFilm(rs, rowNum));
         log.info("Collection > {}", listFilm);
         return listFilm;
@@ -187,4 +187,12 @@ public class FilmDbStorage implements FilmStorage {
         return idRows.next();
     }
 
+    @Override
+    public List<Film> getCommonFilms(int idUser) {
+        String sql = "SELECT ID_FILM, NAME_FILMS, DESCRIPTION, RELEASE_DATE, DURATION, rating, ID_RATE, likesF" +
+                "FROM FILM " +
+                "LEFT JOIN likesF ON ID_FILM " +
+                "WHERE ID_FILM = ? ";
+        return jdbcTemplate.query(sql, this::mapToFilm, idUser);
+    }
 }

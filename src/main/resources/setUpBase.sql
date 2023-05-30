@@ -1,4 +1,4 @@
-// загрузка базы тестовыми данными setUpBase.sql
+ // загрузка базы тестовыми данными setUpBase.sql
 INSERT INTO FILMORATE_SHEMA.films(name_films, description, release_date, duration, id_rate, id_director)
 VALUES ('ИмФП1', 'Фильм1', '1901-01-01', 10, 1, 1);
 INSERT INTO FILMORATE_SHEMA.films(name_films, description, release_date, duration, id_rate, id_director)
