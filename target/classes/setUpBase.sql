@@ -16,7 +16,7 @@ ALTER TABLE FILMORATE_SHEMA.FILMS ALTER COLUMN ID_FILM RESTART WITH 1;
 ALTER TABLE FILMORATE_SHEMA.USERS ALTER COLUMN ID_USER RESTART WITH 1;
 ALTER TABLE FILMORATE_SHEMA.REVIEWS ALTER COLUMN ID_REVIEW RESTART WITH 1;
 
-MERGE INTO FILMORATE_SHEMA.rate(id_rate, name)
+INSERT INTO FILMORATE_SHEMA.rate(id_rate, name)
     VALUES
         (1, 'G'),
         (2, 'PG'),
@@ -24,7 +24,7 @@ MERGE INTO FILMORATE_SHEMA.rate(id_rate, name)
         (4, 'R'),
         (5, 'NC-17');
 
-MERGE INTO FILMORATE_SHEMA.genre(id, name)
+INSERT INTO FILMORATE_SHEMA.genre(id, name)
     VALUES
         (1, 'Комедия'),
         (2, 'Драма'),
@@ -33,13 +33,13 @@ MERGE INTO FILMORATE_SHEMA.genre(id, name)
         (5, 'Документальный'),
         (6, 'Боевик');
 
-MERGE INTO FILMORATE_SHEMA.type_friends(id_type, fri_type)
+INSERT INTO FILMORATE_SHEMA.type_friends(id_type, fri_type)
     VALUES
         (1, 'FRIEND'),
         (2, 'NO_FRIEND'),
         (3, 'FRIEND_REQUEST');
 
-MERGE INTO FILMORATE_SHEMA.director_list(id_director, name_director)
+INSERT INTO FILMORATE_SHEMA.director_list(id_director, name_director)
     VALUES
         (1, 'Иванов'),
         (2, 'Петров'),

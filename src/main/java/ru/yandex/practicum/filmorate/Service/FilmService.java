@@ -132,9 +132,8 @@ public class FilmService {
         filmStorage.getCollectionFilm();
         return films;
     }
-}
 
-    private List<String> validateSearch(String query, String by) {
+    public List<String> validateSearch(String query, String by) {
         if (!StringUtils.hasText(query) && !StringUtils.hasText(by)) {
             throw new IncorrectParameterException("incorrectly specified field by or query");
         }
