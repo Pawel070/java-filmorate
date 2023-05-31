@@ -37,8 +37,6 @@ public class FilmDbStorage implements FilmStorage {
     @Autowired
     private final DirectorStorage directorStorage;
 
-    static final String sqlQueryCreate = "INSERT INTO FILMORATE_SHEMA.FILMS (ID_RATE, DURATION, RELEASE_DATE, DESCRIPTION, NAME_FILMS) VALUES (?,?,CAST (? AS DATE),?,?)";
-
     @Autowired
     private FilmDbStorage(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate, GenreDbStorage genreDbStorage, DirectorStorage directorStorage) {
         this.jdbcTemplate = jdbcTemplate;

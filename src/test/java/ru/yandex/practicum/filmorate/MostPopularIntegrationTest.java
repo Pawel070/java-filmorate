@@ -100,11 +100,9 @@ public class MostPopularIntegrationTest {
 
         jdbcTemplate.update("DELETE FROM FILMORATE_SHEMA.GENRE_SET");
         jdbcTemplate.update("DELETE FROM FILMORATE_SHEMA.LIKES_SET");
-        jdbcTemplate.update("ALTER TABLE FILMORATE_SHEMA.FILMS " +
-                "ALTER COLUMN ID_FILM RESTART WITH 1");
+        jdbcTemplate.update("ALTER TABLE FILMORATE_SHEMA.FILMS ALTER COLUMN ID_FILM RESTART WITH 1");
         jdbcTemplate.update("DELETE FROM FILMORATE_SHEMA.FILMS");
-        jdbcTemplate.update("ALTER TABLE FILMORATE_SHEMA.USERS " +
-                "ALTER COLUMN ID_USER RESTART WITH 1");
+        jdbcTemplate.update("ALTER TABLE FILMORATE_SHEMA.USERS ALTER COLUMN ID_USER RESTART WITH 1");
         jdbcTemplate.update("DELETE FROM FILMORATE_SHEMA.USERS");
     }
 

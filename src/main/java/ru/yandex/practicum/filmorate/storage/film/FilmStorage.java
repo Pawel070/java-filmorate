@@ -43,6 +43,8 @@ public interface FilmStorage {
 
     List<Film> getCommonFilms(int userId);
 
+    Collection<Film> getMaxPopular(int scoring);
+
     List<Film> getFilmsByDirector(int directorId, String sorting);
 
 }
