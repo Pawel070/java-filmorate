@@ -71,6 +71,10 @@ public class FilmDbStorage implements FilmStorage {
         }, keyHolder);
         int id = keyHolder.getKey().intValue();
         film.setId(id);
+
+        insertGenreList(film);
+
+        findAndSetGenreListWithName(film);
         log.info("Результат create film > {} ", film);
         return film;
     }
@@ -252,14 +256,12 @@ public class FilmDbStorage implements FilmStorage {
         String sqlQuery =
                 "SELECT * FROM FILMORATE_SHEMA.FILMS AS f " +
                         "JOIN FILMORATE_SHEMA.LIKES_SET AS ls ON f.ID_FILM = ls.ID_FILM " +
-                        "WHERE f.ID_FILM IN (SELECT ID_FILM FROM FILMORATE_SHEMA.FILMS " +
-                        "WHERE YEAR(f.RELEASE_DATE) LIKE ? AND " +
-                        "(SELECT ID_FILM FROM FILMORATE_SHEMA.GENRE_SET " +
-                        "WHERE ID = ?)) " +
+                        "WHERE f.ID_FILM IN ( SELECT ID_FILM FROM FILMORATE_SHEMA.GENRE_SET " +
+                        "WHERE ID = ?) AND YEAR(f.RELEASE_DATE) LIKE ? " +
                         "GROUP BY f.ID_FILM " +
                         "ORDER BY COUNT(ls.ID_USER) desc LIMIT ?";
         log.info("Запрос getMaxPopularByGenreAndYear > {}", sqlQuery);
-        List<Film> listFilm = jdbcTemplate.query(sqlQuery, this::mapToFilm, year, genreId, count);
+        List<Film> listFilm = jdbcTemplate.query(sqlQuery, this::mapToFilm, genreId, year, count);
         log.info("Collection > {}", listFilm);
         return listFilm;
     }
@@ -274,5 +276,36 @@ public class FilmDbStorage implements FilmStorage {
         List<Film> listFilm = jdbcTemplate.query(sqlQuery, this::mapToFilm, count);
         log.info("Collection > {}", listFilm);
         return listFilm;
+    }
+
+    private void insertGenreList(Film film) {
+        List<Object[]> batch = new ArrayList<>();
+        for (Genre genre : film.getGenres()) {
+            Object[] values = new Object[]{
+                    film.getId(),
+                    genre.getId()};
+            batch.add(values);
+        }
+        int[] updateCounts = jdbcTemplate.batchUpdate("INSERT INTO FILMORATE_SHEMA.GENRE_SET (ID_FILM, ID) " +
+                "Values(?, ?)", batch);
+    }
+
+    private void findAndSetGenreListWithName(Film film) {
+        List<Genre> genres = jdbcTemplate.query(
+                "SELECT * FROM FILMORATE_SHEMA.GENRE AS g " +
+                        "JOIN FILMORATE_SHEMA.GENRE_SET AS gl ON " +
+                        "gl.ID = g.ID " +
+                        "WHERE ID_FILM = ? " +
+                        "ORDER BY ID", this::mapRowToGenre,
+                film.getId());
+        film.setGenres(new ArrayList<>());
+        film.getGenres().addAll(genres);
+    }
+
+    private Genre mapRowToGenre(ResultSet resultSet, int rowNum) throws SQLException {
+        return Genre.builder()
+                .id(resultSet.getInt("ID"))
+                .name(resultSet.getString("NAME"))
+                .build();
     }
 }
