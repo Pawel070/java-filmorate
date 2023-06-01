@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.Service;
 
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.ErrorsIO.MethodArgumentNotException;
@@ -12,7 +11,6 @@ import ru.yandex.practicum.filmorate.storage.film.ReviewStorage;
 
 import java.util.List;
 
-@Slf4j
 @Service
 @Data
 public class ReviewService {
@@ -27,11 +25,14 @@ public class ReviewService {
     }
 
     public Review addReview(Review review) {
-       Review reviewNew = reviewStorage.addReview(review);
-       eventService.createEvent(reviewNew.getUserId(),
-               Math.toIntExact(reviewNew.getReviewId()),
-               EventType.REVIEW,
-               EventOperation.ADD);
+        if (review.getUserId() <= 0 || review.getFilmId() <= 0) {
+            throw new MethodArgumentNotException(String.valueOf(review.getUserId()));
+        }
+        Review reviewNew = reviewStorage.addReview(review);
+        eventService.createEvent(reviewNew.getUserId(),
+                Math.toIntExact(reviewNew.getReviewId()),
+                EventType.REVIEW,
+                EventOperation.ADD);
         return reviewNew;
     }
 
