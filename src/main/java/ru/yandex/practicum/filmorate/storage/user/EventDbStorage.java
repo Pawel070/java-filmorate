@@ -12,12 +12,9 @@ import java.sql.SQLException;
 
 import java.util.List;
 
-//@Primary
-//@Slf4j
 @Component
 @Qualifier
-//@Data
-//@RequiredArgsConstructor
+
 public class EventDbStorage implements EventStorage {
 
     private final JdbcTemplate jdbcTemplate;

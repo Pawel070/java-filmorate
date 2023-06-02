@@ -45,7 +45,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) //500
-    public ErrorResponse handleThrowable(final Throwable e) {
+    public ErrorResponse handleThrowable(final Exception e) {
         log.info("Возникло исключение. Возврат код 500 {}", e.getMessage());
         return new ErrorResponse("http:500 Аргумент метода недействителен, возникло исключение", e.getMessage());
     }

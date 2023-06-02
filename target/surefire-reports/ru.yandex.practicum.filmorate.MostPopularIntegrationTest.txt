@@ -1,0 +1,20 @@
+-------------------------------------------------------------------------------
+Test set: ru.yandex.practicum.filmorate.MostPopularIntegrationTest
+-------------------------------------------------------------------------------
+Tests run: 4, Failures: 4, Errors: 0, Skipped: 0, Time elapsed: 0.385 s <<< FAILURE! - in ru.yandex.practicum.filmorate.MostPopularIntegrationTest
+findMostPopularsByGenreAndYearTest  Time elapsed: 0.139 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <[Film(id=2, name=Фильм2, description=Описание2, releaseDate=2000-12-28, duration=100, likes=[1], genres=[Genre(id=1, name=Комедия)], directors=[], mpa=Rating(id=1, name=), idD=0)]> but was: <[Film(id=2, name=Фильм2, description=Описание2, releaseDate=2000-12-28, duration=100, likes=[], genres=[Genre(id=1, name=Комедия)], directors=null, mpa=Rating(id=1, name=), idD=0), Film(id=1, name=Фильм1, description=Описание1, releaseDate=1995-12-28, duration=50, likes=[], genres=[Genre(id=1, name=Комедия)], directors=null, mpa=Rating(id=1, name=), idD=0)]>
+	at ru.yandex.practicum.filmorate.MostPopularIntegrationTest.findMostPopularsByGenreAndYearTest(MostPopularIntegrationTest.java:130)
+
+findMostPopularsByGenreTest  Time elapsed: 0.033 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <[Film(id=2, name=Фильм2, description=Описание2, releaseDate=2000-12-28, duration=100, likes=[1], genres=[Genre(id=1, name=Комедия)], directors=[], mpa=Rating(id=1, name=), idD=0)]> but was: <[Film(id=2, name=Фильм2, description=Описание2, releaseDate=2000-12-28, duration=100, likes=[], genres=[Genre(id=1, name=Комедия)], directors=null, mpa=Rating(id=1, name=), idD=0), Film(id=1, name=Фильм1, description=Описание1, releaseDate=1995-12-28, duration=50, likes=[], genres=[Genre(id=1, name=Комедия)], directors=null, mpa=Rating(id=1, name=), idD=0)]>
+	at ru.yandex.practicum.filmorate.MostPopularIntegrationTest.findMostPopularsByGenreTest(MostPopularIntegrationTest.java:112)
+
+findMostPopularsByYearTest  Time elapsed: 0.096 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <[Film(id=2, name=Фильм2, description=Описание2, releaseDate=2000-12-28, duration=100, likes=[1], genres=[Genre(id=1, name=Комедия)], directors=[], mpa=Rating(id=1, name=), idD=0)]> but was: <[Film(id=2, name=Фильм2, description=Описание2, releaseDate=2000-12-28, duration=100, likes=[], genres=[Genre(id=1, name=Комедия)], directors=null, mpa=Rating(id=1, name=), idD=0)]>
+	at ru.yandex.practicum.filmorate.MostPopularIntegrationTest.findMostPopularsByYearTest(MostPopularIntegrationTest.java:118)
+
+findMostPopularsAllTest  Time elapsed: 0.103 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <[Film(id=2, name=Фильм2, description=Описание2, releaseDate=2000-12-28, duration=100, likes=[1], genres=[Genre(id=1, name=Комедия)], directors=[], mpa=Rating(id=1, name=), idD=0), Film(id=1, name=Фильм1, description=Описание1, releaseDate=1995-12-28, duration=50, likes=[], genres=[Genre(id=1, name=Комедия)], directors=[], mpa=Rating(id=1, name=), idD=0)]> but was: <[Film(id=2, name=Фильм2, description=Описание2, releaseDate=2000-12-28, duration=100, likes=[], genres=[Genre(id=1, name=Комедия)], directors=null, mpa=Rating(id=1, name=), idD=0), Film(id=1, name=Фильм1, description=Описание1, releaseDate=1995-12-28, duration=50, likes=[], genres=[Genre(id=1, name=Комедия)], directors=null, mpa=Rating(id=1, name=), idD=0)]>
+	at ru.yandex.practicum.filmorate.MostPopularIntegrationTest.findMostPopularsAllTest(MostPopularIntegrationTest.java:124)
+
