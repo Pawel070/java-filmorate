@@ -9,10 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import ru.yandex.practicum.filmorate.ErrorsIO.MethodArgumentNotException;
@@ -115,5 +113,20 @@ public class DirectorDBStorage implements DirectorStorage {
         }
         return director;
     }
+
+    @Override
+    public Director checkDirector(int idD) {
+        Director director;
+        try {
+            String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.DIRECTOR_LIST WHERE ID = ?";
+            director = jdbcTemplate.queryForObject(sqlQuery, (rs, rowNum) -> mapToDirector(rs, rowNum), idD);
+            log.info("Запрос checkGenre > {} -- {} ", sqlQuery, director);
+        } catch (Exception e) {
+            log.info("Жанра с id {} нет", idD);
+            throw new MethodArgumentNotException("Жанра с id " + idD + " нет.");
+        }
+        return director;
+    }
+
 
 }

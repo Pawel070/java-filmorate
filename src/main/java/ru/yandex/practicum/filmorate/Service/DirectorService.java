@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.Service;
 
 import java.util.Collection;
+import java.util.List;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,16 @@ public class DirectorService {
     public Collection<Director> returnAllDirector() {
         log.info("returnAllDirector Ok.");
         return  directorStorage.getCollectionDirector();
+    }
+
+    public List<Director> findById(int id) {
+        log.info("Возврат списка жанров фильма с id {} ", id);
+        return directorStorage.findDirectorsByIdFilm(id);
+    }
+
+    public Director getDirectorById(int id) {
+        log.info("Возврат жанра фильма с id {} ", id);
+        return directorStorage.checkDirector(id);
     }
 
     public void validateD(Director director) throws ValidationException {

@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ru.yandex.practicum.filmorate.ErrorsIO.MethodArgumentNotException;
 import ru.yandex.practicum.filmorate.model.Rating;
 import ru.yandex.practicum.filmorate.storage.film.RateDbStorage;
 
@@ -28,7 +29,15 @@ public class RateService {
 
     public Rating findById(int id) {
         log.info("Возвращаем рейтинг с id {} ", id);
-        return storage.checkRate(id);
+        Rating rating;
+        try {
+            rating = storage.checkRate(id);
+        } catch (Exception e) {
+            log.info("Рейтинга с id {} нет", id);
+            throw new MethodArgumentNotException("Рейтинга с id " + id + " нет.");
+        }
+
+        return rating;
     }
 
 }

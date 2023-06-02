@@ -19,8 +19,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.Collection;
-import java.util.List;
 
 @Data
 @Slf4j
@@ -118,17 +116,17 @@ public class FilmService {
         }
         throw new IncorrectParameterException("incorrectly specified field by or query");
     }
+
     public List<Film> getCommonFilms(int userId, int friendId) {
         if (userStorage.getByIdUser(userId) == null || userStorage.getByIdUser(friendId) == null) {
             throw new MethodArgumentNotException("Не найден пользователь с одним из данных id" + userId + friendId);
         }
         List<Film> films = filmStorage.getCommonFilms(userId);
         films.retainAll(filmStorage.getCommonFilms(friendId));
-        filmStorage.getCollectionFilm();
         return films;
     }
 
-    public List<String> validateSearch(String query, String by) {
+    private List<String> validateSearch(String query, String by) {
         if (!StringUtils.hasText(query) && !StringUtils.hasText(by)) {
             throw new IncorrectParameterException("incorrectly specified field by or query");
         }

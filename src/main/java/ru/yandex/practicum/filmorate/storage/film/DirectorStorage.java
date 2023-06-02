@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.List;
 
 import ru.yandex.practicum.filmorate.model.Director;
-import ru.yandex.practicum.filmorate.model.Film;
 
 public interface DirectorStorage {
 
@@ -21,5 +20,7 @@ public interface DirectorStorage {
     Director update(Director director);
 
     List<Director> findDirectorsByIdFilm(int idFilm);
+
+    Director checkDirector(int idD);
 
 }

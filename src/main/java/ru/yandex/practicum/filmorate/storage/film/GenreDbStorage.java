@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.ErrorsIO.ItemNotFoundException;
 import ru.yandex.practicum.filmorate.ErrorsIO.MethodArgumentNotException;
 import ru.yandex.practicum.filmorate.model.Genre;
 

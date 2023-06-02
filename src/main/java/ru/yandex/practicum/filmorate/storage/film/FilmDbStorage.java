@@ -13,6 +13,8 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import ru.yandex.practicum.filmorate.ErrorsIO.MethodArgumentNotException;
+import ru.yandex.practicum.filmorate.Service.DirectorService;
+import ru.yandex.practicum.filmorate.Service.GenreService;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
@@ -32,24 +34,20 @@ public class FilmDbStorage implements FilmStorage {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     static final String sqlQueryCreate = "INSERT INTO FILMORATE_SHEMA.FILMS (ID_RATE, DURATION, RELEASE_DATE, DESCRIPTION, NAME_FILMS) VALUES (?,?,CAST (? AS DATE),?,?)";
-    private final GenreDbStorage genreDbStorage;
+    private GenreService genreService;
+    private DirectorService directorService;
 
     @Autowired
-    private final DirectorStorage directorStorage;
-
-    @Autowired
-    private FilmDbStorage(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate, GenreDbStorage genreDbStorage, DirectorStorage directorStorage) {
+    private FilmDbStorage(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-        this.genreDbStorage = genreDbStorage;
-        this.directorStorage = directorStorage;
     }
 
     public Film mapToFilm(ResultSet rs, int rowNum) throws SQLException {
         log.info("Запрос mapToFilm ResultSet > {}", rs);
         Rating rating = new Rating(rs.getInt("ID_RATE"), "");
-        List<Genre> genres = genreDbStorage.findGenreByIdFilm(rs.getInt("ID_FILM"));
-        List<Director> directors = directorStorage.findDirectorsByIdFilm(rs.getInt("ID_FILM"));
+        List<Genre> genres = genreService.findById(rs.getInt("ID_FILM"));
+        List<Director> directors = directorService.findById(rs.getInt("ID_FILM"));
         Set<Long> likesF = getLikes(rs.getInt("ID_FILM"));
         return Film.builder()
                 .id(rs.getInt("ID_FILM"))
@@ -171,7 +169,7 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Film> getFilmsByDirector(int directorId, String sorting) {
-       Director director = directorStorage.getByIdDirector(directorId);
+       Director director = directorService.getDirectorById(directorId);
        List<Film> films;
         if (sorting.equals("year")) {
             String sqlQuery = "SELECT * FROM FILMORATE_SHEMA.FILMS AS F " +
