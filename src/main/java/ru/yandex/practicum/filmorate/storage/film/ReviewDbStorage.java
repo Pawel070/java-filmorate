@@ -33,10 +33,6 @@ public class ReviewDbStorage implements ReviewStorage {
         final String sql = "INSERT INTO FILMORATE_SHEMA.REVIEWS (ID_FILM, ID_USER, CONTENT, IS_POSITIVE, USEFULL)" +
                 "Values (?, ?, ?, ?, 0)";
 
-        if (review.getUserId() <= 0 || review.getFilmId() <= 0) {
-            throw new MethodArgumentNotException(String.valueOf(review.getUserId()));
-        }
-
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
